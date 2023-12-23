@@ -6,10 +6,11 @@ import { grey } from '@mui/material/colors';
 import { responsiveFontSizes } from '@mui/material/styles';
 import { BrowserRouter } from 'react-router-dom';
 import { SnackbarProvider } from 'notistack';
+import './index.css'
 
 let fonts = [
     'Nunito',
-    'Nunito Sans',
+    '"Nunito Sans"',
     'Roboto',
     '"Segoe UI"',
     '"Helvetica Neue"',
@@ -24,18 +25,15 @@ let fonts = [
 let theme = createTheme({
     palette: {
         primary: {
-            main: "#0f6d51",
-            light: "#b2cfc6",
+            main: "#E8533F",
+            light: "#ef8476",
         },
         secondary: {
             main: grey[500],
         },
-        blue: {
-            main: "#0083CA",
-        },
         yellow: {
-            main: "#faf2e9",
-            dark: "#c49451",
+            main: "#FDDC02",
+            dark: "#7e6e01",
         },
         white: {
             main: "#ffffff",
@@ -54,6 +52,14 @@ let theme = createTheme({
                 fontFamily: fonts,
             },
         },
+        MuiCard: {
+            defaultProps: {
+                elevation: 10,
+            },
+        },
+    },
+    shape: {
+        borderRadius: 20,
     },
 });
 

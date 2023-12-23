@@ -1,9 +1,9 @@
 import { useContext, useEffect } from 'react'
 import { Route, Routes, Navigate } from 'react-router-dom'
-import NotFound from './errors/NotFound'
-import App from './Test'
+//import NotFound from './errors/NotFound'
 import Home from './Home'
-import { UserContext } from '..'
+import Login from './Login'
+//import { UserContext } from '..'
 
 
 function UserRoutes() {
@@ -16,8 +16,9 @@ function UserRoutes() {
     // }, [])
     return (
         <Routes>
-            <Route path='*' element={<NotFound />} />
+            <Route path='*' element={<Login />} />
             <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
         </Routes>
     )
 }

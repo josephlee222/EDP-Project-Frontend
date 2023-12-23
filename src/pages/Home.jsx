@@ -14,9 +14,10 @@ function Home() {
     //     setIsAdminPage(false)
     // }, [])
     return (
+        document.title = "UPlay - Home",
         <>
             <Container>
-                <Typography>Beep boop test</Typography>
+                <Typography>Beep boop test hello world</Typography>
             </Container>
         </>
     )
