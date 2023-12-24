@@ -37,6 +37,9 @@ let theme = createTheme({
         },
         white: {
             main: "#ffffff",
+        },
+        background: {
+            paper: "#EEEEEE",
         }
     },
     typography: {
@@ -54,9 +57,23 @@ let theme = createTheme({
         },
         MuiCard: {
             defaultProps: {
-                elevation: 10,
-            },
+                elevation: 0,
+            }
         },
+        MuiButton: {
+            variants: [
+                {
+                    props: { variant: 'secondary' },
+                    style: {
+                        color: "#E8533F",
+                        backgroundColor: "#E8533F32",
+                        '&:hover': {
+                            backgroundColor: "#E8533F80",
+                        },
+                    },
+                },
+            ]
+        }
     },
     shape: {
         borderRadius: 20,
