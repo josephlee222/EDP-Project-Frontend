@@ -1,8 +1,8 @@
 import { useContext, useEffect } from 'react'
-import { Route, Routes, Navigate } from 'react-router-dom'
+import { Route, Routes, Navigate, Link } from 'react-router-dom'
 //import NotFound from './errors/NotFound'
 //import { UserContext } from '..'
-import { Container, Typography } from '@mui/material'
+import { Button, Container, Divider, Typography } from '@mui/material'
 
 
 function Home() {
@@ -16,8 +16,15 @@ function Home() {
     return (
         document.title = "UPlay - Home",
         <>
-            <Container>
-                <Typography>Beep boop test hello world</Typography>
+            <Container sx={{mt: "1rem"}}>
+                <Typography variant="h4" component="div" fontWeight={700} sx={{ flexGrow: 1 }}>
+                    Welcome to UPlay WIP
+                </Typography>
+                <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
+                    This is a work in progress of a website for the UPlay app. This is a temporary landing page.
+                </Typography>
+                <Divider sx={{my: "1rem"}}/>
+                <Button variant="contained" sx={{fontWeight: 700}} LinkComponent={Link} to="/login">Login</Button>
             </Container>
         </>
     )

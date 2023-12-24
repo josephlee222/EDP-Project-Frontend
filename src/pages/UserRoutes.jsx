@@ -1,9 +1,10 @@
 import { useContext, useEffect } from 'react'
 import { Route, Routes, Navigate } from 'react-router-dom'
-//import NotFound from './errors/NotFound'
+import NotFound from './errors/NotFound'
 import Home from './Home'
 import Login from './Login'
-//import { UserContext } from '..'
+import Register from './Register'
+import { AppContext } from '../App'
 
 
 function UserRoutes() {
@@ -14,11 +15,14 @@ function UserRoutes() {
     // useEffect(() => {
     //     setIsAdminPage(false)
     // }, [])
+
+    const { user } = useContext(AppContext);
     return (
         <Routes>
-            <Route path='*' element={<Login />} />
+            <Route path="*" element={<NotFound />} />
             <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
+            <Route path="/login" element={!user ? <Login /> : <Navigate to={"/"} />} />
+            <Route path="/register" element={!user ? <Register /> : <Navigate to={"/"} />} />
         </Routes>
     )
 }

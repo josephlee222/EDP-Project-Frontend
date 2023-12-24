@@ -14,7 +14,7 @@ import http from "../http";
 import { AppContext } from "../App";
 
 
-export default function Login() {
+export default function Register() {
     const [loading, setLoading] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
     const { setUser } = useContext(AppContext);
@@ -22,8 +22,10 @@ export default function Login() {
 
     const formik = useFormik({
         initialValues: {
+            name: "",
             email: "",
             password: "",
+            cfm_password: "",
         },
         validationSchema: Yup.object({
             email: Yup.string().email("Invalid email address").required("E-mail is required"),
@@ -31,17 +33,23 @@ export default function Login() {
         }),
         onSubmit: (data) => {
             setLoading(true);
-            //enqueueSnackbar("Logging in...", { variant: "info" });
+            //enqueueSnackbar("Logging in...", { variant: "info" });\
+            data.name = data.name.trim();
             data.email = data.email.trim();
             data.password = data.password.trim();
-            http.post("/User/Login", data).then((res) => {
+            data.cfm_password = data.cfm_password.trim();
+
+            if (data.password !== data.cfm_password) {
+                enqueueSnackbar("Passwords do not match!", { variant: "error" });
+                setLoading(false);
+                return;
+            }
+
+            http.post("/User/Register", data).then((res) => {
                 if (res.status === 200) {
-                    enqueueSnackbar("Login successful. Welcome back!", { variant: "success" });
+                    enqueueSnackbar("Registration successful. Check your e-mail for the activition link.", { variant: "success" });
                     // Store token in local storage
-                    localStorage.setItem("token", res.data.token);
-                    // Set user context
-                    setUser(res.data.user);
-                    navigate("/")
+                    navigate("/Login")
                 } else {
                     enqueueSnackbar("Login failed! Check your e-mail and password.", { variant: "error" });
                     setLoading(false);
@@ -71,18 +79,29 @@ export default function Login() {
             </Box>
             <Grid container spacing={2} justifyContent={"center"} mb={"2rem"}>
                 <Grid item xs={6} md={2}>
-                    <Button variant="contained" fullWidth sx={{fontWeight: 700}}>Login</Button>
+                    <Button variant="secondary" fullWidth sx={{fontWeight: 700}} LinkComponent={Link} to="/login">Login</Button>
                 </Grid>
                 <Grid item xs={6} md={2}>
-                    <Button variant="secondary" fullWidth sx={{fontWeight: 700}} LinkComponent={Link} to="/register">Register</Button>
+                    <Button variant="contained" fullWidth sx={{fontWeight: 700}}>Register</Button>
                 </Grid>
             </Grid>
             <Grid container spacing={2} justifyContent={"center"}>
                 <Grid item xs={12} md={5}>
                     <Card>
                         <CardContent>
-                            <CardTitle title="Login with E-mail" icon={<PasswordRoundedIcon />} />
+                            <CardTitle title="Register with E-mail" icon={<PasswordRoundedIcon />} />
                             <Box component="form" onSubmit={formik.handleSubmit}>
+                                <TextField
+                                    fullWidth
+                                    id="name"
+                                    name="name"
+                                    label="Name"
+                                    value={formik.values.name}
+                                    onChange={formik.handleChange}
+                                    error={formik.touched.name && Boolean(formik.errors.name)}
+                                    helperText={formik.touched.name && formik.errors.name}
+                                    sx={{ mt: 3 }}
+                                />
                                 <TextField
                                     fullWidth
                                     id="email"
@@ -92,7 +111,7 @@ export default function Login() {
                                     onChange={formik.handleChange}
                                     error={formik.touched.email && Boolean(formik.errors.email)}
                                     helperText={formik.touched.email && formik.errors.email}
-                                    sx={{ mt: 3 }}
+                                    sx={{ mt: 1 }}
                                 />
                                 <TextField
                                     fullWidth
@@ -106,6 +125,18 @@ export default function Login() {
                                     helperText={formik.touched.password && formik.errors.password}
                                     sx={{ mt: 1 }}
                                 />
+                                <TextField
+                                    fullWidth
+                                    id="cfm_password"
+                                    name="cfm_password"
+                                    label="Confirm Password"
+                                    type="password"
+                                    value={formik.values.cfm_password}
+                                    onChange={formik.handleChange}
+                                    error={formik.touched.cfm_password && Boolean(formik.errors.cfm_password)}
+                                    helperText={formik.touched.cfm_password && formik.errors.cfm_password}
+                                    sx={{ mt: 1 }}
+                                />
                                 <Button
                                     fullWidth
                                     variant="contained"
@@ -113,16 +144,7 @@ export default function Login() {
                                     sx={{ mt: "1rem" }}
                                     disabled={loading}
                                 >
-                                    Login
-                                </Button>
-                                <Button
-                                    fullWidth
-                                    variant="text"
-                                    component={Link}
-                                    to="/forgot"
-                                    sx={{ mt: "1rem" }}
-                                >
-                                    Forgot password?
+                                    Register Account
                                 </Button>
                             </Box>
                         </CardContent>
