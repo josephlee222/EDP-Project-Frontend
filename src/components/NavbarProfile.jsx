@@ -55,7 +55,7 @@ export default function NavbarProfile() {
                 <Box sx={{ display: "flex", alignItems: "center", margin: "1rem" }}>
                     <ProfilePicture user={user} />
                     <Box marginLeft={"1rem"}>
-                        <Typography variant="subtitle1">{user.name}</Typography>
+                        <Typography variant="subtitle1" fontWeight={700}>{user.name}</Typography>
                         <Typography variant="body2">{user.email}</Typography>
                     </Box>
                 </Box>

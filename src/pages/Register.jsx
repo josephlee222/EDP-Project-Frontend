@@ -12,6 +12,7 @@ import FacebookRoundedIcon from '@mui/icons-material/FacebookRounded';
 import GoogleIcon from '@mui/icons-material/Google';
 import http from "../http";
 import { AppContext } from "../App";
+import { LoadingButton } from "@mui/lab";
 
 
 export default function Register() {
@@ -137,15 +138,15 @@ export default function Register() {
                                     helperText={formik.touched.cfm_password && formik.errors.cfm_password}
                                     sx={{ mt: 1 }}
                                 />
-                                <Button
+                                <LoadingButton
                                     fullWidth
                                     variant="contained"
                                     type="submit"
                                     sx={{ mt: "1rem" }}
-                                    disabled={loading}
+                                    loading={loading}
                                 >
                                     Register Account
-                                </Button>
+                                </LoadingButton>
                             </Box>
                         </CardContent>
                     </Card>
@@ -153,7 +154,7 @@ export default function Register() {
                 <Grid item xs={12} md={5}>
                     <Card>
                         <CardContent>
-                            <CardTitle title="Login via other methods" icon={<KeyRoundedIcon />} />
+                            <CardTitle title="Register via other methods" icon={<KeyRoundedIcon />} />
                             <Button fullWidth variant="contained" sx={{ mt: "1rem" }} disabled startIcon={<KeyRoundedIcon/>}>
                                 Passkey
                             </Button>

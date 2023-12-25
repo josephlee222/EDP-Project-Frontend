@@ -1,6 +1,7 @@
 import React, {useState, useContext} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Container, Button, Card, Grid, CardContent, Box, TextField, Typography } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 import CardTitle from "../components/CardTitle";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -106,15 +107,15 @@ export default function Login() {
                                     helperText={formik.touched.password && formik.errors.password}
                                     sx={{ mt: 1 }}
                                 />
-                                <Button
+                                <LoadingButton
                                     fullWidth
                                     variant="contained"
                                     type="submit"
                                     sx={{ mt: "1rem" }}
-                                    disabled={loading}
+                                    loading={loading}
                                 >
                                     Login
-                                </Button>
+                                </LoadingButton>
                                 <Button
                                     fullWidth
                                     variant="text"
