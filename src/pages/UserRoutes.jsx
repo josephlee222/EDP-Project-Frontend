@@ -4,6 +4,7 @@ import NotFound from './errors/NotFound'
 import Home from './Home'
 import Login from './Login'
 import Register from './Register'
+import Verify from './Verify'
 import { AppContext } from '../App'
 
 
@@ -23,6 +24,7 @@ function UserRoutes() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={!user ? <Login /> : <Navigate to={"/"} />} />
             <Route path="/register" element={!user ? <Register /> : <Navigate to={"/"} />} />
+            <Route path="/verify" element={<Verify />} />
         </Routes>
     )
 }
