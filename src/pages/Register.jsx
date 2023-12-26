@@ -17,6 +17,7 @@ import PageHeader from "../components/PageHeader";
 
 
 export default function Register() {
+    document.title = "UPlay - Register";
     const [loading, setLoading] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
     const { setUser } = useContext(AppContext);

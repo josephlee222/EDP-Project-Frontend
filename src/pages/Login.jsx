@@ -20,6 +20,7 @@ import PageHeader from "../components/PageHeader";
 
 
 export default function Login() {
+    document.title = "UPlay - Login"
     const [loading, setLoading] = useState(false);
     const [resetLoading, setResetLoading] = useState(false);
     const [resendLoading, setResendLoading] = useState(false);
@@ -95,7 +96,7 @@ export default function Login() {
         onSubmit: (data) => {
             setResetLoading(true);
             data.email = data.email.trim();
-            http.post("/auth/forgot", data).then((res) => {
+            http.post("/User/Forgot", data).then((res) => {
                 if (res.status === 200) {
                     enqueueSnackbar("Password reset e-mail sent!", { variant: "success" });
                     setResetPasswordDialog(false);
