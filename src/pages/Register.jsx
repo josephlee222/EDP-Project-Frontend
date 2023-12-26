@@ -1,4 +1,4 @@
-import React, {useState, useContext} from "react";
+import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Container, Button, Card, Grid, CardContent, Box, TextField, Typography } from "@mui/material";
 import CardTitle from "../components/CardTitle";
@@ -13,6 +13,7 @@ import GoogleIcon from '@mui/icons-material/Google';
 import http from "../http";
 import { AppContext } from "../App";
 import { LoadingButton } from "@mui/lab";
+import PageHeader from "../components/PageHeader";
 
 
 export default function Register() {
@@ -62,7 +63,7 @@ export default function Register() {
                 } else {
                     enqueueSnackbar("Login failed! " + err.message, { variant: "error" });
                     setLoading(false);
-                }  
+                }
             })
         }
 
@@ -70,104 +71,98 @@ export default function Register() {
 
 
     return (
-        <Container>
-            <Box display={"flex"} sx={{ p: "3rem", justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
-                <LoginIcon sx={{ height: "72px", width:"72px", color: "primary"}} color="primary" />
+        <>
+            <PageHeader title="Welcome Back" icon={LoginIcon} />
+            <Container sx={{mt: "2rem"}}>
+                <Grid container spacing={2} justifyContent={"center"} mb={"2rem"}>
+                    <Grid item xs={6} md={2}>
+                        <Button variant="secondary" fullWidth sx={{ fontWeight: 700 }} LinkComponent={Link} to="/login">Login</Button>
+                    </Grid>
+                    <Grid item xs={6} md={2}>
+                        <Button variant="contained" fullWidth sx={{ fontWeight: 700 }}>Register</Button>
+                    </Grid>
+                </Grid>
+                <Grid container spacing={2} justifyContent={"center"}>
+                    <Grid item xs={12} md={5}>
+                        <Card>
+                            <CardContent>
+                                <CardTitle title="Register with E-mail" icon={<PasswordRoundedIcon />} />
+                                <Box component="form" onSubmit={formik.handleSubmit}>
+                                    <TextField
+                                        fullWidth
+                                        id="name"
+                                        name="name"
+                                        label="Name"
+                                        value={formik.values.name}
+                                        onChange={formik.handleChange}
+                                        error={formik.touched.name && Boolean(formik.errors.name)}
+                                        helperText={formik.touched.name && formik.errors.name}
+                                        sx={{ mt: 3 }}
+                                    />
+                                    <TextField
+                                        fullWidth
+                                        id="email"
+                                        name="email"
+                                        label="E-mail"
+                                        value={formik.values.email}
+                                        onChange={formik.handleChange}
+                                        error={formik.touched.email && Boolean(formik.errors.email)}
+                                        helperText={formik.touched.email && formik.errors.email}
+                                        sx={{ mt: 1 }}
+                                    />
+                                    <TextField
+                                        fullWidth
+                                        id="password"
+                                        name="password"
+                                        label="Password"
+                                        type="password"
+                                        value={formik.values.password}
+                                        onChange={formik.handleChange}
+                                        error={formik.touched.password && Boolean(formik.errors.password)}
+                                        helperText={formik.touched.password && formik.errors.password}
+                                        sx={{ mt: 1 }}
+                                    />
+                                    <TextField
+                                        fullWidth
+                                        id="cfm_password"
+                                        name="cfm_password"
+                                        label="Confirm Password"
+                                        type="password"
+                                        value={formik.values.cfm_password}
+                                        onChange={formik.handleChange}
+                                        error={formik.touched.cfm_password && Boolean(formik.errors.cfm_password)}
+                                        helperText={formik.touched.cfm_password && formik.errors.cfm_password}
+                                        sx={{ mt: 1 }}
+                                    />
+                                    <LoadingButton
+                                        fullWidth
+                                        variant="contained"
+                                        type="submit"
+                                        sx={{ mt: "1rem" }}
+                                        loading={loading}
+                                    >
+                                        Register Account
+                                    </LoadingButton>
+                                </Box>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+                    <Grid item xs={12} md={5}>
+                        <Card>
+                            <CardContent>
+                                <CardTitle title="Register via other methods" icon={<KeyRoundedIcon />} />
+                                <Button fullWidth variant="contained" sx={{ mt: "1rem" }} disabled startIcon={<GoogleIcon />}>
+                                    Google
+                                </Button>
+                                <Button fullWidth variant="contained" sx={{ mt: "1rem" }} disabled startIcon={<FacebookRoundedIcon />}>
+                                    Facebook
+                                </Button>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+                </Grid>
+            </Container>
+        </>
 
-                <Typography fontWeight={700} variant="h4" component="h1" align="center">
-                    Welcome Back
-                </Typography>
-            </Box>
-            <Grid container spacing={2} justifyContent={"center"} mb={"2rem"}>
-                <Grid item xs={6} md={2}>
-                    <Button variant="secondary" fullWidth sx={{fontWeight: 700}} LinkComponent={Link} to="/login">Login</Button>
-                </Grid>
-                <Grid item xs={6} md={2}>
-                    <Button variant="contained" fullWidth sx={{fontWeight: 700}}>Register</Button>
-                </Grid>
-            </Grid>
-            <Grid container spacing={2} justifyContent={"center"}>
-                <Grid item xs={12} md={5}>
-                    <Card>
-                        <CardContent>
-                            <CardTitle title="Register with E-mail" icon={<PasswordRoundedIcon />} />
-                            <Box component="form" onSubmit={formik.handleSubmit}>
-                                <TextField
-                                    fullWidth
-                                    id="name"
-                                    name="name"
-                                    label="Name"
-                                    value={formik.values.name}
-                                    onChange={formik.handleChange}
-                                    error={formik.touched.name && Boolean(formik.errors.name)}
-                                    helperText={formik.touched.name && formik.errors.name}
-                                    sx={{ mt: 3 }}
-                                />
-                                <TextField
-                                    fullWidth
-                                    id="email"
-                                    name="email"
-                                    label="E-mail"
-                                    value={formik.values.email}
-                                    onChange={formik.handleChange}
-                                    error={formik.touched.email && Boolean(formik.errors.email)}
-                                    helperText={formik.touched.email && formik.errors.email}
-                                    sx={{ mt: 1 }}
-                                />
-                                <TextField
-                                    fullWidth
-                                    id="password"
-                                    name="password"
-                                    label="Password"
-                                    type="password"
-                                    value={formik.values.password}
-                                    onChange={formik.handleChange}
-                                    error={formik.touched.password && Boolean(formik.errors.password)}
-                                    helperText={formik.touched.password && formik.errors.password}
-                                    sx={{ mt: 1 }}
-                                />
-                                <TextField
-                                    fullWidth
-                                    id="cfm_password"
-                                    name="cfm_password"
-                                    label="Confirm Password"
-                                    type="password"
-                                    value={formik.values.cfm_password}
-                                    onChange={formik.handleChange}
-                                    error={formik.touched.cfm_password && Boolean(formik.errors.cfm_password)}
-                                    helperText={formik.touched.cfm_password && formik.errors.cfm_password}
-                                    sx={{ mt: 1 }}
-                                />
-                                <LoadingButton
-                                    fullWidth
-                                    variant="contained"
-                                    type="submit"
-                                    sx={{ mt: "1rem" }}
-                                    loading={loading}
-                                >
-                                    Register Account
-                                </LoadingButton>
-                            </Box>
-                        </CardContent>
-                    </Card>
-                </Grid>
-                <Grid item xs={12} md={5}>
-                    <Card>
-                        <CardContent>
-                            <CardTitle title="Register via other methods" icon={<KeyRoundedIcon />} />
-                            <Button fullWidth variant="contained" sx={{ mt: "1rem" }} disabled startIcon={<KeyRoundedIcon/>}>
-                                Passkey
-                            </Button>
-                            <Button fullWidth variant="contained" sx={{ mt: "1rem" }} disabled startIcon={<GoogleIcon />}>
-                                Google
-                            </Button>
-                            <Button fullWidth variant="contained" sx={{ mt: "1rem" }} disabled startIcon={<FacebookRoundedIcon />}>
-                                Facebook
-                            </Button>
-                        </CardContent>
-                    </Card>
-                </Grid>
-            </Grid>
-        </Container>
     );
 }

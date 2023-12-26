@@ -73,7 +73,14 @@ let theme = createTheme({
                     },
                 },
             ]
-        }
+        },
+        MuiDialogTitle: {
+            defaultProps: {
+                style: {
+                    fontWeight: 700,
+                }
+            }
+        },
     },
     shape: {
         borderRadius: 20,
