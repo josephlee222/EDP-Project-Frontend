@@ -6,19 +6,18 @@ import Login from './Login'
 import Register from './Register'
 import Verify from './Verify'
 import Reset from './Reset'
+import Test from './Test'
 import { AppContext } from '../App'
 
 
 function UserRoutes() {
     // Routes for admin pages. To add authenication so that only admins can access these pages, add a check for the user's role in the UserContext
-    //const { setIsAdminPage } = useContext(UserContext);
-    //const { user } = useContext(UserContext);
+    const { setAdminPage, user } = useContext(AppContext);
 
-    // useEffect(() => {
-    //     setIsAdminPage(false)
-    // }, [])
+    useEffect(() => {
+        setAdminPage(false)
+    }, [])
 
-    const { user } = useContext(AppContext);
     return (
         <Routes>
             <Route path="*" element={<NotFound />} />
@@ -27,6 +26,7 @@ function UserRoutes() {
             <Route path="/register" element={!user ? <Register /> : <Navigate to={"/"} />} />
             <Route path="/verify" element={<Verify />} />
             <Route path="/reset" element={<Reset />} />
+            <Route path="/test" element={<Test />} />
         </Routes>
     )
 }

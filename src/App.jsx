@@ -3,6 +3,7 @@
 import React, { useState, createContext, useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import UserRoutes from './pages/UserRoutes';
+import AdminRoutes from './pages/Admin/AdminRoutes';
 import Navbar from './components/Navbar';
 import http from './http';
 
@@ -11,6 +12,7 @@ function App() {
     const location = useLocation();
     const [user, setUser] = useState(null);
     const [userLoading, setUserLoading] = useState(true);
+    const [adminPage, setAdminPage] = useState(false);
 
     useEffect(() => {
         try {
@@ -36,11 +38,12 @@ function App() {
     return (
         <>
             <AppContext.Provider value={{
-                user, setUser, userLoading, setUserLoading
+                user, setUser, userLoading, setUserLoading, adminPage, setAdminPage
             }}>
                 <Navbar />
                 <Routes location={location}>
                     <Route path='*' element={<UserRoutes />} />
+                    <Route path='/admin/*' element={<AdminRoutes />} />
                 </Routes>
             </AppContext.Provider>
         </>

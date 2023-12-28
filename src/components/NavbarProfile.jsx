@@ -1,12 +1,12 @@
 import { useState, useContext } from "react";
-import { Box, IconButton, List, ListItem, ListItemIcon, ListItemText, ListItemButton, Popover, Divider, Typography, Button } from "@mui/material"
+import { Box, IconButton, List, ListItem, ListItemIcon, ListItemText, ListItemButton, Popover, Divider, Typography, Button, colors } from "@mui/material"
 import { Link, useNavigate } from "react-router-dom"
 import ProfilePicture from "./ProfilePicture";
 import { AppContext } from "../App";
 
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import LogoutIcon from '@mui/icons-material/LogoutRounded';
-import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettingsRounded';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import PersonIcon from '@mui/icons-material/PersonRounded';
@@ -67,9 +67,16 @@ export default function NavbarProfile() {
                             <ListItemText primary={"My Profile"} />
                         </ListItemButton>
                     </ListItem>
+                    { user.isAdmin && 
+                    <ListItem key={"Admin Panel"} disablePadding>
+                        <ListItemButton component={Link} to="/admin/users" onClick={() => setIsPopoverOpen(false)}>
+                            <ListItemIcon><AdminPanelSettingsIcon /></ListItemIcon>
+                            <ListItemText primary={"Admin Panel"} />
+                        </ListItemButton>
+                    </ListItem> }
                     <ListItem key={"Logout"} disablePadding>
-                        <ListItemButton onClick={() => handleLogout()}>
-                            <ListItemIcon><LogoutIcon /></ListItemIcon>
+                        <ListItemButton onClick={() => handleLogout()}  sx={{color: colors.red[500]}}>
+                            <ListItemIcon><LogoutIcon sx={{color: colors.red[500]}} /></ListItemIcon>
                             <ListItemText primary={"Logout"} />
                         </ListItemButton>
                     </ListItem>
