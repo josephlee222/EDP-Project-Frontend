@@ -81,10 +81,21 @@ let theme = createTheme({
                 }
             }
         },
+        MuiCardContent: {
+            defaultProps: {
+                style: {
+                    padding: 16,
+                    "&:last-child": {
+                        paddingBottom: 0,
+                    },
+                }
+            },
+        },
     },
     shape: {
         borderRadius: 20,
     },
+
 });
 
 theme = responsiveFontSizes(theme);

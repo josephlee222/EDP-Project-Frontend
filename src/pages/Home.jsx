@@ -16,7 +16,7 @@ function Home() {
     return (
         document.title = "UPlay - Home",
         <>
-            <Container sx={{mt: "1rem"}}>
+            <Container sx={{mt: "1rem"}} maxWidth="xl">
                 <Typography variant="h4" component="div" fontWeight={700} sx={{ flexGrow: 1 }}>
                     Welcome to UPlay WIP
                 </Typography>
@@ -24,7 +24,8 @@ function Home() {
                     This is a work in progress of a website for the UPlay app. This is a temporary landing page.
                 </Typography>
                 <Divider sx={{my: "1rem"}}/>
-                <Button variant="contained" sx={{fontWeight: 700}} LinkComponent={Link} to="/login">Login</Button>
+                <Button variant="contained" sx={{fontWeight: 700, mr: "1rem"}} LinkComponent={Link} to="/login">Login</Button>
+                <Button variant="contained" sx={{fontWeight: 700}} LinkComponent={Link} to="/admin/test">Admin Test</Button>
             </Container>
         </>
     )
