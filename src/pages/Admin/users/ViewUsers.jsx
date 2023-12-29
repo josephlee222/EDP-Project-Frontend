@@ -48,7 +48,7 @@ function ViewUsers() {
             type: 'singleSelect',
             valueOptions: ["Admin", "Customer"],
         },
-        { field: 'is_verified', headerName: 'Active?', type: 'boolean', minWidth: 100 },
+        { field: 'isVerified', headerName: 'Active?', type: 'boolean', minWidth: 100 },
         {
             field: 'actions', type: 'actions', width: 120, getActions: (params) => [
                 <GridActionsCellItem

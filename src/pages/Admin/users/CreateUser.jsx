@@ -23,12 +23,12 @@ function CreateUser() {
         initialValues: {
             email: "",
             name: "",
-            is_admin: false,
+            isAdmin: false,
         },
         validationSchema: Yup.object({
             email: Yup.string().email("Invalid email address").required("Email is required"),
             name: Yup.string().required("Name is required"),
-            is_admin: Yup.boolean().optional(),
+            isAdmin: Yup.boolean().optional(),
         }),
         onSubmit: (data) => {
             setLoading(true);
@@ -44,7 +44,7 @@ function CreateUser() {
                     setLoading(false);
                 }
             }).catch((err) => {
-                enqueueSnackbar("User creation failed! " + err.response.data.message, { variant: "error" });
+                enqueueSnackbar("User creation failed! " + err.response.data.error, { variant: "error" });
                 setLoading(false);
             })
         }
@@ -93,14 +93,14 @@ function CreateUser() {
                             </Grid>
                             <FormControlLabel label="Is Admin" control={
                                 <Checkbox
-                                    id="is_admin"
-                                    name="is_admin"
+                                    id="isAdmin"
+                                    name="isAdmin"
                                     label="Is Admin"
                                     variant="outlined"
-                                    value={formik.values.is_admin}
+                                    value={formik.values.isAdmin}
                                     onChange={formik.handleChange}
-                                    error={formik.touched.is_admin && Boolean(formik.errors.is_admin)}
-                                    helperText={formik.touched.is_admin && formik.errors.is_admin}
+                                    error={formik.touched.isAdmin && Boolean(formik.errors.isAdmin)}
+                                    helperText={formik.touched.isAdmin && formik.errors.isAdmin}
                                 />
                             } />
                             <Typography gutterBottom>When the user is created, an e-mail with an activation URL will be sent to the user to set the account password.</Typography>

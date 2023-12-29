@@ -4,6 +4,7 @@ import { useState, useContext } from "react"
 import LoginIcon from '@mui/icons-material/LoginRounded';
 import { AppContext } from "../App";
 import NavbarProfile from "./NavbarProfile";
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettingsRounded';
 
 export default function Navbar() {
     const { user, adminPage } = useContext(AppContext);
@@ -17,7 +18,7 @@ export default function Navbar() {
                                 <Link to="/" style={{ textDecoration: 'none', color: 'white' }}>UPlay WIP</Link>
                             </Typography>
                             <Divider orientation="vertical" flexItem sx={{mx: "1rem"}}/>
-                            {adminPage && <Chip label="Admin Area" color="warning" size="small"/>}
+                            {adminPage && <Chip label="Admin Area" color="warning" size="small" icon={<AdminPanelSettingsIcon/>}/>}
                         </Box>
                         
                         {!user && <Button LinkComponent={Link} variant="text" color="inherit" to="/login" startIcon={<LoginIcon/>}>Login</Button>}
