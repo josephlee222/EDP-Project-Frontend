@@ -5,7 +5,7 @@ import Test from '../../Test'
 import { AppContext } from '../../../App'
 import { useSnackbar } from 'notistack'
 import { Card, CardContent, Container, Grid, ListItemIcon, ListItemButton, ListItem, ListItemText, Box, Button } from '@mui/material'
-import PersonIcon from '@mui/icons-material/PersonRounded';
+import PersonAddIcon from '@mui/icons-material/PersonAddRounded';
 import GroupIcon from '@mui/icons-material/GroupRounded';
 import BackpackIcon from '@mui/icons-material/BackpackRounded';
 import StorefrontIcon from '@mui/icons-material/StorefrontRounded';
@@ -24,7 +24,7 @@ export default function AdminUsersRoutes() {
                     <CardContent>
                         <Box sx={{ display: "flex", alignItems: "center" }}>
                             <Button variant={activePage == 1 ? "contained" : "secondary"} startIcon={<List/>} sx={{mr: ".5rem"}} LinkComponent={Link} to="/admin/users">User List</Button>
-                            <Button variant={activePage == 2 ? "contained" : "secondary"} startIcon={<PersonIcon/>} LinkComponent={Link} to="/admin/users/create">Add User</Button>
+                            <Button variant={activePage == 2 ? "contained" : "secondary"} startIcon={<PersonAddIcon/>} LinkComponent={Link} to="/admin/users/create">Create User</Button>
                         </Box>
                     </CardContent>
                 </Card>

@@ -1,4 +1,4 @@
-import { AppBar, Box, Container, Toolbar, IconButton, List, ListItem, ListItemIcon, ListItemText, ListItemButton, Typography, Divider, Drawer, Stack, Button, Badge, Chip } from "@mui/material"
+import { AppBar, Box, Container, Toolbar, IconButton, List, ListItem, ListItemIcon, ListItemText, ListItemButton, Typography, Divider, Drawer, Stack, Button, Badge, Chip, CircularProgress } from "@mui/material"
 import { Link } from "react-router-dom"
 import { useState, useContext } from "react"
 import LoginIcon from '@mui/icons-material/LoginRounded';
@@ -7,7 +7,7 @@ import NavbarProfile from "./NavbarProfile";
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettingsRounded';
 
 export default function Navbar() {
-    const { user, adminPage } = useContext(AppContext);
+    const { user, adminPage, userLoading } = useContext(AppContext);
     return (
         <>
             <AppBar position="sticky">
@@ -18,9 +18,10 @@ export default function Navbar() {
                                 <Link to="/" style={{ textDecoration: 'none', color: 'white' }}>UPlay WIP</Link>
                             </Typography>
                             <Divider orientation="vertical" flexItem sx={{mx: "1rem"}}/>
-                            {adminPage && <Chip label="Admin Area" color="warning" size="small" icon={<AdminPanelSettingsIcon/>}/>}
+
+                            {adminPage && <Chip label="Admin Panel" color="warning" size="small" icon={<AdminPanelSettingsIcon/>}/>}
                         </Box>
-                        
+                        {userLoading && <CircularProgress/>}
                         {!user && <Button LinkComponent={Link} variant="text" color="inherit" to="/login" startIcon={<LoginIcon/>}>Login</Button>}
                         {user && <NavbarProfile />}
                     </Box>

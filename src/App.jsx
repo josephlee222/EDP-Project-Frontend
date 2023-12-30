@@ -17,6 +17,7 @@ function App() {
     useEffect(() => {
         try {
             // Request to the server to check if the token is valid
+            setUserLoading(true)
             http.get("User/Refresh").then((res) => {
                 // If the token is valid, set the user context to the decoded token
                 setUser(res.data.user)
@@ -27,10 +28,12 @@ function App() {
             }).catch((err) => {
                 // If the token is invalid, set the user context to null
                 setUser(null)
+                setUserLoading(false)
             })
             console.log("User set")
         } catch {
             setUser(null)
+            setUserLoading(false)
         }
     }, [])
 
