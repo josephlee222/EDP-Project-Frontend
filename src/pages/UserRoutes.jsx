@@ -7,6 +7,8 @@ import Register from './Register'
 import Verify from './Verify'
 import Reset from './Reset'
 import Test from './Test'
+import ProfileRoutes from './Profile/ProfileRoutes'
+
 import { AppContext } from '../App'
 
 
@@ -27,6 +29,7 @@ function UserRoutes() {
             <Route path="/verify" element={<Verify />} />
             <Route path="/reset" element={<Reset />} />
             <Route path="/test" element={<Test />} />
+            <Route path="/profile/*" element={<ProfileRoutes />} />
         </Routes>
     )
 }

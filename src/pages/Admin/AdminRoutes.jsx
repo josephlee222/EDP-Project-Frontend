@@ -55,7 +55,7 @@ export default function AdminRoutes() {
     return (
         <Container maxWidth="xl">
             <Grid container spacing={2} maxWidth={"xl"}>
-                <Grid item xs={0} md="3">
+                <Grid item xs={12} md="3">
                     <Card sx={{ mt: "1rem" }}>
                         <CardContent>
                             <ThemeProvider theme={styles}>

@@ -7,7 +7,7 @@ export default function PageHeader(props) {
     return (
         <Box display={"flex"} sx={{ py: "3rem", justifyContent: "center", alignItems: "center", flexDirection: "column", backgroundColor: theme.palette.background.paper }}>
             <props.icon sx={{ height: "72px", width: "72px", color: "primary" }} color="primary" />
-            <Typography fontWeight={700} variant="h4" component="h1" align="center">
+            <Typography fontWeight={700} variant="h4" component="h1" align="center" mt={"0.5rem"}>
                 {props.title}
             </Typography>
         </Box>
