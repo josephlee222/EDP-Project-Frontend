@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react'
-import { Chip, Button, Dialog, DialogContent, DialogContentText, DialogTitle, DialogActions, Box, Card, CardContent, Typography, Grid } from '@mui/material'
+import { Chip, Button, Dialog, DialogContent, DialogContentText, DialogTitle, DialogActions, Box, Card, CardContent, Typography, Grid, Container, CardMedia } from '@mui/material'
 import LoadingButton from '@mui/lab/LoadingButton/LoadingButton';
 import { DataGrid, GridActionsCellItem, GridToolbarExport } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
@@ -15,6 +15,8 @@ import PhoneIcon from '@mui/icons-material/Phone';
 //import { CategoryContext } from '../UserRoutes';
 import CardTitle from '../../components/CardTitle';
 import { Person } from '@mui/icons-material';
+import PageHeader from '../../components/PageHeader';
+import BackpackRounded from '@mui/icons-material/BackpackRounded';
 
 function getChipProps(params) {
     return {
@@ -81,21 +83,26 @@ function ActivityList() {
         );
     }
 
-    
 
-const CustomCard = ({ id, name, expiryDate, description }) => (
-  <Card>
-    <CardContent>
-      <Link to={`/activityList/${id}`} style={{ textDecoration: 'none' }}>
-        <Typography variant="h6">{name}</Typography>
-      </Link>
-      <Typography>{description}</Typography>
-      <Typography>Expiry Date: {expiryDate}</Typography>
-    </CardContent>
-  </Card>
-);
 
-      
+    const CustomCard = ({ id, name, expiryDate, description }) => (
+        <Card>
+            <CardMedia
+                sx={{ height: 140 }}
+                image="/static/images/cards/contemplative-reptile.jpg"
+                title="green iguana"
+            />
+            <CardContent>
+                <Link to={`/activityList/${id}`} style={{ textDecoration: 'none' }}>
+                    <Typography variant="h6">{name}</Typography>
+                </Link>
+                <Typography>{description}</Typography>
+                <Typography>Expiry Date: {expiryDate}</Typography>
+            </CardContent>
+        </Card>
+    );
+
+
 
     useEffect(() => {
         document.title = "UPlay Admin - View Activities"
@@ -104,13 +111,16 @@ const CustomCard = ({ id, name, expiryDate, description }) => (
     }, [])
     return (
         <>
-                    <Grid container spacing={2}>
-            {Activities.map((card) => (
-                <Grid item key={card.id} xs={12} sm={6} md={4} lg={3}>
-                <CustomCard {...card} />
+            <PageHeader title="Activities" icon={BackpackRounded} />
+            <Container sx={{ mt: "1rem" }} maxWidth="xl">
+                <Grid container spacing={2}>
+                    {Activities.map((card) => (
+                        <Grid item key={card.id} xs={12} sm={6} md={4}>
+                            <CustomCard {...card} />
+                        </Grid>
+                    ))}
                 </Grid>
-            ))}
-            </Grid>
+            </Container>
         </>
     )
 }

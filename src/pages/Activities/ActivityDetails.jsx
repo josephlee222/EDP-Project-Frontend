@@ -25,7 +25,7 @@ function ActivityDetails() {
   });
 
   const handleGetActivity = () => {
-    http.get(`/Admin/Activity/${activityId}`).then((res) => {
+    http.get(`/Activity/${activityId}`).then((res) => {
       if (res.status === 200) {
         setActivity(res.data);
       }

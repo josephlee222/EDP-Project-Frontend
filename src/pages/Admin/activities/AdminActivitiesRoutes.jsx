@@ -9,7 +9,7 @@ import PersonAddIcon from '@mui/icons-material/PersonAddRounded';
 import GroupIcon from '@mui/icons-material/GroupRounded';
 import BackpackIcon from '@mui/icons-material/BackpackRounded';
 import StorefrontIcon from '@mui/icons-material/StorefrontRounded';
-import { List } from '@mui/icons-material'
+import { AddRounded, List } from '@mui/icons-material'
 import ViewActivities from './ViewActivities'
 import CreateActivity from './CreateActivity'
 import EditActivity from './EditActivity'
@@ -25,7 +25,7 @@ export default function AdminActivitiesRoutes() {
                     <CardContent>
                         <Box sx={{ display: "flex", alignItems: "center" }}>
                             <Button variant={activePage == 1 ? "contained" : "secondary"} startIcon={<List/>} sx={{mr: ".5rem"}} LinkComponent={Link} to="/admin/activities">Activity List</Button>
-                            <Button variant={activePage == 2 ? "contained" : "secondary"} startIcon={<PersonAddIcon/>} LinkComponent={Link} to="/admin/activities/create">Create Activity</Button>
+                            <Button variant={activePage == 2 ? "contained" : "secondary"} startIcon={<AddRounded/>} LinkComponent={Link} to="/admin/activities/create">Create Activity</Button>
                         </Box>
                     </CardContent>
                 </Card>

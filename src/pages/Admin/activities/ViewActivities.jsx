@@ -14,7 +14,8 @@ import EmailIcon from '@mui/icons-material/Email';
 import PhoneIcon from '@mui/icons-material/Phone';
 import { CategoryContext } from './AdminActivitiesRoutes';
 import CardTitle from '../../../components/CardTitle';
-import { Person } from '@mui/icons-material';
+import { BackpackRounded, Person } from '@mui/icons-material';
+import moment from 'moment';
 
 function getChipProps(params) {
     return {
@@ -34,8 +35,8 @@ function ViewActivities() {
     const { setActivePage } = useContext(CategoryContext);
     const columns = [
         { field: 'name', headerName: 'Name', width: 200 },
-        { field: 'expiryDate', headerName: 'Expiry Date', flex: 1, minWidth: 250 },
-        { field: 'description', headerName: 'Description', width: 200 },
+        { field: 'expiryDate', headerName: 'Expiry Date', width: 200, valueFormatter: params => moment(params?.value).format("DD/MM/YYYY"), },
+        { field: 'description', headerName: 'Description', flex: 1, minWidth: 250 },
         { field: 'category', headerName: 'Category', width: 200 },
         /*{ field: 'ntucExclusive', headerName: 'NtucExclusive', width: 200 },
         { field: 'ageLimit', headerName: 'AgeLimit', width: 200 },
@@ -47,7 +48,7 @@ function ViewActivities() {
         ,
 
         {
-            field: 'actions', type: 'actions', width: 120, getActions: (params) => [
+            field: 'actions', type: 'actions', width: 40, getActions: (params) => [
                 <GridActionsCellItem
                     icon={<EditIcon />}
                     label="Edit Activity"
@@ -113,7 +114,7 @@ function ViewActivities() {
             <Box sx={{ marginY: "1rem" }}>
                 <Card>
                     <CardContent>
-                        <CardTitle title="Activity List" icon={<Person />} />
+                        <CardTitle title="Activity List" icon={<BackpackRounded />} />
                         <DataGrid
                             rows={Activities}
                             columns={columns}
