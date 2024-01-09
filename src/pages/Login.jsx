@@ -142,7 +142,7 @@ export default function Login() {
     return (
         <>
             <PageHeader icon={LoginIcon} title="Welcome Back" />
-            <Container sx={{mt: "2rem"}}>
+            <Container sx={{mt: "2rem"}} maxWidth="lg">
                 <Grid container spacing={2} justifyContent={"center"} mb={"2rem"}>
                     <Grid item xs={6} md={2}>
                         <Button variant="contained" fullWidth sx={{ fontWeight: 700 }}>Login</Button>
@@ -152,7 +152,7 @@ export default function Login() {
                     </Grid>
                 </Grid>
                 <Grid container spacing={2} justifyContent={"center"}>
-                    <Grid item xs={12} md={5}>
+                    <Grid item xs={12} md={6}>
                         <Card>
                             <CardContent>
                                 <CardTitle title="Login with E-mail" icon={<PasswordRoundedIcon />} />
@@ -202,7 +202,7 @@ export default function Login() {
                             </CardContent>
                         </Card>
                     </Grid>
-                    <Grid item xs={12} md={5}>
+                    <Grid item xs={12} md={6}>
                         <Card>
                             <CardContent>
                                 <CardTitle title="Login via other methods" icon={<KeyRoundedIcon />} />

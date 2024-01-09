@@ -1,9 +1,9 @@
 import { useContext, useEffect, useState } from "react";
-import { Box, Card, CardContent, Grid } from "@mui/material";
+import { Box, Card, CardContent, Grid, Typography, Button } from "@mui/material";
 import { AppContext } from "../../App";
 import { ProfileContext } from "./ProfileRoutes";
 import CardTitle from "../../components/CardTitle";
-import { PersonRounded } from "@mui/icons-material";
+import { PersonRounded, NewspaperRounded } from "@mui/icons-material";
 import InfoBox from "../../components/InfoBox";
 
 
@@ -55,6 +55,13 @@ export default function ViewProfile() {
                             <InfoBox title="Postal Code" value={user && (user.postalCode ? user.postalCode : "Not Provided")} />
                         </Grid>
                     </Grid>
+                </CardContent>
+            </Card>
+            <Card sx={{ mt: "1rem" }}>
+                <CardContent>
+                    <CardTitle title="Newsletter Subscription" icon={<NewspaperRounded />} />
+                    <Typography variant="body1" mt={3}>Subscribe to our monthly newsletter to keep up-to-date on the latest NTUC UPlay offerings and discounts! Subscription to the newsletter is optional and can be disable anytime on this menu.</Typography>
+                    <Button variant="contained" sx={{ mt: 3 }} startIcon={<NewspaperRounded />} fullWidth>Subscribe to Newsletter</Button>
                 </CardContent>
             </Card>
         </>

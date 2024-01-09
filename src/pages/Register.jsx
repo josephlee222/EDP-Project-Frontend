@@ -14,6 +14,7 @@ import http from "../http";
 import { AppContext } from "../App";
 import { LoadingButton } from "@mui/lab";
 import PageHeader from "../components/PageHeader";
+import { CelebrationRounded, PartyModeRounded } from "@mui/icons-material";
 
 
 export default function Register() {
@@ -74,7 +75,7 @@ export default function Register() {
     return (
         <>
             <PageHeader title="Welcome Back" icon={LoginIcon} />
-            <Container sx={{mt: "2rem"}}>
+            <Container sx={{mt: "2rem"}} maxWidth="lg">
                 <Grid container spacing={2} justifyContent={"center"} mb={"2rem"}>
                     <Grid item xs={6} md={2}>
                         <Button variant="secondary" fullWidth sx={{ fontWeight: 700 }} LinkComponent={Link} to="/login">Login</Button>
@@ -84,7 +85,15 @@ export default function Register() {
                     </Grid>
                 </Grid>
                 <Grid container spacing={2} justifyContent={"center"}>
-                    <Grid item xs={12} md={5}>
+                    <Grid item xs={12} md={12}>
+                        <Card>
+                            <CardContent>
+                                <CardTitle title="Enjoy more with a UPlay account!" icon={<CelebrationRounded />} />
+                                <Typography variant="body1" mt={3}>Sign up for a UPlay account to manage and book for your upcoming activities. You can also join groups and plan together with your friends, family members or interest groups!</Typography>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
                         <Card>
                             <CardContent>
                                 <CardTitle title="Register with E-mail" icon={<PasswordRoundedIcon />} />
@@ -148,7 +157,7 @@ export default function Register() {
                             </CardContent>
                         </Card>
                     </Grid>
-                    <Grid item xs={12} md={5}>
+                    <Grid item xs={12} md={6}>
                         <Card>
                             <CardContent>
                                 <CardTitle title="Register via other methods" icon={<KeyRoundedIcon />} />
