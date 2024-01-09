@@ -26,6 +26,7 @@ function Home() {
                 <Divider sx={{my: "1rem"}}/>
                 <Button variant="contained" sx={{fontWeight: 700, mr: "1rem"}} LinkComponent={Link} to="/login">Login</Button>
                 <Button variant="contained" sx={{fontWeight: 700}} LinkComponent={Link} to="/admin/test">Admin Test</Button>
+                <Button variant="contained" sx={{fontWeight: 700}} LinkComponent={Link} to="/activityList">View all Activities</Button>
             </Container>
         </>
     )

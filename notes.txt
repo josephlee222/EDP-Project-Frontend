@@ -1,0 +1,20 @@
+We're gna do some front end stuff. rubrics says 4 pages at least, so it's gonna be:
+    list page
+    create
+    edit
+
+ok we're missing one. We could set up crud for another object like category, 
+but that means doubling my backend work, and I want to finish this asap to do mad.
+So maybe we can make a customer page to see the activities, but how will that set it apart from the admin list view?
+
+ok nvm we'll figure that along the way. Let's start with the list view, then.
+
+right, so I've linked the list view up but the request to the backend is not working. Network connection issue.
+
+files/folders created:
+everything in Admin/activities
+everything in pages/Activities
+
+files edited:
+UserRoutes.jsx
+Home.jsx
