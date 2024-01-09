@@ -3,13 +3,14 @@ import { Box, Card, CardContent, Grid, Typography, Button } from "@mui/material"
 import { AppContext } from "../../App";
 import { ProfileContext } from "./ProfileRoutes";
 import CardTitle from "../../components/CardTitle";
-import { PersonRounded } from "@mui/icons-material";
+import { NewspaperRounded, PersonRounded } from "@mui/icons-material";
 import InfoBox from "../../components/InfoBox";
 import AccountBalanceWalletRoundedIcon from '@mui/icons-material/AccountBalanceWalletRounded';
 import CardGiftcardIcon from '@mui/icons-material/CardGiftcardRounded';
 import HistoryRoundedIcon from '@mui/icons-material/HistoryRounded';
 import AddCardRoundedIcon from '@mui/icons-material/AddCardRounded';
 import PinRoundedIcon from '@mui/icons-material/PinRounded';
+
 
 
 export default function ViewWallet() {
