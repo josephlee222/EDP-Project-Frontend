@@ -9,6 +9,9 @@ import Reset from './Reset'
 import Test from './Test'
 import ProfileRoutes from './Profile/ProfileRoutes'
 
+import ActivityList from './Activities/ActivityList'
+import ActivityDetails from './Activities/ActivityDetails';
+
 import { AppContext } from '../App'
 
 
@@ -24,6 +27,10 @@ function UserRoutes() {
         <Routes>
             <Route path="*" element={<NotFound />} />
             <Route path="/" element={<Home />} />
+
+            <Route path="/activityList" element={<ActivityList />} />
+            <Route path="/activityList/:id" element={<ActivityDetails />} />
+
             <Route path="/login" element={!user ? <Login /> : <Navigate to={"/"} />} />
             <Route path="/register" element={!user ? <Register /> : <Navigate to={"/"} />} />
             <Route path="/verify" element={<Verify />} />
