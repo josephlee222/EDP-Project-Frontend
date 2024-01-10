@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Card, CardContent, Grid, Typography } from '@mui/material';
-import LoadingButton from '@mui/lab/LoadingButton';
 import { useParams } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import http from '../../http';
@@ -25,9 +24,11 @@ function ActivityDetails() {
   });
 
   const handleGetActivity = () => {
+    setLoading(true);
     http.get(`/Activity/${activityId}`).then((res) => {
       if (res.status === 200) {
         setActivity(res.data);
+        setLoading(false);
       }
     });
   };

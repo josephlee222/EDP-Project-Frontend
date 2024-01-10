@@ -1,20 +1,14 @@
 import React, { useEffect, useState, useContext } from 'react'
-import { Chip, Button, Dialog, DialogContent, DialogContentText, DialogTitle, DialogActions, Box, Card, CardContent, Typography, Grid, Container, CardMedia } from '@mui/material'
+import { Card, CardContent, Typography, Grid, Container, CardMedia, Skeleton } from '@mui/material'
 import LoadingButton from '@mui/lab/LoadingButton/LoadingButton';
 import { DataGrid, GridActionsCellItem, GridToolbarExport } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import http from '../../http';
 import EditIcon from '@mui/icons-material/Edit';
-import LabelIcon from '@mui/icons-material/Label';
 import DeleteIcon from '@mui/icons-material/Delete';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import CloseIcon from '@mui/icons-material/Close';
-import EmailIcon from '@mui/icons-material/Email';
-import PhoneIcon from '@mui/icons-material/Phone';
 //import { CategoryContext } from '../UserRoutes';
 import CardTitle from '../../components/CardTitle';
-import { Person } from '@mui/icons-material';
 import PageHeader from '../../components/PageHeader';
 import BackpackRounded from '@mui/icons-material/BackpackRounded';
 
@@ -102,7 +96,16 @@ function ActivityList() {
         </Card>
     );
 
-
+    const CustomSkeletonCard = () => (
+        <Card>
+            <Skeleton variant="rectangular" height={140} />
+            <CardContent>
+                <Typography variant="h6"><Skeleton animation="wave" /></Typography>
+                <Typography><Skeleton animation="wave" /></Typography>
+                <Typography><Skeleton animation="wave" /></Typography>
+            </CardContent>
+        </Card>
+    );
 
     useEffect(() => {
         document.title = "UPlay Admin - View Activities"
@@ -114,11 +117,17 @@ function ActivityList() {
             <PageHeader title="Activities" icon={BackpackRounded} />
             <Container sx={{ mt: "1rem" }} maxWidth="xl">
                 <Grid container spacing={2}>
-                    {Activities.map((card) => (
+                    {loading && <>{[...Array(6)].map((card) => (
+                        <Grid item key={card} xs={12} sm={6} md={4}>
+                            <CustomSkeletonCard />
+                        </Grid>
+                    ))}</>}
+
+                    {!loading && <>{Activities.map((card) => (
                         <Grid item key={card.id} xs={12} sm={6} md={4}>
                             <CustomCard {...card} />
                         </Grid>
-                    ))}
+                    ))}</>}
                 </Grid>
             </Container>
         </>
