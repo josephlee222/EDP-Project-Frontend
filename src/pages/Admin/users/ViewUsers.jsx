@@ -34,7 +34,7 @@ function ViewUsers() {
         { field: 'name', headerName: 'Name', width: 200 },
         { field: 'email', headerName: 'E-mail Address', flex: 1, minWidth: 250 },
         {
-            field: 'phone_number', headerName: 'Phone Number', minWidth: 200, renderCell: (params) => {
+            field: 'phoneNumber', headerName: 'Phone Number', minWidth: 200, renderCell: (params) => {
                 return params.value ? params.value : "Not Provided"
             }
         },
@@ -55,7 +55,7 @@ function ViewUsers() {
                     icon={<EditIcon />}
                     label="Edit User"
                     onClick={() => {
-                        navigate("/admin/users/" + params.row.id)
+                        navigate("/admin/users/edit/" + params.row.id)
                     }}
                     showInMenu
                 />,

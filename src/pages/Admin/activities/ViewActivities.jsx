@@ -53,7 +53,7 @@ function ViewActivities() {
                     icon={<EditIcon />}
                     label="Edit Activity"
                     onClick={() => {
-                        navigate("/admin/Activities/" + params.row.id)
+                        navigate("/admin/activities/" + params.row.id)
                     }}
                     showInMenu
                 />,

@@ -12,6 +12,7 @@ import StorefrontIcon from '@mui/icons-material/StorefrontRounded';
 import { List } from '@mui/icons-material'
 import ViewUsers from './ViewUsers'
 import CreateUser from './CreateUser'
+import EditUser from './EditUser'
 
 export const CategoryContext = createContext(null);
 export default function AdminUsersRoutes() {
@@ -31,6 +32,7 @@ export default function AdminUsersRoutes() {
                 <Routes>
                     <Route path="/" element={<ViewUsers />} />
                     <Route path="/create" element={<CreateUser />} />
+                    <Route path="/edit/:id" element={<EditUser />} />
                     <Route path="/test" element={<Test />} />
                     <Route path="*" element={<NotFound />} />
                 </Routes>

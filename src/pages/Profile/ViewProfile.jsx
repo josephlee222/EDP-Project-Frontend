@@ -27,7 +27,7 @@ export default function ViewProfile() {
                             <InfoBox title="Name" value={user && user.name} />
                         </Grid>
                         <Grid item xs={12} md={6}>
-                            <InfoBox title="Phone Number" value={user && (user.phone ? user.phone : "Not Provided")} />
+                            <InfoBox title="Phone Number" value={user && (user.phoneNumber ? user.phoneNumber : "Not Provided")} />
                         </Grid>
                         <Grid item xs={12} md={6}>
                             <InfoBox title="Birthday" value={user && (user.birthday ? user.birthday : "Not Provided")} />
