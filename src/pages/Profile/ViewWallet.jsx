@@ -10,12 +10,22 @@ import CardGiftcardIcon from '@mui/icons-material/CardGiftcardRounded';
 import HistoryRoundedIcon from '@mui/icons-material/HistoryRounded';
 import AddCardRoundedIcon from '@mui/icons-material/AddCardRounded';
 import PinRoundedIcon from '@mui/icons-material/PinRounded';
+import TopUpDialog from "../../components/TopUpDialog";
 
 
 
 export default function ViewWallet() {
     const { setActivePage } = useContext(ProfileContext);
     const { user } = useContext(AppContext);
+    const [topupOpen, setTopupOpen] = useState(false);
+
+    const handleTopupClose = () => {
+        setTopupOpen(false);
+    }
+
+    const handleTopupOpen = () => {
+        setTopupOpen(true);
+    }
 
     useEffect(() => {
         setActivePage(3);
@@ -30,7 +40,7 @@ export default function ViewWallet() {
                     <Typography variant="body2" mt={3} fontWeight={700}>Current Balance</Typography>
                     <Typography variant="h4" mt={1} fontWeight={700}>${user && user.balance.toFixed(2)}</Typography>
                     <Box sx={{ mt: "1rem", display:"flex" }}>
-                        <Button variant="contained" sx={{ mr: ".5rem", flexGrow: 1, flexBasis: 0 }} startIcon={<AddCardRoundedIcon />}>Top-Up Wallet</Button>
+                        <Button variant="contained" sx={{ mr: ".5rem", flexGrow: 1, flexBasis: 0 }} startIcon={<AddCardRoundedIcon />} onClick={handleTopupOpen}>Top-Up Wallet</Button>
                         <Button variant="secondary" sx={{ ml: ".5rem", flexGrow: 1, flexBasis: 0 }} startIcon={<HistoryRoundedIcon />}>View Transaction History</Button>
                     </Box>
                 </CardContent>
@@ -45,6 +55,7 @@ export default function ViewWallet() {
                     </Box>
                 </CardContent>
             </Card>
+            <TopUpDialog open={topupOpen} onClose={handleTopupClose} />
         </>
     )
 }
