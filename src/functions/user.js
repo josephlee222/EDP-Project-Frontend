@@ -5,7 +5,6 @@ export function validateAdmin() {
     try {
         const token = localStorage.getItem('token');
         const decoded = jwtDecode(token);
-        console.log(decoded);
         if (decoded.role == "Admin") {
             return true;
         }

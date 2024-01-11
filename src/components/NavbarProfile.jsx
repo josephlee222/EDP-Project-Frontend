@@ -12,6 +12,7 @@ import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import PersonIcon from '@mui/icons-material/PersonRounded';
 import SupportIcon from '@mui/icons-material/Support';
 import { enqueueSnackbar } from "notistack";
+import { ShoppingBagRounded } from "@mui/icons-material";
 
 export default function NavbarProfile() {
     const { user, setUser } = useContext(AppContext);
@@ -65,6 +66,12 @@ export default function NavbarProfile() {
                         <ListItemButton component={Link} to="/profile" onClick={() => setIsPopoverOpen(false)}>
                             <ListItemIcon><PersonIcon /></ListItemIcon>
                             <ListItemText primary={"My Profile"} />
+                        </ListItemButton>
+                    </ListItem>
+                    <ListItem key={"Cart"} disablePadding>
+                        <ListItemButton component={Link} to="/profile" onClick={() => setIsPopoverOpen(false)}>
+                            <ListItemIcon><ShoppingBagRounded /></ListItemIcon>
+                            <ListItemText primary={"Cart"} />
                         </ListItemButton>
                     </ListItem>
                     { user.isAdmin && 
