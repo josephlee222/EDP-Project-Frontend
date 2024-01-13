@@ -13,6 +13,7 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@fontsource-variable/nunito": "^5.0.17",
+    "@microsoft/signalr": "^8.0.0",
     "@mui/icons-material": "^5.15.1",
     "@mui/lab": "^5.0.0-alpha.157",
     "@mui/material": "^5.15.1",

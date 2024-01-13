@@ -6,6 +6,8 @@ import UserRoutes from './pages/UserRoutes';
 import AdminRoutes from './pages/Admin/AdminRoutes';
 import Navbar from './components/Navbar';
 import http from './http';
+import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
+import { useSnackbar } from 'notistack';
 
 export const AppContext = createContext(null);
 function App() {
@@ -13,6 +15,8 @@ function App() {
     const [user, setUser] = useState(null);
     const [userLoading, setUserLoading] = useState(true);
     const [adminPage, setAdminPage] = useState(false);
+    const [connection, setConnection] = useState(null);
+    const { enqueueSnackbar } = useSnackbar();
 
     useEffect(() => {
         try {
@@ -23,6 +27,15 @@ function App() {
                 setUser(res.data.user)
                 // Set the token in local storage
                 localStorage.setItem("token", res.data.token)
+
+                // Create a new connection to the actions hub
+                const connect = new HubConnectionBuilder()
+                    .withUrl(import.meta.env.VITE_API_URL + "/hubs/actions")
+                    .withAutomaticReconnect()
+                    .build();
+
+                setConnection(connect);
+
                 // Set the loading state to false
                 setUserLoading(false)
             }).catch((err) => {
@@ -37,11 +50,36 @@ function App() {
         }
     }, [])
 
+    useEffect(() => {
+        if (connection) {
+            connection
+                .start()
+                .then(() => {
+
+                    connection.invoke("Register", user.id)
+
+                    connection.on("ReceiveMessage", (message) => {
+                        console.log(message);
+                    });
+
+                    connection.on("refresh", () => {
+                        http.get("User").then((res) => {
+                            setUser(res.data)
+                            console.log("User refreshed")
+                            //enqueueSnackbar("[Debug] Refreshed.", { variant: "success" })
+                        }).catch((err) => {
+                            setUser(null)
+                        })
+                    });
+                })
+                .catch((error) => console.log(error));
+        }
+    }, [connection]);
 
     return (
         <>
             <AppContext.Provider value={{
-                user, setUser, userLoading, setUserLoading, adminPage, setAdminPage
+                user, setUser, userLoading, setUserLoading, adminPage, setAdminPage, connection, setConnection
             }}>
                 <Navbar />
                 <Routes location={location}>
