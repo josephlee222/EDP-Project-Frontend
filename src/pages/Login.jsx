@@ -17,6 +17,7 @@ import RefreshIcon from '@mui/icons-material/RefreshRounded';
 import http from "../http";
 import { AppContext } from "../App";
 import PageHeader from "../components/PageHeader";
+import { HubConnectionBuilder } from "@microsoft/signalr";
 
 
 export default function Login() {
@@ -27,7 +28,7 @@ export default function Login() {
     const [resetPasswordDialog, setResetPasswordDialog] = useState(false);
     const [resendDialog, setResendDialog] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
-    const { setUser } = useContext(AppContext);
+    const { setUser, setConnection } = useContext(AppContext);
     const navigate = useNavigate();
     const theme = useTheme();
 
@@ -68,6 +69,14 @@ export default function Login() {
                     localStorage.setItem("token", res.data.token);
                     // Set user context
                     setUser(res.data.user);
+
+                    // Create a new connection to the actions hub
+                    const connect = new HubConnectionBuilder()
+                        .withUrl(import.meta.env.VITE_API_URL + "/hubs/actions")
+                        .withAutomaticReconnect()
+                        .build();
+
+                    setConnection(connect);
                     navigate("/")
                 } else {
                     enqueueSnackbar("Login failed! Check your e-mail and password.", { variant: "error" });
@@ -142,7 +151,7 @@ export default function Login() {
     return (
         <>
             <PageHeader icon={LoginIcon} title="Welcome Back" />
-            <Container sx={{mt: "2rem"}} maxWidth="lg">
+            <Container sx={{ mt: "2rem" }} maxWidth="lg">
                 <Grid container spacing={2} justifyContent={"center"} mb={"2rem"}>
                     <Grid item xs={6} md={2}>
                         <Button variant="contained" fullWidth sx={{ fontWeight: 700 }}>Login</Button>
