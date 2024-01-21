@@ -3,7 +3,7 @@ import { Box, Card, CardContent, Grid, Typography, Button } from "@mui/material"
 import { AppContext } from "../../App";
 import { ProfileContext } from "./ProfileRoutes";
 import CardTitle from "../../components/CardTitle";
-import { PersonRounded, NewspaperRounded, CloseRounded } from "@mui/icons-material";
+import { PersonRounded, NewspaperRounded, CloseRounded, BadgeRounded } from "@mui/icons-material";
 import InfoBox from "../../components/InfoBox";
 import http from "../../http";
 import { useSnackbar } from "notistack";
@@ -61,13 +61,13 @@ export default function ViewProfile() {
             </Card>
             <Card sx={{ mt: "1rem" }}>
                 <CardContent>
-                    <CardTitle title="Membership & Other Information" icon={<PersonRounded />} />
+                    <CardTitle title="Membership & Other Information" icon={<BadgeRounded />} />
                     <Grid container mt=".5rem" spacing={2}>
                         <Grid item xs={12} md={6}>
                             <InfoBox title="Membership Status" value={"Not implemented"} />
                         </Grid>
                         <Grid item xs={12} md={6}>
-                            <InfoBox title="Newsletter subscription" boolean={user?.newsletter} value={user?.newsletter ? "Subscribed" : "Not Subscribed"} />
+                            <InfoBox title="Newsletter Subscription" boolean={user?.newsletter} value={user?.newsletter ? "Subscribed" : "Not Subscribed"} />
                         </Grid>
                         <Grid item xs={12} md={6}>
                             <InfoBox title="Address" value={user && (user.address ? user.address : "Not Provided")} />
@@ -81,7 +81,7 @@ export default function ViewProfile() {
             <Card sx={{ mt: "1rem" }}>
                 <CardContent>
                     <CardTitle title="Newsletter Subscription" icon={<NewspaperRounded />} />
-                    <Typography variant="body1" mt={3}>Subscribe to our monthly newsletter to keep up-to-date on the latest NTUC UPlay offerings and discounts! Subscription to the newsletter is optional and can be disable anytime on this menu.</Typography>
+                    <Typography variant="body1" mt={3}>Subscribe to our monthly newsletter to keep up-to-date on the latest NTUC UPlay offerings and discounts! Subscription to the newsletter is optional and can be disabled anytime on this menu.</Typography>
                     <LoadingButton variant="contained" sx={{ mt: 3 }} startIcon={user?.newsletter ? <CloseRounded/> : <NewspaperRounded />} fullWidth onClick={handleNewsletterSubscription} loading={loading} loadingPosition="start">{user?.newsletter ? "Unsubscribe to newsletter" : "Subscribe to Newsletter"}</LoadingButton>
                 </CardContent>
             </Card>

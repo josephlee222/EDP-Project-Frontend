@@ -23,6 +23,7 @@ import ViewProfile from './ViewProfile'
 import ViewBookings from './ViewBookings'
 import ViewWallet from './ViewWallet'
 import ViewSecurity from './ViewSecurity'
+import ViewTransactions from './ViewTransactions'
 import EditProfile from './EditProfile'
 
 export const ProfileContext = createContext(null);
@@ -136,6 +137,7 @@ export default function ProfileRoutes() {
                             <Route path="/bookings" element={<ViewBookings />} />
                             <Route path="/wallet" element={<ViewWallet />} />
                             <Route path="/security" element={<ViewSecurity />} />
+                            <Route path="/transactions" element={<ViewTransactions />} />
                             <Route path="/edit" element={<EditProfile />} />
                         </Routes>
                     </Grid>
