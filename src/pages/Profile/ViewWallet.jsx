@@ -11,6 +11,7 @@ import HistoryRoundedIcon from '@mui/icons-material/HistoryRounded';
 import AddCardRoundedIcon from '@mui/icons-material/AddCardRounded';
 import PinRoundedIcon from '@mui/icons-material/PinRounded';
 import TopUpDialog from "../../components/TopUpDialog";
+import { Link } from "react-router-dom";
 
 
 
@@ -41,7 +42,7 @@ export default function ViewWallet() {
                     <Typography variant="h4" mt={1} fontWeight={700}>${user && user.balance.toFixed(2)}</Typography>
                     <Box sx={{ mt: "1rem", display:"flex" }}>
                         <Button variant="contained" sx={{ mr: ".5rem", flexGrow: 1, flexBasis: 0 }} startIcon={<AddCardRoundedIcon />} onClick={handleTopupOpen}>Top-Up Wallet</Button>
-                        <Button variant="secondary" sx={{ ml: ".5rem", flexGrow: 1, flexBasis: 0 }} startIcon={<HistoryRoundedIcon />}>View Transaction History</Button>
+                        <Button variant="secondary" sx={{ ml: ".5rem", flexGrow: 1, flexBasis: 0 }} startIcon={<HistoryRoundedIcon />} LinkComponent={Link} to="/profile/transactions">View Transaction History</Button>
                     </Box>
                 </CardContent>
             </Card>

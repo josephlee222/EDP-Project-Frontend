@@ -151,7 +151,7 @@ export default function Login() {
     return (
         <>
             <PageHeader icon={LoginIcon} title="Welcome Back" />
-            <Container sx={{ mt: "2rem" }} maxWidth="lg">
+            <Container sx={{ mt: "2rem", mb: "1rem" }} maxWidth="lg">
                 <Grid container spacing={2} justifyContent={"center"} mb={"2rem"}>
                     <Grid item xs={6} md={2}>
                         <Button variant="contained" fullWidth sx={{ fontWeight: 700 }}>Login</Button>

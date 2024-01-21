@@ -75,7 +75,7 @@ export default function Register() {
     return (
         <>
             <PageHeader title="Welcome Back" icon={LoginIcon} />
-            <Container sx={{mt: "2rem"}} maxWidth="lg">
+            <Container sx={{mt: "2rem", mb: "1rem"}} maxWidth="lg">
                 <Grid container spacing={2} justifyContent={"center"} mb={"2rem"}>
                     <Grid item xs={6} md={2}>
                         <Button variant="secondary" fullWidth sx={{ fontWeight: 700 }} LinkComponent={Link} to="/login">Login</Button>
