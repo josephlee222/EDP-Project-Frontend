@@ -67,6 +67,7 @@ function App() {
                     connection.on("refresh", () => {
                         http.get("User").then((res) => {
                             setUser(res.data)
+                            setNotifications(res.data.notifications)
                             console.log("User refreshed")
                             //enqueueSnackbar("[Debug] Refreshed.", { variant: "success" })
                         }).catch((err) => {
@@ -76,7 +77,7 @@ function App() {
 
                     connection.on("notification", (n) => {
                         setNotifications(o => [n, ...o])
-                        enqueueSnackbar("New notification recieved", { variant: "info" })
+                        //enqueueSnackbar("New notification recieved", { variant: "info" })
                     });
                 })
                 .catch((error) => console.log(error));

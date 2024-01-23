@@ -3,6 +3,7 @@ import { Box, IconButton, List, ListItem, ListItemIcon, ListItemText, ListItemBu
 import { Link, useNavigate } from "react-router-dom"
 import ProfilePicture from "./ProfilePicture";
 import { AppContext } from "../App";
+import CardTitle from "./CardTitle";
 
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import LogoutIcon from '@mui/icons-material/LogoutRounded';
@@ -13,6 +14,7 @@ import PersonIcon from '@mui/icons-material/PersonRounded';
 import SupportIcon from '@mui/icons-material/Support';
 import { enqueueSnackbar } from "notistack";
 import { NotificationsRounded, ShoppingBagRounded } from "@mui/icons-material";
+import http from "../http";
 
 export default function NavbarNotifications() {
     const { notifications } = useContext(AppContext);
@@ -25,10 +27,23 @@ export default function NavbarNotifications() {
         setIsPopoverOpen(true);
     }
 
+    function handleNotificationClick(url) {
+        navigate(url)
+        setIsPopoverOpen(false)
+    }
+
+    function handleNotificationDismiss(id) {
+        http.get("User/Notification/Read?notificationId=" + id).then((res) => {
+            enqueueSnackbar("Notification dismissed", { variant: "success" })
+        }).catch((err) => {
+            enqueueSnackbar("Failed to dismiss notification", { variant: "error" })
+        })
+    }
+
     // Profile picture should be implemented later
     return (
         <>
-            <Tooltip title="Account Notifications" placement="bottom">
+            <Tooltip title="Account Notifications" arrow>
                 <IconButton onClick={(e) => handlePopoverOpen(e)}>
                     {notifications.length > 0 &&
                         <Badge badgeContent={notifications.length} color="yellow" overlap="circular">
@@ -62,8 +77,8 @@ export default function NavbarNotifications() {
                 }}
             >
                 <Box sx={{ margin: "1rem" }}>
-                    <Typography variant="h6" fontWeight={700} mb={"1rem"}>Account Notifications</Typography>
-                    <Stack spacing={".5rem"}>
+                    <CardTitle title="Account Notifications" icon={<NotificationsRounded />} />
+                    <Stack spacing={".5rem"} mt={"1rem"}>
                         {notifications.length === 0 &&
                             <Card sx={{ backgroundColor: "#ffffff" }}>
                                 <CardContent>
@@ -77,8 +92,8 @@ export default function NavbarNotifications() {
                                     <Typography variant="body1" fontWeight={700}>{notification.title}</Typography>
                                     <Typography variant="body2" mb={".5rem"}>{notification.subtitle}</Typography>
                                     <Stack direction="row" justifyContent="flex-end">
-                                        <Button variant="contained" color="primary" size="small" sx={{ mr: ".5rem" }} LinkComponent={Link} to={notification.actionUrl}>{notification.action}</Button>
-                                        <Button variant="outlined" color="primary" size="small">Dismiss</Button>
+                                        <Button variant="contained" color="primary" size="small" sx={{ mr: ".5rem" }} onClick={() => handleNotificationClick(notification.actionUrl)}>{notification.action}</Button>
+                                        <Button variant="outlined" color="primary" size="small" onClick={() => handleNotificationDismiss(notification.id)}>Dismiss</Button>
                                     </Stack>
                                 </CardContent>
                             </Card>
