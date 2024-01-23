@@ -5,6 +5,7 @@ import LoginIcon from '@mui/icons-material/LoginRounded';
 import { AppContext } from "../App";
 import NavbarProfile from "./NavbarProfile";
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettingsRounded';
+import NavbarNotifications from "./NavbarNotifications";
 
 export default function Navbar() {
     const { user, adminPage, userLoading } = useContext(AppContext);
@@ -22,7 +23,9 @@ export default function Navbar() {
                             {adminPage && <Chip label="Admin Panel" color="warning" size="small" icon={<AdminPanelSettingsIcon/>}/>}
                         </Box>
                         {(!user && userLoading) && <Skeleton variant="circular" width={40} height={40} sx={{m: "8px"}} animation="wave"/>}
+                        {(!user && userLoading) && <Skeleton variant="circular" width={40} height={40} sx={{m: "8px"}} animation="wave"/>}
                         {(!user && !userLoading) && <Button LinkComponent={Link} variant="text" color="inherit" to="/login" startIcon={<LoginIcon/>}>Login</Button>}
+                        {user && <NavbarNotifications />}
                         {user && <NavbarProfile />}
                     </Box>
                     
