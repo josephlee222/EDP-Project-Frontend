@@ -6,6 +6,7 @@ import { grey } from '@mui/material/colors';
 import { responsiveFontSizes } from '@mui/material/styles';
 import { BrowserRouter } from 'react-router-dom';
 import { SnackbarProvider } from 'notistack';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import './index.css'
 
 let fonts = [
@@ -101,11 +102,14 @@ let theme = createTheme({
 theme = responsiveFontSizes(theme);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-    <ThemeProvider theme={theme}>
-        <BrowserRouter>
-            <SnackbarProvider maxSnack={3}>
-                <App />
-            </SnackbarProvider>
-        </BrowserRouter>
-    </ThemeProvider>,
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+        <ThemeProvider theme={theme}>
+            <BrowserRouter>
+                <SnackbarProvider maxSnack={3}>
+                    <App />
+                </SnackbarProvider>
+            </BrowserRouter>
+        </ThemeProvider>,
+    </GoogleOAuthProvider>
+
 )
