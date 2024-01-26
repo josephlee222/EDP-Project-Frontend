@@ -1,4 +1,6 @@
 import React, { useState, useContext } from "react";
+import { useGoogleLogin } from "@react-oauth/google";
+import FacebookLogin from '@greatsumini/react-facebook-login';
 import { Link, useNavigate } from "react-router-dom";
 import { Container, Button, Card, Grid, CardContent, Box, TextField, Typography, Dialog, DialogActions, DialogContent, DialogTitle, DialogContentText, useTheme } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
@@ -27,8 +29,9 @@ export default function Login() {
     const [resendLoading, setResendLoading] = useState(false);
     const [resetPasswordDialog, setResetPasswordDialog] = useState(false);
     const [resendDialog, setResendDialog] = useState(false);
+    const [loginType, setLoginType] = useState("email");
     const { enqueueSnackbar } = useSnackbar();
-    const { setUser, setConnection } = useContext(AppContext);
+    const { setUser, setConnection, setNotifications } = useContext(AppContext);
     const navigate = useNavigate();
     const theme = useTheme();
 
@@ -46,6 +49,16 @@ export default function Login() {
 
     const handleResendDialogClose = () => {
         setResendDialog(false);
+    }
+
+    const handleStartSignalR = () => {
+        // Create a new connection to the actions hub
+        const connect = new HubConnectionBuilder()
+            .withUrl(import.meta.env.VITE_API_URL + "/hubs/actions")
+            .withAutomaticReconnect()
+            .build();
+
+        setConnection(connect);
     }
 
     const formik = useFormik({
@@ -69,14 +82,9 @@ export default function Login() {
                     localStorage.setItem("token", res.data.token);
                     // Set user context
                     setUser(res.data.user);
-
-                    // Create a new connection to the actions hub
-                    const connect = new HubConnectionBuilder()
-                        .withUrl(import.meta.env.VITE_API_URL + "/hubs/actions")
-                        .withAutomaticReconnect()
-                        .build();
-
-                    setConnection(connect);
+                    // Set notifications
+                    setNotifications(res.data.user.notifications);
+                    handleStartSignalR();
                     navigate("/")
                 } else {
                     enqueueSnackbar("Login failed! Check your e-mail and password.", { variant: "error" });
@@ -121,6 +129,8 @@ export default function Login() {
         }
     })
 
+
+    // Currently not in use
     const resendFormik = useFormik({
         initialValues: {
             email: "",
@@ -147,6 +157,66 @@ export default function Login() {
         }
     })
 
+    const googleAuth = useGoogleLogin({
+        onSuccess: async (res) => {
+            setLoading(true);
+            setLoginType("google");
+            http.post("/User/Google", { token: res.access_token }).then((res) => {
+                if (res.status === 200) {
+                    enqueueSnackbar("Login successful. Welcome back!", { variant: "success" });
+                    // Store token in local storage
+                    localStorage.setItem("token", res.data.token);
+                    // Set user context
+                    setUser(res.data.user);
+                    setNotifications(res.data.user.notifications);
+                    handleStartSignalR();
+                    navigate("/")
+                } else {
+                    enqueueSnackbar("Login failed! " + err.response.data.error, { variant: "error" });
+                    setLoading(false);
+                }
+            }).catch((err) => {
+                enqueueSnackbar("Login failed! " + err.response.data.error, { variant: "error" });
+                setLoading(false);
+            })
+        },
+    });
+
+    const handleFacebookSuccess = async (res) => {
+        setLoading(true);
+        setLoginType("facebook");
+        console.log(res.accessToken);
+        http.post("/User/Facebook", { token: res.accessToken }).then((res) => {
+            if (res.status === 200) {
+                enqueueSnackbar("Login successful. Welcome back!", { variant: "success" });
+                // Store token in local storage
+                localStorage.setItem("token", res.data.token);
+                // Set user context
+                setUser(res.data.user);
+                setNotifications(res.data.user.notifications);
+                handleStartSignalR();
+                navigate("/")
+            } else {
+                enqueueSnackbar("Login failed! " + err.response.data.error, { variant: "error" });
+                setLoading(false);
+            }
+        }).catch((err) => {
+            enqueueSnackbar("Login failed! " + err.response.data.error, { variant: "error" });
+            setLoading(false);
+        })
+    }
+
+    const handleFacebookFailure = (err) => {
+        console.log(err);
+        if (err.status === "loginCancelled") {
+            enqueueSnackbar("Login failed! Cancelled by user.", { variant: "error" });
+            setLoading(false);
+        } else {
+            enqueueSnackbar("Login failed! " + err.status, { variant: "error" });
+            setLoading(false);
+        }
+    }
+
 
     return (
         <>
@@ -170,7 +240,7 @@ export default function Login() {
                                         fullWidth
                                         id="email"
                                         name="email"
-                                        label="E-mail"
+                                        label="E-mail Address"
                                         value={formik.values.email}
                                         onChange={formik.handleChange}
                                         error={formik.touched.email && Boolean(formik.errors.email)}
@@ -216,14 +286,21 @@ export default function Login() {
                             <CardContent>
                                 <CardTitle title="Login via other methods" icon={<KeyRoundedIcon />} />
                                 <Button fullWidth variant="contained" sx={{ mt: "1rem" }} disabled startIcon={<KeyRoundedIcon />}>
-                                    Passkey
+                                    Login with PassKey
                                 </Button>
-                                <Button fullWidth variant="contained" sx={{ mt: "1rem" }} disabled startIcon={<GoogleIcon />}>
-                                    Google
-                                </Button>
-                                <Button fullWidth variant="contained" sx={{ mt: "1rem" }} disabled startIcon={<FacebookRoundedIcon />}>
-                                    Facebook
-                                </Button>
+                                <LoadingButton fullWidth variant="contained" sx={{ mt: "1rem" }} startIcon={<GoogleIcon />} onClick={googleAuth} loading={loading}>
+                                    Login with Google
+                                </LoadingButton>
+                                <FacebookLogin
+                                    appId={import.meta.env.VITE_FACEBOOK_APP_ID}
+                                    onSuccess={handleFacebookSuccess}
+                                    onFail={handleFacebookFailure}
+                                    render={({ onClick, logout }) => (
+                                        <LoadingButton fullWidth variant="contained" sx={{ mt: "1rem" }} onClick={onClick} startIcon={<FacebookRoundedIcon />} loading={loading}>
+                                            Login with Facebook
+                                        </LoadingButton>
+                                    )}
+                                />
                             </CardContent>
                         </Card>
                     </Grid>

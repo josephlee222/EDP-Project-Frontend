@@ -4,7 +4,7 @@ import NotFound from '../errors/NotFound'
 import Test from '../Test'
 import { AppContext } from '../../App'
 import { useSnackbar } from 'notistack'
-import { Card, CardContent, Container, Grid, Box, Typography, Button, Dialog, DialogTitle, DialogActions, DialogContent, IconButton, DialogContentText, Stack, Tooltip } from '@mui/material'
+import { Card, CardContent, Container, Grid, Box, Typography, Button, Dialog, DialogTitle, DialogActions, DialogContent, IconButton, DialogContentText, Stack, Tooltip, Alert } from '@mui/material'
 import { LoadingButton } from '@mui/lab'
 import ProfilePicture from '../../components/ProfilePicture'
 import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
@@ -101,6 +101,9 @@ export default function ProfileRoutes() {
         <ProfileContext.Provider value={{ activePage, setActivePage }}>
             <PageHeader icon={BadgeRoundedIcon} title="My Profile" />
             <Container maxWidth="xl">
+                {user && !user.password && 
+                    <Alert severity="warning" sx={{ mt: "1rem" }}>You have not set a password for your account. Please set a password to ensure your account is secure.</Alert>
+                }
                 <Grid container spacing={2} maxWidth={"xl"} mb={3}>
                     <Grid item xs={12} md="4" lg="3">
                         <Card sx={{ mt: "1rem", width: "100%" }}>

@@ -76,7 +76,8 @@ function ViewUsers() {
                 <GridActionsCellItem
                     icon={<PhoneIcon />}
                     label="Call"
-                    href={"tel:" + params.row.phone_number}
+                    href={"tel:" + params.row.phoneNumber}
+                    disabled={params.row.phoneNumber == ''}
                 />
             ]
         },

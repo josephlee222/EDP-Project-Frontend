@@ -15,14 +15,26 @@ import { AppContext } from "../App";
 import { LoadingButton } from "@mui/lab";
 import PageHeader from "../components/PageHeader";
 import { CelebrationRounded, PartyModeRounded } from "@mui/icons-material";
-
+import { useGoogleLogin } from "@react-oauth/google";
+import FacebookLogin from '@greatsumini/react-facebook-login';
+import { HubConnectionBuilder } from "@microsoft/signalr";
 
 export default function Register() {
     document.title = "UPlay - Register";
     const [loading, setLoading] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
-    const { setUser } = useContext(AppContext);
+    const { setUser, setNotifications, setConnection } = useContext(AppContext);
     const navigate = useNavigate();
+
+    const handleStartSignalR = () => {
+        // Create a new connection to the actions hub
+        const connect = new HubConnectionBuilder()
+        .withUrl(import.meta.env.VITE_API_URL + "/hubs/actions")
+        .withAutomaticReconnect()
+        .build();
+
+        setConnection(connect);
+    }
 
     const formik = useFormik({
         initialValues: {
@@ -71,6 +83,63 @@ export default function Register() {
 
     })
 
+    const googleAuth = useGoogleLogin({
+        onSuccess: async (res) => {
+            setLoading(true);
+            http.post("/User/Google", { token: res.access_token }).then((res) => {
+                if (res.status === 200) {
+                    enqueueSnackbar("Login successful. Welcome back!", { variant: "success" });
+                    // Store token in local storage
+                    localStorage.setItem("token", res.data.token);
+                    // Set user context
+                    setUser(res.data.user);
+                    setNotifications(res.data.user.notifications);
+                    handleStartSignalR();
+                    navigate("/")
+                } else {
+                    enqueueSnackbar("Login failed! " + err.response.data.error, { variant: "error" });
+                    setLoading(false);
+                }
+            }).catch((err) => {
+                enqueueSnackbar("Login failed! " + err.response.data.error, { variant: "error" });
+                setLoading(false);
+            })
+        },
+    });
+
+    const handleFacebookSuccess = async (res) => {
+        setLoading(true);
+        http.post("/User/Facebook", { token: res.accessToken }).then((res) => {
+            if (res.status === 200) {
+                enqueueSnackbar("Login successful. Welcome back!", { variant: "success" });
+                // Store token in local storage
+                localStorage.setItem("token", res.data.token);
+                // Set user context
+                setUser(res.data.user);
+                setNotifications(res.data.user.notifications);
+                handleStartSignalR();
+                navigate("/")
+            } else {
+                enqueueSnackbar("Login failed! " + err.response.data.error, { variant: "error" });
+                setLoading(false);
+            }
+        }).catch((err) => {
+            enqueueSnackbar("Login failed! " + err.response.data.error, { variant: "error" });
+            setLoading(false);
+        })
+    }
+
+    const handleFacebookFailure = (err) => {
+        console.log(err);
+        if (err.status === "loginCancelled") {
+            enqueueSnackbar("Login failed! Cancelled by user.", { variant: "error" });
+            setLoading(false);
+        } else {
+            enqueueSnackbar("Login failed! " + err.status, { variant: "error" });
+            setLoading(false);
+        }
+    }
+
 
     return (
         <>
@@ -113,7 +182,7 @@ export default function Register() {
                                         fullWidth
                                         id="email"
                                         name="email"
-                                        label="E-mail"
+                                        label="E-mail Address"
                                         value={formik.values.email}
                                         onChange={formik.handleChange}
                                         error={formik.touched.email && Boolean(formik.errors.email)}
@@ -160,13 +229,20 @@ export default function Register() {
                     <Grid item xs={12} md={6}>
                         <Card>
                             <CardContent>
-                                <CardTitle title="Register via other methods" icon={<KeyRoundedIcon />} />
-                                <Button fullWidth variant="contained" sx={{ mt: "1rem" }} disabled startIcon={<GoogleIcon />}>
-                                    Google
-                                </Button>
-                                <Button fullWidth variant="contained" sx={{ mt: "1rem" }} disabled startIcon={<FacebookRoundedIcon />}>
-                                    Facebook
-                                </Button>
+                                <CardTitle title="Easy Registration" icon={<KeyRoundedIcon />} />
+                                <LoadingButton fullWidth variant="contained" sx={{ mt: "1rem" }} startIcon={<GoogleIcon />} onClick={googleAuth} loading={loading}>
+                                    Register with Google
+                                </LoadingButton>
+                                <FacebookLogin
+                                    appId={import.meta.env.VITE_FACEBOOK_APP_ID}
+                                    onSuccess={handleFacebookSuccess}
+                                    onFail={handleFacebookFailure}
+                                    render={({ onClick, logout }) => (
+                                        <LoadingButton fullWidth variant="contained" sx={{ mt: "1rem" }} onClick={onClick} startIcon={<FacebookRoundedIcon />} loading={loading}>
+                                            Register with Facebook
+                                        </LoadingButton>
+                                    )}
+                                />
                             </CardContent>
                         </Card>
                     </Grid>
