@@ -11,6 +11,7 @@ import * as Yup from "yup";
 import { useFormik } from 'formik';
 import { PersonAddRounded } from '@mui/icons-material';
 import { CategoryContext } from './AdminUsersRoutes';
+import titleHelper from '../../../functions/helpers';
 
 function CreateUser() {
 
@@ -18,6 +19,7 @@ function CreateUser() {
     const { enqueueSnackbar } = useSnackbar();
     const navigate = useNavigate();
     const { setActivePage } = useContext(CategoryContext);
+    titleHelper("Create User")
 
     const formik = useFormik({
         initialValues: {

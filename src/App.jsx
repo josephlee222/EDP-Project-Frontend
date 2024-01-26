@@ -8,6 +8,7 @@ import Navbar from './components/Navbar';
 import http from './http';
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import { useSnackbar } from 'notistack';
+import { Home } from '@mui/icons-material';
 
 export const AppContext = createContext(null);
 function App() {
@@ -17,6 +18,8 @@ function App() {
     const [userLoading, setUserLoading] = useState(true);
     const [adminPage, setAdminPage] = useState(false);
     const [connection, setConnection] = useState(null);
+    const [title, setTitle] = useState(document.title);
+    const [icon, setIcon] = useState(() => Home);
     const { enqueueSnackbar } = useSnackbar();
 
     useEffect(() => {
@@ -87,7 +90,20 @@ function App() {
     return (
         <>
             <AppContext.Provider value={{
-                user, setUser, userLoading, setUserLoading, adminPage, setAdminPage, connection, setConnection, notifications, setNotifications
+                user,
+                setUser, 
+                userLoading, 
+                setUserLoading, 
+                adminPage, 
+                setAdminPage, 
+                connection, 
+                setConnection, 
+                notifications, 
+                setNotifications,
+                title,
+                setTitle,
+                icon,
+                setIcon
             }}>
                 <Navbar />
                 <Routes location={location}>

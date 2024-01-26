@@ -3,11 +3,10 @@ import { Container, Button } from "@mui/material";
 import { Link } from "react-router-dom";
 import Infobox from "../components/InfoBox";
 import http from "../http";
+import titleHelper from "../functions/helpers";
 
 function Test() {
-  useEffect(() => {
-    document.title = "Test";
-  }, []);
+  titleHelper("Test Page")
 
   function test() {
     http.get("User/Test").then((res) => {

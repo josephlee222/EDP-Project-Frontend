@@ -20,10 +20,10 @@ import http from "../http";
 import { AppContext } from "../App";
 import PageHeader from "../components/PageHeader";
 import { HubConnectionBuilder } from "@microsoft/signalr";
+import titleHelper from "../functions/helpers";
 
 
 export default function Login() {
-    document.title = "UPlay - Login"
     const [loading, setLoading] = useState(false);
     const [resetLoading, setResetLoading] = useState(false);
     const [resendLoading, setResendLoading] = useState(false);
@@ -34,6 +34,7 @@ export default function Login() {
     const { setUser, setConnection, setNotifications } = useContext(AppContext);
     const navigate = useNavigate();
     const theme = useTheme();
+    titleHelper("Login");
 
     const handleResetPasswordDialog = () => {
         setResetPasswordDialog(true);
@@ -220,7 +221,7 @@ export default function Login() {
 
     return (
         <>
-            <PageHeader icon={LoginIcon} title="Welcome Back" />
+            <PageHeader icon={LoginIcon} title="Welcome Back" navTitle="Login" />
             <Container sx={{ mt: "2rem", mb: "1rem" }} maxWidth="lg">
                 <Grid container spacing={2} justifyContent={"center"} mb={"2rem"}>
                     <Grid item xs={6} md={2}>

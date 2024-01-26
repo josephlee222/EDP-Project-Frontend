@@ -11,6 +11,7 @@ import * as Yup from "yup";
 import { useFormik } from 'formik';
 import { AddRounded, PersonAddRounded } from '@mui/icons-material';
 import { CategoryContext } from './AdminActivitiesRoutes';
+import titleHelper from '../../../functions/helpers';
 
 function CreateActivity() {
 
@@ -18,6 +19,7 @@ function CreateActivity() {
     const { enqueueSnackbar } = useSnackbar();
     const navigate = useNavigate();
     const { setActivePage } = useContext(CategoryContext);
+    titleHelper("Create Activity")
 
     const formik = useFormik({
         initialValues: {

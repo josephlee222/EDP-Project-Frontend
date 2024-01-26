@@ -12,9 +12,11 @@ import { useFormik } from 'formik';
 import { EditRounded, PersonAddRounded } from '@mui/icons-material';
 import { CategoryContext } from './AdminActivitiesRoutes';
 import moment from 'moment';
+import titleHelper from '../../../functions/helpers';
 
 function EditActivity() {
     //const { user } = useContext(AppContext);
+    titleHelper("Edit Activity")
     const [loading, setLoading] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
     const navigate = useNavigate();

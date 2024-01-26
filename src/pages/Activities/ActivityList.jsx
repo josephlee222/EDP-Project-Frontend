@@ -11,6 +11,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import CardTitle from '../../components/CardTitle';
 import PageHeader from '../../components/PageHeader';
 import BackpackRounded from '@mui/icons-material/BackpackRounded';
+import titleHelper from '../../functions/helpers';
 
 function getChipProps(params) {
     return {
@@ -27,6 +28,7 @@ function ActivityList() {
     const [deactivateActivityDialog, setDeactivateActivityDialog] = useState(false)
     const [deactivateActivity, setDeactivateActivity] = useState(null)
     const navigate = useNavigate()
+    titleHelper("View Activities")
     //const { setActivePage } = useContext(CategoryContext);
     const columns = [
         { field: 'name', headerName: 'Name', width: 200 },

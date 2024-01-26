@@ -5,6 +5,7 @@ import { useSnackbar } from 'notistack';
 import http from '../../http';
 import CardTitle from '../../components/CardTitle';
 import AddIcon from '@mui/icons-material/Add';
+import titleHelper from '../../functions/helpers';
 
 function ActivityDetails() {
   const [loading, setLoading] = useState(false);
@@ -22,6 +23,7 @@ function ActivityDetails() {
     discountType: "",
     discountAmount: ""
   });
+  titleHelper("Activity Details" , activity.name);
 
   const handleGetActivity = () => {
     setLoading(true);
@@ -29,6 +31,7 @@ function ActivityDetails() {
       if (res.status === 200) {
         setActivity(res.data);
         setLoading(false);
+        
       }
     });
   };

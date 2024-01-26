@@ -16,6 +16,7 @@ import { CategoryContext } from './AdminActivitiesRoutes';
 import CardTitle from '../../../components/CardTitle';
 import { BackpackRounded, Person } from '@mui/icons-material';
 import moment from 'moment';
+import titleHelper from '../../../functions/helpers';
 
 function getChipProps(params) {
     return {
@@ -33,6 +34,7 @@ function ViewActivities() {
     const [deactivateActivity, setDeactivateActivity] = useState(null)
     const navigate = useNavigate()
     const { setActivePage } = useContext(CategoryContext);
+    titleHelper("View Activities")
     const columns = [
         { field: 'name', headerName: 'Name', width: 200 },
         { field: 'expiryDate', headerName: 'Expiry Date', width: 200, valueFormatter: params => moment(params?.value).format("DD/MM/YYYY"), },
@@ -105,7 +107,6 @@ function ViewActivities() {
     }
 
     useEffect(() => {
-        document.title = "UPlay Admin - View Activities"
         setActivePage(1)
         handleGetActivities()
     }, [])
