@@ -34,7 +34,9 @@ let theme = createTheme({
         },
         yellow: {
             main: "#FDDC02",
+            light: "#FDDC02",
             dark: "#7e6e01",
+            contrastText: "#000000",
         },
         white: {
             main: "#ffffff",
