@@ -1,5 +1,5 @@
-import { useState, useContext } from "react";
-import { Box, IconButton, List, ListItem, ListItemIcon, ListItemText, ListItemButton, Popover, Divider, Typography, Button, colors, Tooltip, Stack, Card, CardContent, Badge } from "@mui/material"
+import { useState, useContext, useEffect, useRef } from "react";
+import { Box, IconButton, List, ListItem, ListItemIcon, ListItemText, ListItemButton, Popover, Divider, Typography, Button, colors, Tooltip, Stack, Card, CardContent, Badge, Popper, Fade } from "@mui/material"
 import { Link, useNavigate } from "react-router-dom"
 import ProfilePicture from "./ProfilePicture";
 import { AppContext } from "../App";
@@ -13,13 +13,15 @@ import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import PersonIcon from '@mui/icons-material/PersonRounded';
 import SupportIcon from '@mui/icons-material/Support';
 import { enqueueSnackbar } from "notistack";
-import { NotificationsRounded, ShoppingBagRounded } from "@mui/icons-material";
+import { NotificationsActiveRounded, NotificationsRounded, ShoppingBagRounded } from "@mui/icons-material";
 import http from "../http";
 
 export default function NavbarNotifications() {
-    const { notifications } = useContext(AppContext);
+    const { notifications, currentNotification, setCurrentNotification } = useContext(AppContext);
     const [isPopoverOpen, setIsPopoverOpen] = useState(false)
+    const [isPopperOpen, setIsPopperOpen] = useState(false)
     const [anchorEl, setAnchorEl] = useState(null)
+    const buttonRef = useRef(null)
     const navigate = useNavigate()
 
     function handlePopoverOpen(event) {
@@ -31,6 +33,21 @@ export default function NavbarNotifications() {
         navigate(url)
         setIsPopoverOpen(false)
     }
+
+    useEffect(() => {
+        if (currentNotification) {
+            setAnchorEl(buttonRef.current);
+            setIsPopperOpen(true)
+
+            setTimeout(() => {
+                setIsPopperOpen(false)
+            }, 5000)
+
+            setTimeout(() => {
+                setCurrentNotification(null)
+            }, 5250)
+        }
+    }, [currentNotification])
 
     function handleNotificationDismiss(id) {
         http.get("User/Notification/Read?notificationId=" + id).then((res) => {
@@ -44,7 +61,7 @@ export default function NavbarNotifications() {
     return (
         <>
             <Tooltip title="Account Notifications" arrow>
-                <IconButton onClick={(e) => handlePopoverOpen(e)}>
+                <IconButton onClick={(e) => handlePopoverOpen(e)} ref={buttonRef}>
                     {notifications.length > 0 &&
                         <Badge badgeContent={notifications.length} color="yellow" overlap="circular">
                             <NotificationsRounded sx={{ fill: "white" }} />
@@ -103,6 +120,33 @@ export default function NavbarNotifications() {
                     </Stack>
                 </Box>
             </Popover>
+            <Popper 
+                open={isPopperOpen} 
+                anchorEl={anchorEl} 
+                placement="bottom-end" 
+                transition 
+                disablePortal
+            >
+                {({ TransitionProps }) => (
+                    <Fade {...TransitionProps}>
+                        <Card sx={{ width: "400px" }} elevation={8}>
+                            <CardContent>
+                                <CardTitle title="New Notification!" icon={<NotificationsActiveRounded />} />
+                                <Card sx={{ backgroundColor: "#ffffff", mt: "1rem" }}>
+                                    <CardContent>
+                                        <Typography variant="body1" fontWeight={700}>{currentNotification?.title}</Typography>
+                                        <Typography variant="body2" mb={".5rem"}>{currentNotification?.subtitle}</Typography>
+                                        <Stack direction="row" justifyContent="flex-end">
+                                            <Button variant="contained" color="primary" size="small" sx={{ mr: ".5rem" }} onClick={() => handleNotificationClick(currentNotification?.actionUrl)}>{currentNotification?.action}</Button>
+                                            <Button variant="outlined" color="primary" size="small" onClick={() => handleNotificationDismiss(currentNotification?.id)}>Dismiss</Button>
+                                        </Stack>
+                                    </CardContent>
+                                </Card>
+                            </CardContent>
+                        </Card>
+                    </Fade>
+                )}
+            </Popper>
         </>
     )
 }
