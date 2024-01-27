@@ -15,6 +15,7 @@ function App() {
     const location = useLocation();
     const [user, setUser] = useState(null);
     const [notifications, setNotifications] = useState([]);
+    const [currentNotification, setCurrentNotification] = useState(null);
     const [userLoading, setUserLoading] = useState(true);
     const [adminPage, setAdminPage] = useState(false);
     const [connection, setConnection] = useState(null);
@@ -60,7 +61,6 @@ function App() {
             connection
                 .start()
                 .then(() => {
-
                     connection.invoke("Register", user.id)
 
                     connection.on("ReceiveMessage", (message) => {
@@ -80,7 +80,11 @@ function App() {
 
                     connection.on("notification", (n) => {
                         setNotifications(o => [n, ...o])
-                        //enqueueSnackbar("New notification recieved", { variant: "info" })
+                        setCurrentNotification(n)
+                    });
+
+                    connection.onreconnected(() => {
+                        connection.invoke("Register", user.id)
                     });
                 })
                 .catch((error) => console.log(error));
@@ -103,7 +107,9 @@ function App() {
                 title,
                 setTitle,
                 icon,
-                setIcon
+                setIcon,
+                currentNotification,
+                setCurrentNotification,
             }}>
                 <Navbar />
                 <Routes location={location}>
