@@ -18,9 +18,10 @@ import { CelebrationRounded, PartyModeRounded } from "@mui/icons-material";
 import { useGoogleLogin } from "@react-oauth/google";
 import FacebookLogin from '@greatsumini/react-facebook-login';
 import { HubConnectionBuilder } from "@microsoft/signalr";
+import titleHelper from "../functions/helpers";
 
 export default function Register() {
-    document.title = "UPlay - Register";
+    titleHelper("Register")
     const [loading, setLoading] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
     const { setUser, setNotifications, setConnection } = useContext(AppContext);
@@ -143,7 +144,7 @@ export default function Register() {
 
     return (
         <>
-            <PageHeader title="Welcome Back" icon={LoginIcon} />
+            <PageHeader title="Welcome Back" icon={LoginIcon} navTitle="Register" />
             <Container sx={{mt: "2rem", mb: "1rem"}} maxWidth="lg">
                 <Grid container spacing={2} justifyContent={"center"} mb={"2rem"}>
                     <Grid item xs={6} md={2}>
@@ -248,6 +249,7 @@ export default function Register() {
                     </Grid>
                 </Grid>
             </Container>
+            
         </>
 
     );

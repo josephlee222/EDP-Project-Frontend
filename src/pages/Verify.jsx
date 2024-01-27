@@ -11,6 +11,7 @@ import PersonAddRoundedIcon from '@mui/icons-material/PersonAddRounded';
 import PasswordRoundedIcon from '@mui/icons-material/PasswordRounded';
 import CardTitle from '../components/CardTitle'
 import PageHeader from '../components/PageHeader'
+import titleHelper from '../functions/helpers'
 
 function Verify() {
     const [searchParams] = useSearchParams()
@@ -18,6 +19,7 @@ function Verify() {
     const { enqueueSnackbar } = useSnackbar()
     const navigate = useNavigate()
     const [loading, setLoading] = useState(false);
+    titleHelper("Activate Account")
 
     useEffect(() => {
         var data = {

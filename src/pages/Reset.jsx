@@ -11,15 +11,15 @@ import LockResetRoundedIcon from '@mui/icons-material/LockResetRounded';
 import http from "../http";
 import { AppContext } from "../App";
 import PageHeader from "../components/PageHeader";
+import titleHelper from "../functions/helpers";
 
 
-export default function Login() {
-    document.title = "UPlay - Login"
+export default function Reset() {
+    titleHelper("Reset Password")
     const [searchParams] = useSearchParams()
     const token = searchParams.get("t")
     const [loading, setLoading] = useState(true);
     const { enqueueSnackbar } = useSnackbar();
-    const { setUser } = useContext(AppContext);
     const navigate = useNavigate();
 
     useEffect(() => {

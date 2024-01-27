@@ -12,6 +12,7 @@ import { Edit, InfoRounded } from '@mui/icons-material';
 import { CategoryContext } from './AdminUsersRoutes';
 import ProfilePicture from '../../../components/ProfilePicture';
 import { AppContext } from '../../../App';
+import titleHelper from '../../../functions/helpers';
 
 export default function EditUser() {
     const [loading, setLoading] = useState(true);
@@ -22,6 +23,7 @@ export default function EditUser() {
     const { id: userId } = useParams();
     const [user, setUser] = useState(null);
     const { user: currentUser, setUser: setCurrentUser } = useContext(AppContext);
+    titleHelper("Edit User")
 
     function handleLogout() {
         localStorage.removeItem("token")

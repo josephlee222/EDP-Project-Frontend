@@ -3,18 +3,20 @@ import { Route, Routes, Navigate, Link } from 'react-router-dom'
 //import NotFound from './errors/NotFound'
 //import { UserContext } from '..'
 import { Button, Container, Divider, Typography } from '@mui/material'
+import { AppContext } from '../App';
+import { HomeRounded } from '@mui/icons-material';
+import titleHelper from '../functions/helpers';
 
 
 function Home() {
     // Routes for admin pages. To add authenication so that only admins can access these pages, add a check for the user's role in the UserContext
     //const { setIsAdminPage } = useContext(UserContext);
-    //const { user } = useContext(UserContext);
+    titleHelper("Home")
 
     // useEffect(() => {
     //     setIsAdminPage(false)
     // }, [])
     return (
-        document.title = "UPlay - Home",
         <>
             <Container sx={{mt: "1rem"}} maxWidth="xl">
                 <Typography variant="h4" component="div" fontWeight={700} sx={{ flexGrow: 1 }}>
@@ -25,7 +27,7 @@ function Home() {
                 </Typography>
                 <Divider sx={{my: "1rem"}}/>
                 <Button variant="contained" sx={{fontWeight: 700, mr: "1rem"}} LinkComponent={Link} to="/login">Login</Button>
-                <Button variant="contained" sx={{fontWeight: 700}} LinkComponent={Link} to="/admin/test">Admin Test</Button>
+                <Button variant="contained" sx={{fontWeight: 700, mr: "1rem"}} LinkComponent={Link} to="/admin/test">Admin Test</Button>
                 <Button variant="contained" sx={{fontWeight: 700}} LinkComponent={Link} to="/activityList">View all Activities</Button>
             </Container>
         </>

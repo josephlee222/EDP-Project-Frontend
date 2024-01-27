@@ -15,6 +15,7 @@ import PhoneIcon from '@mui/icons-material/Phone';
 import { CategoryContext } from './AdminUsersRoutes';
 import CardTitle from '../../../components/CardTitle';
 import { Person } from '@mui/icons-material';
+import titleHelper from '../../../functions/helpers';
 
 function getChipProps(params) {
     return {
@@ -30,6 +31,8 @@ function ViewUsers() {
     const [deactivateUser, setDeactivateUser] = useState(null)
     const navigate = useNavigate()
     const { setActivePage } = useContext(CategoryContext);
+    titleHelper("View Users")
+
     const columns = [
         { field: 'name', headerName: 'Name', width: 200 },
         { field: 'email', headerName: 'E-mail Address', flex: 1, minWidth: 250 },

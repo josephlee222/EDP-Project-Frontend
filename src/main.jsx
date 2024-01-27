@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
-import { createTheme, ThemeProvider } from '@mui/material';
+import { createTheme, ThemeProvider, CssBaseline } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import { responsiveFontSizes } from '@mui/material/styles';
 import { BrowserRouter } from 'react-router-dom';
@@ -28,18 +28,25 @@ let theme = createTheme({
         primary: {
             main: "#E8533F",
             light: "#ef8476",
+            dark: "#b22c20",
+            contrastText: "#ffffff",
         },
         secondary: {
             main: grey[500],
+            light: grey[300],
+            dark: grey[700],
         },
         yellow: {
             main: "#FDDC02",
-            light: "#FDDC02",
+            light: "#fde45f",
             dark: "#7e6e01",
             contrastText: "#000000",
         },
         white: {
             main: "#ffffff",
+            light: "#ffffff",
+            dark: "#ffffff",
+            contrastText: "#000000",
         },
         background: {
             paper: "#EEEEEE",
@@ -106,6 +113,7 @@ theme = responsiveFontSizes(theme);
 ReactDOM.createRoot(document.getElementById('root')).render(
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
         <ThemeProvider theme={theme}>
+            <CssBaseline />
             <BrowserRouter>
                 <SnackbarProvider maxSnack={3}>
                     <App />
