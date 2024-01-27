@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import { useGoogleLogin } from "@react-oauth/google";
 import FacebookLogin from '@greatsumini/react-facebook-login';
 import { Link, useNavigate } from "react-router-dom";
-import { Container, Button, Card, Grid, CardContent, Box, TextField, Typography, Dialog, DialogActions, DialogContent, DialogTitle, DialogContentText, useTheme } from "@mui/material";
+import { Container, Button, Card, Grid, CardContent, Box, TextField, Typography, Dialog, DialogActions, DialogContent, DialogTitle, DialogContentText, useTheme, Stack } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import CardTitle from "../components/CardTitle";
 import { useFormik } from "formik";
@@ -142,7 +142,7 @@ export default function Login() {
         onSubmit: (data) => {
             setResendLoading(true);
             data.email = data.email.trim();
-            http.post("/auth/resend", data).then((res) => {
+            http.post("/User/Resend", data).then((res) => {
                 if (res.status === 200) {
                     enqueueSnackbar("Verification e-mail sent!", { variant: "success" });
                     setResendDialog(false);
@@ -269,15 +269,26 @@ export default function Login() {
                                     >
                                         Login
                                     </LoadingButton>
-                                    <Button
-                                        fullWidth
-                                        variant="text"
-                                        component={Link}
-                                        sx={{ mt: "1rem" }}
-                                        onClick={handleResetPasswordDialog}
-                                    >
-                                        Forgot password?
-                                    </Button>
+                                    <Stack direction={["column", "column", "row"]} sx={{ mt: "1rem" }}>
+                                        <Button
+                                            fullWidth
+                                            variant="secondary"
+                                            component={Link}
+                                            onClick={handleResetPasswordDialog}
+                                            sx={{ mr: { xs: 0, md: "1rem" } }}
+                                        >
+                                            Forgot password?
+                                        </Button>
+                                        <Button
+                                            fullWidth
+                                            variant="secondary"
+                                            component={Link}
+                                            onClick={handleResendDialog}
+                                            sx={{ mt: { xs: "1rem", md: 0 } }}
+                                        >
+                                            Resend verification
+                                        </Button>
+                                    </Stack>
                                 </Box>
                             </CardContent>
                         </Card>

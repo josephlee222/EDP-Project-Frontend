@@ -5,7 +5,7 @@ import { Route, Routes, Navigate, Link } from 'react-router-dom'
 import { Button, Container, Divider, Typography } from '@mui/material'
 import { AppContext } from '../App';
 import { HomeRounded } from '@mui/icons-material';
-import { titleHelper } from '../functions/helpers';
+import titleHelper from '../functions/helpers';
 
 
 function Home() {

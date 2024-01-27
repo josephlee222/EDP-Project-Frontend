@@ -141,7 +141,7 @@ export default function ViewSecurity() {
             <Card sx={{ mt: "1rem" }}>
                 <CardContent>
                     <CardTitle title="Social Account Linkage" icon={<LinkRounded />} />
-                    <Typography variant="body1" mt={"1rem"}>By linking your social accounts to UPlay, you can login using preferred social media account directly in the future.</Typography>
+                    <Typography variant="body1" mt={"1rem"}>By linking your social accounts to UPlay, you can login using your preferred social media account directly in the future.</Typography>
                     <Grid container marginTop={"1rem"} alignItems={"center"}>
                             <Grid item xs={12} sm marginBottom={["1rem", 0]}>
                                 <Box component="form" display="flex" alignItems={"center"}>
