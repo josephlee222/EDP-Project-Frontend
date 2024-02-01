@@ -5,13 +5,6 @@ import ProfilePicture from "./ProfilePicture";
 import { AppContext } from "../App";
 import CardTitle from "./CardTitle";
 
-import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
-import LogoutIcon from '@mui/icons-material/LogoutRounded';
-import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettingsRounded';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
-import PersonIcon from '@mui/icons-material/PersonRounded';
-import SupportIcon from '@mui/icons-material/Support';
 import { enqueueSnackbar } from "notistack";
 import { NotificationsActiveRounded, NotificationsRounded, ShoppingBagRounded } from "@mui/icons-material";
 import http from "../http";

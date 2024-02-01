@@ -48,6 +48,12 @@ let theme = createTheme({
             dark: "#ffffff",
             contrastText: "#000000",
         },
+        appGrey: {
+            main: "#EEEEEE",
+            light: "#ffffff",
+            dark: "#bcbcbc",
+            contrastText: "#000000",
+        },
         background: {
             paper: "#EEEEEE",
         }
@@ -119,7 +125,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                     <App />
                 </SnackbarProvider>
             </BrowserRouter>
-        </ThemeProvider>,
+        </ThemeProvider>
     </GoogleOAuthProvider>
 
 )
