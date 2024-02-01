@@ -28,6 +28,8 @@ function UserRoutes() {
             <Route path="*" element={<NotFound />} />
             <Route path="/" element={<Home />} />
 
+            <Route path="/groupList" element={<GroupList />} />
+
             <Route path="/activityList" element={<ActivityList />} />
             <Route path="/activityList/:id" element={<ActivityDetails />} />
 
