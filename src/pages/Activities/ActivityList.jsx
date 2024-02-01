@@ -12,14 +12,13 @@ import CardTitle from '../../components/CardTitle';
 import PageHeader from '../../components/PageHeader';
 import BackpackRounded from '@mui/icons-material/BackpackRounded';
 import titleHelper from '../../functions/helpers';
+//import { CategoryContext } from '../UserRoutes';
 
 function getChipProps(params) {
     return {
         label: params.value,
     };
 }
-
-
 
 function ActivityList() {
     const [Activities, setActivities] = useState([])

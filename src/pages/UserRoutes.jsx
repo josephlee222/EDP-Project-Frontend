@@ -13,6 +13,9 @@ import ActivityList from './Activities/ActivityList'
 import ActivityDetails from './Activities/ActivityDetails';
 
 import { AppContext } from '../App'
+import CreateBooking from './Activities/Booking'
+import EditBooking from './Activities/EditBooking'
+import CreateReview from './Activities/Review'
 
 
 function UserRoutes() {
@@ -30,7 +33,9 @@ function UserRoutes() {
 
             <Route path="/activityList" element={<ActivityList />} />
             <Route path="/activityList/:id" element={<ActivityDetails />} />
-
+            <Route path="/booking/:id" element={<CreateBooking />}/>
+            <Route path="/editBooking/:id" element={<EditBooking />}/>
+            <Route path="/review/:id" element={<CreateReview />}/>
             <Route path="/login" element={!user ? <Login /> : <Navigate to={"/"} />} />
             <Route path="/register" element={!user ? <Register /> : <Navigate to={"/"} />} />
             <Route path="/verify" element={<Verify />} />
