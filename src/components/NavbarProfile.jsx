@@ -12,7 +12,7 @@ import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import PersonIcon from '@mui/icons-material/PersonRounded';
 import SupportIcon from '@mui/icons-material/Support';
 import { enqueueSnackbar } from "notistack";
-import { ShoppingBagRounded } from "@mui/icons-material";
+import { Diversity3Rounded, ShoppingBagRounded, ShoppingCartRounded } from "@mui/icons-material";
 
 export default function NavbarProfile() {
     const { user, setUser } = useContext(AppContext);
@@ -68,10 +68,16 @@ export default function NavbarProfile() {
                             <ListItemText primary={"My Profile"} />
                         </ListItemButton>
                     </ListItem>
-                    <ListItem key={"Cart"} disablePadding>
-                        <ListItemButton component={Link} to="/profile" onClick={() => setIsPopoverOpen(false)}>
-                            <ListItemIcon><ShoppingBagRounded /></ListItemIcon>
+                    <ListItem key={"Cart"} disablePadding sx={{display: {xs: "initial", md: "none"}}}>
+                        <ListItemButton component={Link} to="/cart" onClick={() => setIsPopoverOpen(false)}>
+                            <ListItemIcon><ShoppingCartRounded /></ListItemIcon>
                             <ListItemText primary={"Cart"} />
+                        </ListItemButton>
+                    </ListItem>
+                    <ListItem key={"Friends & Groups"} disablePadding sx={{display: {xs: "initial", md: "none"}}}>
+                        <ListItemButton component={Link} to="/friends" onClick={() => setIsPopoverOpen(false)}>
+                            <ListItemIcon><Diversity3Rounded /></ListItemIcon>
+                            <ListItemText primary={"Friends & Groups"} />
                         </ListItemButton>
                     </ListItem>
                     { user.isAdmin && 
