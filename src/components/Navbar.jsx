@@ -42,9 +42,9 @@ export default function Navbar() {
                                 {title}
                             </Typography>
                         </Box>
-                        {(!user && userLoading) && <Skeleton variant="circular" width={36} height={36} sx={{ m: "8px" }} animation="wave" />}
-                        {(!user && userLoading) && <Skeleton variant="circular" width={36} height={36} sx={{ m: "8px" }} animation="wave" />}
-                        {(!user && userLoading) && <Skeleton variant="circular" width={36} height={36} sx={{ m: "8px" }} animation="wave" />}
+                        {(!user && userLoading) && <Skeleton variant="circular" width={32} height={32} sx={{ m: "8px" }} animation="wave" />}
+                        {(!user && userLoading) && <Skeleton variant="circular" width={32} height={32} sx={{ m: "8px" }} animation="wave" />}
+                        {(!user && userLoading) && <Skeleton variant="circular" width={32} height={32} sx={{ m: "8px" }} animation="wave" />}
                         {(!user && userLoading) && <Skeleton variant="circular" width={40} height={40} sx={{ m: "8px" }} animation="wave" />}
                         {(!user && !userLoading) && <Button LinkComponent={Link} variant="text" color="inherit" to="/login" startIcon={<LoginIcon />}>Login</Button>}
                         {user && <NavbarCart />}

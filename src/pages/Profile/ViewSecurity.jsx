@@ -20,6 +20,7 @@ export default function ViewSecurity() {
     const { user } = useContext(AppContext);
     const { enqueueSnackbar } = useSnackbar();
     const [socialLoading, setSocialLoading] = useState(false);
+    const [passkeyLoading, setPasskeyLoading] = useState(false);
 
     useEffect(() => {
         setActivePage(4);
@@ -27,6 +28,7 @@ export default function ViewSecurity() {
     }, [])
 
     const handlePasskeySetup = async () => {
+        setPasskeyLoading(true);
         var credentials = await http.post("/User/Passkey/Setup");
         credentials = credentials.data;
         var rawCredentials = credentials;
@@ -64,6 +66,7 @@ export default function ViewSecurity() {
             console.log(e);
             return;
         }
+        setPasskeyLoading(false);
     }
 
     const handlePasskeySave = async (newCredential, credentialsOptions) => {
@@ -93,7 +96,7 @@ export default function ViewSecurity() {
         try {
             response = await http.post("/User/Passkey/Save", {AttestationResponse: data, Options: JSON.stringify(credentialsOptions)});
         } catch (e) {
-            alert(e);
+            enqueueSnackbar("Failed to register passkey. " + e, { variant: "error" });
             return;
         }
 
@@ -155,7 +158,7 @@ export default function ViewSecurity() {
                     <CardTitle title="Passkey Access" icon={<Key />} />
                     <Typography variant="body1" mt={"1rem"}>Passkeys allows you to login into NTUC UPlay without the need of a password by using your biometrics via mobile device or USB security key to verify your identity.</Typography>
                     <Box sx={{ mt: "1rem", display: "flex" }}>
-                        <Button variant="contained" sx={{ mr: ".5rem", flexGrow: 1, flexBasis: 0 }} startIcon={<Key />} onClick={handlePasskeySetup}>Setup Passkey Access</Button>
+                        <LoadingButton loading={passkeyLoading} variant="contained" sx={{ mr: ".5rem", flexGrow: 1, flexBasis: 0 }} startIcon={<Key />} onClick={handlePasskeySetup}>Setup Passkey Access</LoadingButton>
                         <Button variant="secondary" sx={{ ml: ".5rem", flexGrow: 1, flexBasis: 0 }} startIcon={<Info />} LinkComponent={Link} to="https://www.passkeys.io/" target="_blank">Learn More</Button>
                     </Box>
                 </CardContent>
