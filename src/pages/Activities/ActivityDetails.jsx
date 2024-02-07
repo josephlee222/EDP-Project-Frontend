@@ -98,11 +98,11 @@ function ActivityDetails() {
             {Reviews.map((review) => (
               <div key={review.id}>
                 <Typography variant="subtitle1">User:</Typography>
-                <Typography variant="body1">{review.user}</Typography>
+                <Typography variant="body1">{review.userId}</Typography>
                 <Typography variant="subtitle1">Rating:</Typography>
                 <Typography variant="body1">{review.rating}</Typography>
-                <Typography variant="subtitle1">Comment:</Typography>
-                <Typography variant="body1">{review.comment}</Typography>
+                <Typography variant="subtitle1">Description:</Typography>
+                <Typography variant="body1">{review.description}</Typography>
               </div>
             ))}
           </CardContent>
