@@ -40,13 +40,13 @@ function CreateReview() {
 
     const formik = useFormik({
         initialValues: {
-            date: "",
-            pax: 0,
+            description: "",
+            rating: 0,
             
         },
         validationSchema: Yup.object({
-            date: Yup.date().required("Date is required"),
-            pax: Yup.number().required("Discount Amount is required"),
+            description: Yup.string().required("description is required"),
+            rating: Yup.number().required("Discount Amount is required"),
 
             
         }),
@@ -54,10 +54,10 @@ function CreateReview() {
             setLoading(true);
             
             console.log(data)
-            data.activityId = activityId;
+            data.ActivityId = activityId;
 
 
-            http.post("/Booking", data).then((res) => {
+            http.post("/Review", data).then((res) => {
                 if (res.status === 200) {
                     enqueueSnackbar("Booking successful!", { variant: "success" });
                     console.log("success yayyyy")
@@ -74,7 +74,6 @@ function CreateReview() {
     })
 
     useEffect(() => {
-        handleGetAvailabilities();
         handleGetActivity();
     }, []
     
@@ -91,34 +90,33 @@ function CreateReview() {
                         <Box component="form" mt={3}>
 
                             <Grid container spacing={2}>
+                            
                                 <Grid item xs={12} sm={6}>
                                     <TextField
                                         fullWidth
-                                        id="date"
-                                        name="date"
-                                        label="Date"
+                                        id="rating"
+                                        name="rating"
+                                        label="rating"
                                         variant="outlined"
-                                        value={formik.values.date}
+                                        value={formik.values.rating}
                                         onChange={formik.handleChange}
-                                        error={formik.touched.date && Boolean(formik.errors.date)}
-                                        helperText={formik.touched.date && formik.errors.date}
-                                        type='date'
-                                        InputLabelProps={{ shrink: true }}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <TextField
-                                        fullWidth
-                                        id="pax"
-                                        name="pax"
-                                        label="pax"
-                                        variant="outlined"
-                                        value={formik.values.pax}
-                                        onChange={formik.handleChange}
-                                        error={formik.touched.pax && Boolean(formik.errors.pax)}
-                                        helperText={formik.touched.pax && formik.errors.pax}
+                                        error={formik.touched.rating && Boolean(formik.errors.rating)}
+                                        helperText={formik.touched.rating && formik.errors.rating}
                                         type='number'
                                     />
+                                    <Grid item xs={12} sm={6}>
+                                    <TextField
+                                        fullWidth
+                                        id="description"
+                                        name="description"
+                                        label="description"
+                                        variant="outlined"
+                                        value={formik.values.description}
+                                        onChange={formik.handleChange}
+                                        error={formik.touched.description && Boolean(formik.errors.description)}
+                                        helperText={formik.touched.description && formik.errors.description}
+                                    />
+                                </Grid>
                                 </Grid>
                                 
                                 
@@ -134,7 +132,7 @@ function CreateReview() {
                                 onClick={formik.handleSubmit}
                                 fullWidth
                             >
-                                Book
+                                Create Review
                             </LoadingButton>
 
 

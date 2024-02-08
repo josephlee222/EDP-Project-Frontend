@@ -1,20 +1,39 @@
-We're gna do some front end stuff. rubrics says 4 pages at least, so it's gonna be:
-    list page
-    create
-    edit
+stuff done:
+homepage design
 
-ok we're missing one. We could set up crud for another object like category, 
-but that means doubling my backend work, and I want to finish this asap to do mad.
-So maybe we can make a customer page to see the activities, but how will that set it apart from the admin list view?
+partially implemented create avdailbaility. Functionality is there, 
+but i want the dates that have an availability to be highlighted which it curretnly is not.
 
-ok nvm we'll figure that along the way. Let's start with the list view, then.
+core Functionalities:
+    for customer:
+        find and book an activity
+        create a review
+        view activity
+        view availability
+        view reviews
 
-right, so I've linked the list view up but the request to the backend is not working. Network connection issue.
+    for admin:
+        view, like, everything
+        create (almost) everything too
 
-files/folders created:
-everything in Admin/activities
-everything in pages/Activities
+final core funcitonality to implement:
+    integrate availability into booking
 
-files edited:
-UserRoutes.jsx
-Home.jsx
+advanced functionalities:
+    easy viewing of availability (doing that rn)
+    filter for activities:
+        name
+        tags (r we even doing tag? I dunno)
+        category obviously
+        date
+
+    integration with coupon for payment (I think joseph will do this tho)
+    send activity to friends
+    
+ok that should b it for now ig
+
+estimated amt of time to finish up core functionalities: 3h
+estimated amt of time to implement all currently listed advanced features: max 15h depends on how many bugs ig
+
+we'll aim to finish most of the functional stuff by saturday night, with a buffer until sunday.
+Tuesday ideally should be all styling.

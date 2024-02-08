@@ -13,6 +13,7 @@ import { AddRounded, List } from '@mui/icons-material'
 import ViewActivities from './ViewActivities'
 import CreateActivity from './CreateActivity'
 import EditActivity from './EditActivity'
+import CreateAvailability from './CreateAvailability'
 
 export const CategoryContext = createContext(null);
 export default function AdminActivitiesRoutes() {
@@ -32,6 +33,7 @@ export default function AdminActivitiesRoutes() {
                 <Routes>
                     <Route path="/" element={<ViewActivities />} />
                     <Route path="/create" element={<CreateActivity />} />
+                    <Route path="/createAvailability/:id" element={<CreateAvailability />} />
                     <Route path="/test" element={<Test />} />
                     <Route path="*" element={<NotFound />} />
                     <Route path="/:id" element={<EditActivity />} />
