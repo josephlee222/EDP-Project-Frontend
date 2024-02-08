@@ -37,3 +37,21 @@ estimated amt of time to implement all currently listed advanced features: max 1
 
 we'll aim to finish most of the functional stuff by saturday night, with a buffer until sunday.
 Tuesday ideally should be all styling.
+
+
+
+
+todo:
+test upload photo-
+create category-
+create coupon
+coupon usage
+category filtering
+
+kkkkk so i just finished the interface for uploading photos for activity creation.
+ havent actly done the saving to backend part.
+
+
+
+
+

@@ -21,7 +21,7 @@ function EditBooking() {
     const navigate = useNavigate();
     const { id: bookingId } = useParams();
     const { setActivePage } = useContext(AppContext);
-    const [availability, setAvailability] = useState([]);
+    const [availabilities, setavailabilities] = useState([]);
     const [activity, setActivity] = useState([]);
       const handleGetActivity = () => {
         setLoading(true);
@@ -49,9 +49,9 @@ function EditBooking() {
     }
 
     const handleGetAvailabilities = () => {
-        http.get("/Availabilities/").then((res) => {
+        http.get(`/Availability/Activity/${booking.activityId}`).then((res) => {
             if (res.status === 200) {
-                setAvailability(res.data)
+                setavailabilities(res.data)
                 setLoading(false)
             }
         })
@@ -86,6 +86,16 @@ function EditBooking() {
         onSubmit: (data) => {
             setLoading(true);
             
+            const isDateAvailable = availabilities.some(availability => {
+                return availability.date === date && availability.currentPax < availability.maxPax;
+            });
+        
+            if (!isDateAvailable) {
+                enqueueSnackbar("Selected date is not available or fully booked.", { variant: "error" });
+                setLoading(false);
+                return;
+            }
+
             console.log(data)
 
 

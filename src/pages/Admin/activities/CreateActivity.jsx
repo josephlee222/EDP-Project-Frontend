@@ -1,5 +1,13 @@
+
+
+
 import React, { useState, useEffect, useContext } from 'react'
-import { Container, Card, CardContent, Box, Checkbox, TextField, Grid, FormControlLabel, IconButton, Typography, RadioGroup, Radio } from '@mui/material'
+import {
+    Container, Card, CardContent, Box, Checkbox, TextField,
+    Grid, FormControlLabel, IconButton, Typography, RadioGroup, Radio, List,
+    ListItem,
+    ListItemText
+} from '@mui/material'
 import LoadingButton from '@mui/lab/LoadingButton';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import AddIcon from '@mui/icons-material/Add';
@@ -19,6 +27,8 @@ function CreateActivity() {
     const { enqueueSnackbar } = useSnackbar();
     const navigate = useNavigate();
     const { setActivePage } = useContext(CategoryContext);
+    const [uploadedFiles, setUploadedFiles] = useState([]);
+    const [files, setFiles] = useState([]);
     titleHelper("Create Activity")
 
     const formik = useFormik({
@@ -34,59 +44,121 @@ function CreateActivity() {
             discounted: false,
             discountType: "",
             discountAmount: 0,
-            
+            pictures: [],
+
         },
         validationSchema: Yup.object({
-            name: Yup.string().required("Name is required"),
-            expiryDate: Yup.date().required("Date is required"),
-            description: Yup.string().required("Description is required"),
-            category: Yup.string().required("Category is required"),
-            ntucExclusive: Yup.boolean().optional(),
-            ageLimit: Yup.number().required("Age Limit is required. Enter 0 if no age limit"),
-            location: Yup.string().required("Location is required"),
-            company: Yup.string().required("Company is required"),
-            discounted: Yup.boolean(),
-            discountType:  Yup.string().when("discounted", {
-                is: true,
-                then: () => Yup.string().required("Discount Type is required"),
-                otherwise: () => Yup.string().optional(),
-                
-            }),
-            discountAmount: Yup.number().when("discounted", {
-                is: true,
-                then: () => Yup.number().required("Discount Amount is required"),
-                otherwise: () => Yup.number().optional(),
-            }),
+            // name: Yup.string().required("Name is required"),
+            // expiryDate: Yup.date().required("Date is required"),
+            // description: Yup.string().required("Description is required"),
+            // category: Yup.string().required("Category is required"),
+            // ntucExclusive: Yup.boolean().optional(),
+            // ageLimit: Yup.number().required("Age Limit is required. Enter 0 if no age limit"),
+            // location: Yup.string().required("Location is required"),
+            // company: Yup.string().required("Company is required"),
+            // discounted: Yup.boolean(),
+            // discountType:  Yup.string().when("discounted", {
+            //     is: true,
+            //     then: () => Yup.string().required("Discount Type is required"),
+            //     otherwise: () => Yup.string().optional(),
+
+            // }),
+            // discountAmount: Yup.number().when("discounted", {
+            //     is: true,
+            //     then: () => Yup.number().required("Discount Amount is required"),
+            //     otherwise: () => Yup.number().optional(),
+            // }),
         }),
         onSubmit: (data) => {
             setLoading(true);
-            data.name = data.name.trim();
-            data.description = data.description.trim();
-            data.category = data.category.trim();
-            data.location = data.location.trim();
-            data.company = data.company.trim();
-            data.discountType = data.discountType.trim();
-            
-            console.log(data)
+            var pictures = []
+            console.log("pictures: " + data.pictures);
+            console.log(data.pictures);
 
-            http.post("/Admin/Activity/", data).then((res) => {
+            const formData = new FormData();
+            Array.from(files).forEach((file, index) => {
+                formData.append(`files`, file);
+                console.log(`Appended file ${index}:`, file);
+            });
+
+            const config = {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            };
+
+            console.log("formdata: ", formData);
+            console.log(formData);
+
+            http.post("/File/multiUpload/", formData, config).then((res) => {
+
                 if (res.status === 200) {
-                    enqueueSnackbar("Activity created successfully!", { variant: "success" });
-                    navigate("/admin/activities")
+                    enqueueSnackbar("Pictures uploaded successfully!", { variant: "success" });
+                    console.log("res data: ", res.data);
+                    const resPic = { Items: res.data };
+                    console.log("respic: ", resPic);
+                    data.pictures = res.data.uploadedFiles
+                    console.log(pictures)
+                    data.name = data.name.trim();
+                    data.description = data.description.trim();
+                    data.category = data.category.trim();
+                    data.location = data.location.trim();
+                    data.company = data.company.trim();
+                    data.discountType = data.discountType.trim();
+
+                    console.log(data)
+
+                    http.post("/Admin/Activity/", data).then((res) => {
+                        if (res.status === 200) {
+                            enqueueSnackbar("Activity created successfully!", { variant: "success" });
+                            navigate("/admin/activities")
+                        } else {
+                            enqueueSnackbar("Activity creation failed!.", { variant: "error" });
+                            setLoading(false);
+                        }
+                    }).catch((err) => {
+                        enqueueSnackbar("Activity creation failed! " + err.response.data.error, { variant: "error" });
+                        setLoading(false);
+                    })
                 } else {
-                    enqueueSnackbar("Activity creation failed!.", { variant: "error" });
+                    enqueueSnackbar("Pictures uploaded failed!. else", { variant: "error" });
                     setLoading(false);
                 }
             }).catch((err) => {
-                enqueueSnackbar("Activity creation failed! " + err.response.data.error, { variant: "error" });
+                console.log(err)
+                enqueueSnackbar("Pictures uploaded failed! catch" + err.response.data.error, { variant: "error" });
                 setLoading(false);
             })
+
+
+
         }
     })
 
     useEffect(() => {
         setActivePage(2);
     }, [])
+
+    const handlePicturesChange = (event) => {
+        const files = event.target.files;
+
+        // Convert FileList to an array
+        const fileList = Array.from(files);
+        // Concatenate the new array of files with the existing list of uploaded files
+        const newUploadedFiles = [...uploadedFiles, ...fileList.map(file => file.name)];
+        // Set the updated list of uploaded files
+        setUploadedFiles(newUploadedFiles);
+        // Set the array of files to the formik values
+        //formik.setFieldValue('pictures', newUploadedFiles);
+        // Set the files state to the selected files
+        setFiles(files);
+
+        console.log("Files state:", files);
+    };
+
+
+
+
 
     return (
         <>
@@ -207,6 +279,36 @@ function CreateActivity() {
                                         helperText={formik.touched.discountAmount && formik.errors.discountAmount}
                                         type='number'
                                     />
+                                    <Grid item xs={12}>
+                                        <input
+                                            accept="image/*"
+                                            id="pictures"
+                                            name="pictures"
+                                            type="file"
+                                            onChange={handlePicturesChange}
+                                            multiple // Allow multiple file selection
+                                            style={{ display: 'none' }}
+                                        />
+                                        <label htmlFor="pictures">
+                                            <IconButton
+                                                color="primary"
+                                                aria-label="upload picture"
+                                                component="span"
+                                            >
+                                                <AddIcon />
+                                            </IconButton>
+                                            <Typography variant="body1">Upload Pictures</Typography>
+                                        </label>
+                                        {uploadedFiles.length > 0 && (
+                                            <List>
+                                                {uploadedFiles.map((fileName, index) => (
+                                                    <ListItem key={index}>
+                                                        <ListItemText primary={fileName} />
+                                                    </ListItem>
+                                                ))}
+                                            </List>
+                                        )}
+                                    </Grid>
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
                                     {/* radio buttons for discount type */}
@@ -223,7 +325,7 @@ function CreateActivity() {
                                         <FormControlLabel value="Fixed" control={<Radio />} label="Fixed" />
                                     </RadioGroup>
                                 </Grid>
-                                
+
                                 <Grid item xs={6}>
                                     <FormControlLabel
                                         control={
@@ -252,6 +354,8 @@ function CreateActivity() {
                                         label="Discounted Activity"
                                     />
                                 </Grid>
+
+
                             </Grid>
 
                             <LoadingButton
