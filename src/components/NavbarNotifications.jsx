@@ -50,6 +50,14 @@ export default function NavbarNotifications() {
         })
     }
 
+    function handleAllNotificationDismiss() {
+        http.get("User/Notification/ReadAll").then((res) => {
+            enqueueSnackbar("All Notifications dismissed", { variant: "success" })
+        }).catch((err) => {
+            enqueueSnackbar("Failed to dismiss notifications", { variant: "error" })
+        })
+    }
+
     // Profile picture should be implemented later
     return (
         <>
@@ -109,7 +117,7 @@ export default function NavbarNotifications() {
                             </Card>
                         ))
                         }
-                        <Button variant="outlined" color="primary" size="small" fullWidth>View All Notifications</Button>
+                        <Button disabled={notifications.length === 0} variant="outlined" color="primary" size="small" fullWidth onClick={handleAllNotificationDismiss}>Clear All Notifications</Button>
                     </Stack>
                 </Box>
             </Popover>

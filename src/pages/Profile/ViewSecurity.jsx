@@ -1,9 +1,9 @@
 import { useContext, useEffect, useState } from "react";
-import { Box, Card, CardContent, Grid, Typography, Button, Divider } from "@mui/material";
+import { Box, Card, CardContent, Grid, Typography, Button, Divider, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, TextField } from "@mui/material";
 import { AppContext } from "../../App";
 import { ProfileContext } from "./ProfileRoutes";
 import CardTitle from "../../components/CardTitle";
-import { AddLinkRounded, Info, Key, LinkOffRounded, LinkRounded } from "@mui/icons-material";
+import { AddLinkRounded, CloseRounded, Info, Key, KeyRounded, LinkOffRounded, LinkRounded } from "@mui/icons-material";
 import InfoBox from "../../components/InfoBox";
 import { useSnackbar } from "notistack";
 import http from "../../http";
@@ -12,6 +12,8 @@ import FacebookLogin from '@greatsumini/react-facebook-login';
 import { LoadingButton } from "@mui/lab";
 import { Link, json } from "react-router-dom";
 import { coerceToArrayBuffer, coerceToBase64Url } from "../../functions/fidoHelpers";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 
 
@@ -21,15 +23,33 @@ export default function ViewSecurity() {
     const { enqueueSnackbar } = useSnackbar();
     const [socialLoading, setSocialLoading] = useState(false);
     const [passkeyLoading, setPasskeyLoading] = useState(false);
+    const [PasskeyDialog, setPasskeyDialog] = useState(false);
 
     useEffect(() => {
         setActivePage(4);
         document.title = "Account Security - UPlay"
     }, [])
 
-    const handlePasskeySetup = async () => {
+    const handlePasskeyDialogOpen = () => {
+        setPasskeyDialog(true);
+    }
+
+    const handlePasskeyDialogClose = () => {
+        setPasskeyDialog(false);
+    }
+
+    const handlePasskeySetup = async (password) => {
         setPasskeyLoading(true);
-        var credentials = await http.post("/User/Passkey/Setup");
+
+        try {
+            var credentials = await http.post("/User/Passkey/Setup", {password: password});
+        } catch (e) {
+            console.log(e);
+            enqueueSnackbar("Failed to setup passkey. " + e.response.data.error, { variant: "error" });
+            setPasskeyLoading(false);
+            return;
+        }
+        
         credentials = credentials.data;
         var rawCredentials = credentials;
         console.log("Credential Options Object", credentials);  // DEBUG
@@ -54,9 +74,10 @@ export default function ViewSecurity() {
                 publicKey: credentials
             });
         } catch (e) {
-            var msg = "Could not create credentials in browser. Probably because the username is already registered with your authenticator. Please change username or authenticator."
-            console.log(msg);
-            console.log(e);
+            var msg = "Could not create credentials in browser."
+            enqueueSnackbar(msg, { variant: "error" });
+            setPasskeyLoading(false);
+            handlePasskeyDialogClose();
             return;
         }
 
@@ -64,9 +85,12 @@ export default function ViewSecurity() {
             await handlePasskeySave(newCredential, rawCredentials);
         } catch (e) {
             console.log(e);
+            enqueueSnackbar("Failed to save passkey. " + e, { variant: "error" });
+            setPasskeyLoading(false);
             return;
         }
         setPasskeyLoading(false);
+        handlePasskeyDialogClose();
     }
 
     const handlePasskeySave = async (newCredential, credentialsOptions) => {
@@ -151,6 +175,19 @@ export default function ViewSecurity() {
         }
     }
 
+    const formik = useFormik({
+        initialValues: {
+            password: "",
+        },
+        validationSchema: Yup.object({
+            password: Yup.string().required("Password is required"),
+        }),
+        onSubmit: async (values) => {
+            handlePasskeySetup(values.password);
+        }
+    });
+    
+
     return (
         <>
             <Card sx={{ mt: "1rem" }}>
@@ -158,7 +195,7 @@ export default function ViewSecurity() {
                     <CardTitle title="Passkey Access" icon={<Key />} />
                     <Typography variant="body1" mt={"1rem"}>Passkeys allows you to login into NTUC UPlay without the need of a password by using your biometrics via mobile device or USB security key to verify your identity.</Typography>
                     <Box sx={{ mt: "1rem", display: "flex" }}>
-                        <LoadingButton loading={passkeyLoading} variant="contained" sx={{ mr: ".5rem", flexGrow: 1, flexBasis: 0 }} startIcon={<Key />} onClick={handlePasskeySetup}>Setup Passkey Access</LoadingButton>
+                        <Button variant="contained" sx={{ mr: ".5rem", flexGrow: 1, flexBasis: 0 }} startIcon={<Key />} onClick={handlePasskeyDialogOpen}>Setup Passkey Access</Button>
                         <Button variant="secondary" sx={{ ml: ".5rem", flexGrow: 1, flexBasis: 0 }} startIcon={<Info />} LinkComponent={Link} to="https://www.passkeys.io/" target="_blank">Learn More</Button>
                     </Box>
                 </CardContent>
@@ -192,6 +229,34 @@ export default function ViewSecurity() {
                     </Grid>
                 </CardContent>
             </Card>
+            <Dialog open={PasskeyDialog} onClose={handlePasskeyDialogClose}>
+                <DialogTitle>Create New Passkey</DialogTitle>
+                <Box component="form" onSubmit={formik.handleSubmit}>
+                    <DialogContent sx={{ paddingTop: 0 }}>
+                        <DialogContentText>
+                            To create a new passkey, please enter your password to verify your identity.
+                        </DialogContentText>
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            id="password"
+                            label="Password"
+                            type="password"
+                            name="password"
+                            fullWidth
+                            variant="standard"
+                            value={formik.values.password}
+                            onChange={formik.handleChange}
+                            error={formik.touched.password && Boolean(formik.errors.password)}
+                            helperText={formik.touched.password && formik.errors.password}
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handlePasskeyDialogClose} startIcon={<CloseRounded />}>Cancel</Button>
+                        <LoadingButton type="submit" loadingPosition="start" loading={passkeyLoading} variant="text" color="primary" startIcon={<KeyRounded />}>Create Passkey</LoadingButton>
+                    </DialogActions>
+                </Box>
+            </Dialog>
         </>
     )
 }

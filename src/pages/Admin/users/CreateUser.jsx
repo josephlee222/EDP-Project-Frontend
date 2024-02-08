@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { Container, Card, CardContent, Box, Checkbox, TextField, Grid, FormControlLabel, IconButton, Typography } from '@mui/material'
+import { Container, Card, CardContent, Box, Checkbox, TextField, Grid, FormControlLabel, IconButton, Typography, Alert } from '@mui/material'
 import LoadingButton from '@mui/lab/LoadingButton';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import AddIcon from '@mui/icons-material/Add';
@@ -105,7 +105,7 @@ function CreateUser() {
                                     helperText={formik.touched.isAdmin && formik.errors.isAdmin}
                                 />
                             } />
-                            <Typography gutterBottom>When the user is created, an e-mail with an activation URL will be sent to the user to set the account password.</Typography>
+                            <Alert severity="info" sx={{ my: "1rem" }}>When the user is created, an e-mail with an activation URL will be sent to the user to set the account password.</Alert>
                             <LoadingButton
                                 variant="contained"
                                 color="primary"
