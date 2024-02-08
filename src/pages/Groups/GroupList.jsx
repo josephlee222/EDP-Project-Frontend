@@ -1,17 +1,16 @@
 import React, { useEffect, useState, useContext } from 'react'
-import { Card, CardContent, Typography, Grid, Container, CardMedia, Skeleton } from '@mui/material'
+import { Card, CardContent, Typography, Grid, Container, CardMedia, Skeleton, CardHeader, Avatar, CardActionArea } from '@mui/material'
 import LoadingButton from '@mui/lab/LoadingButton/LoadingButton';
 import { DataGrid, GridActionsCellItem, GridToolbarExport } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import http from '../../http';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
 //import { CategoryContext } from '../UserRoutes';
 import CardTitle from '../../components/CardTitle';
 import PageHeader from '../../components/PageHeader';
-import BackpackRounded from '@mui/icons-material/BackpackRounded';
+import GroupIcon from '@mui/icons-material/Group';
 import titleHelper from '../../functions/helpers';
+import { grey } from '@mui/material/colors';
 
 function getChipProps(params) {
     return {
@@ -19,41 +18,22 @@ function getChipProps(params) {
     };
 }
 
+//TODO: Add profile picture functionality
 
-
-function ActivityList() {
+function GroupList() {
     const [Groups, setGroups] = useState([])
     const [loading, setLoading] = useState(true)
     const navigate = useNavigate()
     titleHelper("Groups")
     const columns = [
         { field: 'name', headerName: 'Name', width: 200 },
-        {
-            field: 'actions', type: 'actions', width: 120, getActions: (params) => [
-                <GridActionsCellItem
-                    icon={<EditIcon />}
-                    label="Edit Activity"
-                    onClick={() => {
-                        navigate("/admin/Activities/" + params.row.id)
-                    }}
-                    showInMenu
-                />,
-                <GridActionsCellItem
-                    icon={<DeleteIcon />}
-                    label="Delete Activity"
-                    onClick={() => {
-                    }}
-                    showInMenu
-                />,
-            ]
-        },
     ];
 
 
-    const handleGetActivities = () => {
-        http.get("/Activity/").then((res) => {
+    const handleGetGroups = () => {
+        http.get("/Group/").then((res) => {
             if (res.status === 200) {
-                setActivities(res.data)
+                setGroups(res.data)
                 setLoading(false)
             }
         })
@@ -67,53 +47,54 @@ function ActivityList() {
 
 
 
-    const CustomCard = ({ id, name, expiryDate, description }) => (
-        <Card>
-            <CardMedia
-                sx={{ height: 140 }}
-                image="/static/images/cards/contemplative-reptile.jpg"
-                title="green iguana"
+    const GroupTab = ({ id, name }) => (
+        <Card sx={{}}>
+            <CardActionArea onClick={() => {
+                        navigate("/groups/" + params.row.id)
+                    }}>
+            <CardHeader
+            avatar={
+                <Avatar sx={{bgcolor: grey}}>
+                    
+                </Avatar>
+            }
+            title={name}
             />
-            <CardContent>
-                <Link to={`/activityList/${id}`} style={{ textDecoration: 'none' }}>
-                    <Typography variant="h6">{name}</Typography>
-                </Link>
-                <Typography>{description}</Typography>
-                <Typography>Expiry Date: {expiryDate}</Typography>
-            </CardContent>
+            </CardActionArea>
         </Card>
     );
 
-    const CustomSkeletonCard = () => (
+    const SkeletonTab = () => (
         <Card>
-            <Skeleton variant="rectangular" height={140} />
-            <CardContent>
-                <Typography variant="h6"><Skeleton animation="wave" /></Typography>
-                <Typography><Skeleton animation="wave" /></Typography>
-                <Typography><Skeleton animation="wave" /></Typography>
-            </CardContent>
+            <CardHeader
+            avatar={
+                <Skeleton variant='circular'width={60} height={60} animation="wave" />
+            }
+            title={
+                <Skeleton variant='rounded' height={40} animation="wave"/>
+            }
+            />
         </Card>
     );
 
     useEffect(() => {
-        document.title = "UPlay Admin - View Activities"
-        //setActivePage(1)
-        handleGetActivities()
+        document.title = "Groups"
+        handleGetGroups()
     }, [])
     return (
         <>
-            <PageHeader title="Activities" icon={BackpackRounded} />
+            <PageHeader title="Groups & Friends" icon={GroupIcon} />
             <Container sx={{ mt: "1rem" }} maxWidth="xl">
                 <Grid container spacing={2}>
                     {loading && <>{[...Array(6)].map((card) => (
-                        <Grid item key={card} xs={12} sm={6} md={4}>
-                            <CustomSkeletonCard />
+                        <Grid item key={card} xs={12}>
+                            <SkeletonTab />
                         </Grid>
                     ))}</>}
 
-                    {!loading && <>{Activities.map((card) => (
-                        <Grid item key={card.id} xs={12} sm={6} md={4}>
-                            <CustomCard {...card} />
+                    {!loading && <>{Groups.map((card) => (
+                        <Grid item key={card.id} xs={12}>
+                            <GroupTab {...card} />
                         </Grid>
                     ))}</>}
                 </Grid>
@@ -122,7 +103,7 @@ function ActivityList() {
     )
 }
 
-export default ActivityList
+export default GroupList
 
 /*// Import necessary dependencies
 import React from 'react';
@@ -137,7 +118,7 @@ const cardData = [
 ];
 
 // Component for rendering a single card
-const CustomCard = ({ title, content }) => (
+const GroupTab = ({ title, content }) => (
   <Card>
     <CardContent>
       <Typography variant="h6">{title}</Typography>
@@ -152,7 +133,7 @@ const CardGrid = () => {
     <Grid container spacing={2}>
       {cardData.map((card) => (
         <Grid item key={card.id} xs={12} sm={6} md={4} lg={3}>
-          <CustomCard {...card} />
+          <GroupTab {...card} />
         </Grid>
       ))}
     </Grid>
