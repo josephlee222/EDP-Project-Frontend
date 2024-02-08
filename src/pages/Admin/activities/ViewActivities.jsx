@@ -14,7 +14,7 @@ import EmailIcon from '@mui/icons-material/Email';
 import PhoneIcon from '@mui/icons-material/Phone';
 import { CategoryContext } from './AdminActivitiesRoutes';
 import CardTitle from '../../../components/CardTitle';
-import { BackpackRounded, Person } from '@mui/icons-material';
+import { BackpackRounded, EditCalendarRounded, Person } from '@mui/icons-material';
 import moment from 'moment';
 import titleHelper from '../../../functions/helpers';
 
@@ -56,6 +56,14 @@ function ViewActivities() {
                     label="Edit Activity"
                     onClick={() => {
                         navigate("/admin/activities/" + params.row.id)
+                    }}
+                    showInMenu
+                />,
+                <GridActionsCellItem
+                    icon={<EditCalendarRounded />}
+                    label="Edit availability"
+                    onClick={() => {
+                        navigate("/admin/activities/createAvailability/" + params.row.id)
                     }}
                     showInMenu
                 />,
