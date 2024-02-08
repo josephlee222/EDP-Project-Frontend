@@ -12,6 +12,8 @@ import ProfileRoutes from './Profile/ProfileRoutes'
 import ActivityList from './Activities/ActivityList'
 import ActivityDetails from './Activities/ActivityDetails';
 
+import GroupList from './Groups/GroupList'
+
 import { AppContext } from '../App'
 
 
