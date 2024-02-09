@@ -40,7 +40,6 @@ Tuesday ideally should be all styling.
 
 
 
-
 todo:
 test upload photo-
 create category-
@@ -59,10 +58,18 @@ I can do CRUD for coupon now but i can't implement the actual usage right now cu
 
 
 stuff to do:
-photo upload for reviews
+photo upload for reviews-
 category filtering (make category a dropdown for create and edit activity)
 coupon CRUD
 maybe some styling for activity list and details as well.
 
 beyond that, we don't really have that many funcitonalities to work on anymore.
 Everything after this is just refinement.
+
+
+9/2/2024
+letsgo photo upload and display for review works
+so i was thinking, when u click on a review it should take u to a page to display the details of the review too.
+
+dropdown for category for create activtiy is done. Will do it for edit next.
+

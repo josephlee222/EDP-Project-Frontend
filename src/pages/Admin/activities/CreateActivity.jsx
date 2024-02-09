@@ -1,12 +1,8 @@
-
-
-
 import React, { useState, useEffect, useContext } from 'react'
 import {
     Container, Card, CardContent, Box, Checkbox, TextField,
     Grid, FormControlLabel, IconButton, Typography, RadioGroup, Radio, List,
-    ListItem,
-    ListItemText
+    ListItem, ListItemText, Menu, MenuItem
 } from '@mui/material'
 import LoadingButton from '@mui/lab/LoadingButton';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
@@ -20,9 +16,11 @@ import { useFormik } from 'formik';
 import { AddRounded, PersonAddRounded } from '@mui/icons-material';
 import { CategoryContext } from './AdminActivitiesRoutes';
 import titleHelper from '../../../functions/helpers';
+import DeleteIcon from '@mui/icons-material/Delete';
+
 
 function CreateActivity() {
-
+    const [Categories, setCategories] = useState([])
     const [loading, setLoading] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
     const navigate = useNavigate();
@@ -30,6 +28,15 @@ function CreateActivity() {
     const [uploadedFiles, setUploadedFiles] = useState([]);
     const [files, setFiles] = useState([]);
     titleHelper("Create Activity")
+
+    const handleGetCategories = () => {
+        http.get("/Admin/Category/").then((res) => {
+            if (res.status === 200) {
+                setCategories(res.data)
+                setLoading(false)
+            }
+        })
+    }
 
     const formik = useFormik({
         initialValues: {
@@ -48,26 +55,26 @@ function CreateActivity() {
 
         },
         validationSchema: Yup.object({
-            // name: Yup.string().required("Name is required"),
-            // expiryDate: Yup.date().required("Date is required"),
-            // description: Yup.string().required("Description is required"),
-            // category: Yup.string().required("Category is required"),
-            // ntucExclusive: Yup.boolean().optional(),
-            // ageLimit: Yup.number().required("Age Limit is required. Enter 0 if no age limit"),
-            // location: Yup.string().required("Location is required"),
-            // company: Yup.string().required("Company is required"),
-            // discounted: Yup.boolean(),
-            // discountType:  Yup.string().when("discounted", {
-            //     is: true,
-            //     then: () => Yup.string().required("Discount Type is required"),
-            //     otherwise: () => Yup.string().optional(),
+            name: Yup.string().required("Name is required"),
+            expiryDate: Yup.date().required("Date is required"),
+            description: Yup.string().required("Description is required"),
+            category: Yup.string().required("Category is required"),
+            ntucExclusive: Yup.boolean().optional(),
+            ageLimit: Yup.number().required("Age Limit is required. Enter 0 if no age limit"),
+            location: Yup.string().required("Location is required"),
+            company: Yup.string().required("Company is required"),
+            discounted: Yup.boolean(),
+            discountType:  Yup.string().when("discounted", {
+                is: true,
+                then: () => Yup.string().required("Discount Type is required"),
+                otherwise: () => Yup.string().optional(),
 
-            // }),
-            // discountAmount: Yup.number().when("discounted", {
-            //     is: true,
-            //     then: () => Yup.number().required("Discount Amount is required"),
-            //     otherwise: () => Yup.number().optional(),
-            // }),
+            }),
+            discountAmount: Yup.number().when("discounted", {
+                is: true,
+                then: () => Yup.number().required("Discount Amount is required"),
+                otherwise: () => Yup.number().optional(),
+            }),
         }),
         onSubmit: (data) => {
             setLoading(true);
@@ -129,14 +136,15 @@ function CreateActivity() {
                 enqueueSnackbar("Pictures uploaded failed! catch" + err.response.data.error, { variant: "error" });
                 setLoading(false);
             })
-
-
-
         }
     })
 
     useEffect(() => {
+        handleGetCategories();
         setActivePage(2);
+        return () => {
+            uploadedFiles.forEach(file => URL.revokeObjectURL(file.preview));
+        };
     }, [])
 
     const handlePicturesChange = (event) => {
@@ -145,20 +153,24 @@ function CreateActivity() {
         // Convert FileList to an array
         const fileList = Array.from(files);
         // Concatenate the new array of files with the existing list of uploaded files
-        const newUploadedFiles = [...uploadedFiles, ...fileList.map(file => file.name)];
+        const newUploadedFiles = [...uploadedFiles, ...fileList.map(file => ({
+            name: file.name,
+            preview: URL.createObjectURL(file) // Generate preview URL
+        }))];
         // Set the updated list of uploaded files
         setUploadedFiles(newUploadedFiles);
-        // Set the array of files to the formik values
-        //formik.setFieldValue('pictures', newUploadedFiles);
-        // Set the files state to the selected files
+
         setFiles(files);
 
         console.log("Files state:", files);
     };
 
-
-
-
+    const handleDeleteFile = (index) => {
+        const updatedFiles = [...uploadedFiles];
+        updatedFiles.splice(index, 1);
+        setUploadedFiles(updatedFiles);
+    };
+    
 
     return (
         <>
@@ -213,19 +225,29 @@ function CreateActivity() {
                                         rows={4}
                                     />
                                 </Grid>
+                               
                                 <Grid item xs={12} sm={6}>
                                     <TextField
                                         fullWidth
                                         id="category"
                                         name="category"
+                                        select  // Use select to create a dropdown
                                         label="Category"
                                         variant="outlined"
                                         value={formik.values.category}
                                         onChange={formik.handleChange}
                                         error={formik.touched.category && Boolean(formik.errors.category)}
                                         helperText={formik.touched.category && formik.errors.category}
-                                    />
+                                    >
+                                        {/* Map through Categories and create an option for each category */}
+                                        {Categories.map((category) => (
+                                            <MenuItem key={category.id} value={category.name}>
+                                                {category.name}
+                                            </MenuItem>
+                                        ))}
+                                    </TextField>
                                 </Grid>
+
                                 <Grid item xs={12} sm={6}>
                                     <TextField
                                         fullWidth
@@ -299,15 +321,25 @@ function CreateActivity() {
                                             </IconButton>
                                             <Typography variant="body1">Upload Pictures</Typography>
                                         </label>
-                                        {uploadedFiles.length > 0 && (
-                                            <List>
-                                                {uploadedFiles.map((fileName, index) => (
-                                                    <ListItem key={index}>
-                                                        <ListItemText primary={fileName} />
-                                                    </ListItem>
-                                                ))}
-                                            </List>
-                                        )}
+                                        {uploadedFiles.map((file, index) => (
+                                            <ListItem key={index}>
+                                                <ListItemText primary={file.name} />
+                                                {file.preview && (
+                                                    <img
+                                                        src={file.preview}
+                                                        alt={`Preview of ${file.name}`}
+                                                        style={{ width: '50px', height: 'auto', marginLeft: '10px' }}
+                                                    />
+                                                )}
+                                                <IconButton
+                                                    edge="end"
+                                                    aria-label="delete"
+                                                    onClick={() => handleDeleteFile(index)}
+                                                >
+                                                    <DeleteIcon />
+                                                </IconButton>
+                                            </ListItem>
+                                        ))}
                                     </Grid>
                                 </Grid>
                                 <Grid item xs={12} sm={6}>

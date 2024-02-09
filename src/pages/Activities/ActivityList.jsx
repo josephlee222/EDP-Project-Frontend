@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react'
-import { Card, CardContent, Typography, Grid, Container, CardMedia, Skeleton } from '@mui/material'
+import { Button, Container, Divider, Typography, Grid, Box, Card, TextField, Skeleton, CardContent, CardMedia } from '@mui/material'
 import LoadingButton from '@mui/lab/LoadingButton/LoadingButton';
 import { DataGrid, GridActionsCellItem, GridToolbarExport } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
@@ -13,6 +13,7 @@ import PageHeader from '../../components/PageHeader';
 import BackpackRounded from '@mui/icons-material/BackpackRounded';
 import titleHelper from '../../functions/helpers';
 //import { CategoryContext } from '../UserRoutes';
+import { HomeRounded, SearchRounded } from '@mui/icons-material';
 
 function getChipProps(params) {
     return {
@@ -115,6 +116,7 @@ function ActivityList() {
     return (
         <>
             <PageHeader title="Activities" icon={BackpackRounded} />
+           
             <Container sx={{ mt: "1rem" }} maxWidth="xl">
                 <Grid container spacing={2}>
                     {loading && <>{[...Array(6)].map((card) => (

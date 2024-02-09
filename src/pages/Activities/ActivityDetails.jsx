@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Card, CardContent, Grid, Typography, Button } from '@mui/material';
+import { Box, Card, CardContent, Grid, Typography, Button, Container, CardMedia, Skeleton } from '@mui/material';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import http from '../../http';
@@ -8,6 +8,7 @@ import AddIcon from '@mui/icons-material/Add';
 import titleHelper from '../../functions/helpers';
 
 function ActivityDetails() {
+  const url = import.meta.env.VITE_API_URL
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
@@ -50,6 +51,29 @@ function ActivityDetails() {
     });
   };
 
+  const CustomCard = ({ id, rating, description, pictures }) => (
+    <Card>
+        <CardMedia sx={{ height: 140 }} image={pictures ? url+'/uploads/'+pictures.items[0] : "/unknown.png"}/>
+        <CardContent>
+            <Link to={`/activityList/${id}`} style={{ textDecoration: 'none' }}>
+                <Typography variant="h6">rating: {rating}</Typography>
+            </Link>
+            <Typography>{description}</Typography>
+        </CardContent>
+    </Card>
+);
+
+  const CustomSkeletonCard = () => (
+    <Card>
+        <Skeleton variant="rectangular" height={140} />
+        <CardContent>
+            <Typography variant="h6"><Skeleton animation="wave" /></Typography>
+            <Typography><Skeleton animation="wave" /></Typography>
+            <Typography><Skeleton animation="wave" /></Typography>
+        </CardContent>
+    </Card>
+);
+
   useEffect(() => {
     handleGetActivity();
     handleGetReviews();
@@ -86,15 +110,16 @@ function ActivityDetails() {
                 </Button>
               </Grid>
             </Grid>
+
           </CardContent>
 
-            {/* Reviews Section */}
-            <CardContent>
+
+            {/* <CardContent>
             <CardTitle title="Reviews" icon={<AddIcon />} />
             <Link to={`/review/${activityId}`} style={{ textDecoration: 'none' }}>
                     <Typography variant="h6">add review</Typography>
                 </Link>
-            {/* Display reviews here using the Reviews state */}
+
             {Reviews.map((review) => (
               <div key={review.id}>
                 <Typography variant="subtitle1">User:</Typography>
@@ -105,8 +130,27 @@ function ActivityDetails() {
                 <Typography variant="body1">{review.description}</Typography>
               </div>
             ))}
-          </CardContent>
+          </CardContent> */}
         </Card>
+        
+        <Container sx={{ mt: "1rem" }} maxWidth="xl">
+        <Link to={`/review/${activityId}`} style={{ textDecoration: 'none' }}>
+                    <Typography variant="h6">add review</Typography>
+                </Link>
+                <Grid container spacing={2}>
+                    {loading && <>{[...Array(6)].map((card) => (
+                        <Grid item key={card} xs={12} sm={6} md={4}>
+                            <CustomSkeletonCard />
+                        </Grid>
+                    ))}</>}
+
+                    {!loading && <>{Reviews.map((card) => (
+                        <Grid item key={card.id} xs={12} sm={6} md={4}>
+                            <CustomCard {...card} />
+                        </Grid>
+                    ))}</>}
+                </Grid>
+            </Container>
       </Box>
     </>
   );
