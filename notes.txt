@@ -52,6 +52,17 @@ kkkkk so i just finished the interface for uploading photos for activity creatio
  havent actly done the saving to backend part.
 
 
+8/2/2024
+uploading and viewing of photos is done.
+CRUD for categories as well.
+I can do CRUD for coupon now but i can't implement the actual usage right now cuz joseph hasn't done the cart.
 
 
+stuff to do:
+photo upload for reviews
+category filtering (make category a dropdown for create and edit activity)
+coupon CRUD
+maybe some styling for activity list and details as well.
 
+beyond that, we don't really have that many funcitonalities to work on anymore.
+Everything after this is just refinement.
