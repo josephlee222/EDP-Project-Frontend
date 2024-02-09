@@ -4,7 +4,7 @@ import { Route, Routes, Navigate, Link } from 'react-router-dom'
 //import { UserContext } from '..'
 import { Button, Container, Divider, Typography, Grid, Box, Card, TextField, Skeleton, CardContent, Accordion, AccordionDetails, AccordionSummary, Stack } from '@mui/material'
 import { AppContext } from '../../App';
-import { ArrowForwardRounded, AttachMoneyRounded, BackpackRounded, DeleteRounded, ShoppingCartRounded } from '@mui/icons-material';
+import { ArrowForwardRounded, AttachMoneyRounded, BackpackRounded, DeleteRounded, ShoppingCartRounded, WarningRounded } from '@mui/icons-material';
 import titleHelper from '../../functions/helpers';
 import http from '../../http';
 import PageHeader from '../../components/PageHeader';
@@ -140,7 +140,7 @@ function ViewCart() {
                                     </Box>
                                 </Box>
 
-                                <Button startIcon={<ArrowForwardRounded />} variant="contained" fullWidth sx={{ marginTop: "1rem" }} LinkComponent={Link} to="/checkout">Continue To Checkout</Button>
+                                <Button disabled={cart?.cart.length == 0} startIcon={<ArrowForwardRounded />} variant="contained" fullWidth sx={{ marginTop: "1rem" }} LinkComponent={Link} to="/checkout">Continue To Checkout</Button>
                             </CardContent>
                         </Card>
                     </Grid>
