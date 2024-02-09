@@ -115,7 +115,7 @@ function ActivityList() {
     }, [])
     return (
         <>
-            <PageHeader title="Activities" icon={BackpackRounded} />
+            <PageHeader title="Activities" icon={BackpackRounded}/>
            
             <Container sx={{ mt: "1rem" }} maxWidth="xl">
                 <Grid container spacing={2}>

@@ -72,4 +72,10 @@ letsgo photo upload and display for review works
 so i was thinking, when u click on a review it should take u to a page to display the details of the review too.
 
 dropdown for category for create activtiy is done. Will do it for edit next.
+coupon crud is done.
 
+a bit overwhelmed at what to do. Probably will focus on aesthetics for a while.
+Gna do activity details, i guess.
+
+made some carousel looking thing for activity details with animation too yay.
+Still have a LOT of work to do before the site actually looks good, but this is great progress.

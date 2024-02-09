@@ -6,54 +6,42 @@ import http from '../../http';
 import CardTitle from '../../components/CardTitle';
 import AddIcon from '@mui/icons-material/Add';
 import titleHelper from '../../functions/helpers';
-import ShareIcon from '@mui/icons-material/Share';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import ImageSelector from '../../components/ImageSelector';
 
-function ActivityDetails() {
+function ReviewDetails() {
   const url = import.meta.env.VITE_API_URL
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
-  const { id: activityId } = useParams();
+  const { id: reviewId } = useParams();
   const [Reviews, setReviews] = useState([])
-  // const [activity, setActivity] = useState({
-  //   name: "",
-  //   expiryDate: "",
-  //   description: "",
-  //   category: "",
-  //   ntucExclusive: "",
-  //   ageLimit: "",
-  //   location: "",
-  //   company: "",
-  //   discountType: "",
-  //   discountAmount: "",
-  //   pictures:[]
-  // });
-  const [activity, setActivity] = useState([])
-  titleHelper("Activity Details" , activity.name);
+  const [review, setReview] = useState({
+    name: "",
+    expiryDate: "",
+    description: "",
+    category: "",
+    ntucExclusive: "",
+    ageLimit: "",
+    location: "",
+    company: "",
+    discountType: "",
+    discountAmount: ""
+  });
+  titleHelper("Review Details" , review.name);
 
-  const handleGetActivity = () => {
+  const handleGetReview = () => {
     setLoading(true);
-    http.get(`/Activity/${activityId}`).then((res) => {
+    http.get(`/Review/${reviewId}`).then((res) => {
       if (res.status === 200) {
-        setActivity(res.data);
-        console.log("res data ",res.data);
-        console.log("activity ",activity);
+        setReview(res.data);
         setLoading(false);
         
       }
-      
     });
-    
   };
-
-  const testArray =  ['wsG2mTDfY1.png', 'Ro2fXB3hj7.png', 'mGgIXukd6l.avif', 'uwuV3PnEIy.jpeg', 'q9hk-jGPbk.jpeg', 'Mf8uu6lGdw.avif']
 
   const handleGetReviews = () => {
     setLoading(true);
-    http.get(`/Review/Activity/${activityId}`).then((res) => {
+    http.get(`/Review/Review/${reviewId}`).then((res) => {
       console.log("reviews: "+res.data+" status code: "+res.status)
 
       if (res.status === 200) {
@@ -67,7 +55,7 @@ function ActivityDetails() {
     <Card>
         <CardMedia sx={{ height: 140 }} image={pictures ? url+'/uploads/'+pictures.items[0] : "/unknown.png"}/>
         <CardContent>
-            <Link to={`/ReviewDetails/${id}`} style={{ textDecoration: 'none' }}>
+            <Link to={`/reviewList/${id}`} style={{ textDecoration: 'none' }}>
                 <Typography variant="h6">rating: {rating}</Typography>
             </Link>
             <Typography>{description}</Typography>
@@ -87,49 +75,35 @@ function ActivityDetails() {
 );
 
   useEffect(() => {
-    handleGetActivity();
+    handleGetReview();
     handleGetReviews();
   }, []);
 
   return (
     <>
-
-
-    <Box sx={{ marginY: "1rem", margin: "1.5rem" }}>
-    <Typography variant="h2">{activity.name}</Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={11} md={11}>
-                <Typography>category: {activity.category}</Typography>
-              </Grid>
-              <Grid item xs={1} md={1} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Typography>share  </Typography><ShareIcon/>
-              </Grid>
-            </Grid>
-      </Box>
-
-      <ImageSelector imageUrls={activity.pictures ? activity.pictures.items:[]} />
-
-
-
       <Box sx={{ marginY: "1rem" }}>
         <Card>
           <CardContent>
+            <CardTitle title="Review Details" icon={<AddIcon />} />
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 
-              
+                <div>
+                  <Typography variant="subtitle1">Name:</Typography>
+                  <Typography variant="body1">{review.name}</Typography>
+                </div>
                 <div>
                   <Typography variant="subtitle1">Expiry Date:</Typography>
-                  <Typography variant="body1">{activity.expiryDate}</Typography>
+                  <Typography variant="body1">{review.expiryDate}</Typography>
                 </div>
                 <div>
                   <Typography variant="subtitle1">Description:</Typography>
-                  <Typography variant="body1">{activity.description}</Typography>
+                  <Typography variant="body1">{review.description}</Typography>
                 </div>
                 
                 <Button
                  onClick={() => {
-                  navigate("/Booking/" + activityId)
+                  navigate("/Booking/" + reviewId)
               }}
                 >
                   book
@@ -142,7 +116,7 @@ function ActivityDetails() {
 
             {/* <CardContent>
             <CardTitle title="Reviews" icon={<AddIcon />} />
-            <Link to={`/review/${activityId}`} style={{ textDecoration: 'none' }}>
+            <Link to={`/review/${reviewId}`} style={{ textDecoration: 'none' }}>
                     <Typography variant="h6">add review</Typography>
                 </Link>
 
@@ -160,7 +134,7 @@ function ActivityDetails() {
         </Card>
         
         <Container sx={{ mt: "1rem" }} maxWidth="xl">
-        <Link to={`/review/${activityId}`} style={{ textDecoration: 'none' }}>
+        <Link to={`/review/${reviewId}`} style={{ textDecoration: 'none' }}>
                     <Typography variant="h6">add review</Typography>
                 </Link>
                 <Grid container spacing={2}>
@@ -182,4 +156,4 @@ function ActivityDetails() {
   );
 }
 
-export default ActivityDetails;
+export default ReviewDetails;
