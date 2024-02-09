@@ -61,7 +61,7 @@ function CreateCategory() {
     })
 
     useEffect(() => {
-        setActivePage(2);
+        setActivePage(4);
     }, [])
     
     
@@ -74,7 +74,7 @@ function CreateCategory() {
                         <CardTitle title="Create Category" icon={<AddIcon />} />
                         <Box component="form" mt={3}>
 
-                            <Grid container spacing={2}>
+                            <Grid container spacing={2} mb={"1rem"}>
                                 <Grid item xs={12}>
                                     <TextField
                                         fullWidth

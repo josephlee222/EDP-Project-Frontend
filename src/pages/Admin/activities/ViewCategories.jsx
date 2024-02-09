@@ -102,7 +102,7 @@ function ViewCategories() {
     }
 
     useEffect(() => {
-        setActivePage(1)
+        setActivePage(3)
         handleGetCategories()
     }, [])
     return (
