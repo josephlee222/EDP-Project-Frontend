@@ -30,9 +30,9 @@ export default function Register() {
     const handleStartSignalR = () => {
         // Create a new connection to the actions hub
         const connect = new HubConnectionBuilder()
-        .withUrl(import.meta.env.VITE_API_URL + "/hubs/actions")
-        .withAutomaticReconnect()
-        .build();
+            .withUrl(import.meta.env.VITE_API_URL + "/hubs/actions")
+            .withAutomaticReconnect()
+            .build();
 
         setConnection(connect);
     }
@@ -145,7 +145,7 @@ export default function Register() {
     return (
         <>
             <PageHeader title="Welcome Back" icon={LoginIcon} navTitle="Register" />
-            <Container sx={{mt: "2rem", mb: "1rem"}} maxWidth="lg">
+            <Container sx={{ mt: "2rem", mb: "1rem" }} maxWidth="lg">
                 <Grid container spacing={2} justifyContent={"center"} mb={"2rem"}>
                     <Grid item xs={6} md={2}>
                         <Button variant="secondary" fullWidth sx={{ fontWeight: 700 }} LinkComponent={Link} to="/login">Login</Button>
@@ -231,25 +231,31 @@ export default function Register() {
                         <Card>
                             <CardContent>
                                 <CardTitle title="Easy Registration" icon={<KeyRoundedIcon />} />
-                                <LoadingButton fullWidth variant="contained" sx={{ mt: "1rem" }} startIcon={<GoogleIcon />} onClick={googleAuth} loading={loading}>
-                                    Register with Google
-                                </LoadingButton>
-                                <FacebookLogin
-                                    appId={import.meta.env.VITE_FACEBOOK_APP_ID}
-                                    onSuccess={handleFacebookSuccess}
-                                    onFail={handleFacebookFailure}
-                                    render={({ onClick, logout }) => (
-                                        <LoadingButton fullWidth variant="contained" sx={{ mt: "1rem" }} onClick={onClick} startIcon={<FacebookRoundedIcon />} loading={loading}>
-                                            Register with Facebook
+                                <Grid container spacing={2}>
+                                    <Grid item xs={6}>
+                                        <LoadingButton fullWidth variant="secondary" sx={{ mt: "1rem" }} startIcon={<GoogleIcon />} onClick={googleAuth} loading={loading}>
+                                            Google
                                         </LoadingButton>
-                                    )}
-                                />
+                                    </Grid>
+                                    <Grid item xs={6}>
+                                        <FacebookLogin
+                                            appId={import.meta.env.VITE_FACEBOOK_APP_ID}
+                                            onSuccess={handleFacebookSuccess}
+                                            onFail={handleFacebookFailure}
+                                            render={({ onClick, logout }) => (
+                                                <LoadingButton fullWidth variant="secondary" sx={{ mt: "1rem" }} onClick={onClick} startIcon={<FacebookRoundedIcon />} loading={loading}>
+                                                    Facebook
+                                                </LoadingButton>
+                                            )}
+                                        />
+                                    </Grid>
+                                </Grid>
                             </CardContent>
                         </Card>
                     </Grid>
                 </Grid>
             </Container>
-            
+
         </>
 
     );

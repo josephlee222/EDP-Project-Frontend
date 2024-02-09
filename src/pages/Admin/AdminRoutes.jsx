@@ -12,6 +12,7 @@ import BackpackIcon from '@mui/icons-material/BackpackRounded';
 import StorefrontIcon from '@mui/icons-material/StorefrontRounded';
 import AdminUsersRoutes from './users/AdminUsersRoutes'
 import AdminActivitiesRoutes from './activities/AdminActivitiesRoutes'
+import AdminShopRoutes from './shop/AdminShopRoutes'
 
 export default function AdminRoutes() {
     //Routes for admin pages. To add authenication so that only admins can access these pages, add a check for the user's role in the UserContext
@@ -79,7 +80,7 @@ export default function AdminRoutes() {
                                     </ListItemButton>
                                 </ListItem>
                                 <ListItem key={"Shop Settings"} disablePadding>
-                                    <ListItemButton>
+                                    <ListItemButton LinkComponent={Link} to="/admin/shop">
                                         <StorefrontIcon />
                                         <ListItemText disableTypography primary={"Shop Settings"} />
                                     </ListItemButton>
@@ -94,6 +95,7 @@ export default function AdminRoutes() {
                         <Route path="/test" element={<Test />} />
                         <Route path="/users/*" element={<AdminUsersRoutes />} />
                         <Route path="/activities/*" element={<AdminActivitiesRoutes />} />
+                        <Route path="/shop/*" element={<AdminShopRoutes />} />
                     </Routes>
                 </Grid>
             </Grid>

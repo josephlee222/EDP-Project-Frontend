@@ -16,6 +16,7 @@ import { AppContext } from '../App'
 import CreateBooking from './Activities/Booking'
 import EditBooking from './Activities/EditBooking'
 import CreateReview from './Activities/Review'
+import Faq from './Faq'
 
 
 function UserRoutes() {
@@ -41,6 +42,7 @@ function UserRoutes() {
             <Route path="/verify" element={<Verify />} />
             <Route path="/reset" element={<Reset />} />
             <Route path="/test" element={<Test />} />
+            <Route path="/faq" element={<Faq />} />
             <Route path="/profile/*" element={<ProfileRoutes />} />
         </Routes>
     )

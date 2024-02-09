@@ -327,13 +327,13 @@ export default function Login() {
                                     >
                                         Login
                                     </LoadingButton>
-                                    <Stack direction={["column", "column", "row"]} sx={{ mt: "1rem" }}>
+                                    <Stack direction={["column", "row"]} sx={{ mt: "1rem" }}>
                                         <Button
                                             fullWidth
                                             variant="secondary"
                                             component={Link}
                                             onClick={handleResetPasswordDialog}
-                                            sx={{ mr: { xs: 0, md: "1rem" } }}
+                                            sx={{ mr: { xs: 0, sm: "1rem" } }}
                                         >
                                             Forgot password?
                                         </Button>
@@ -342,7 +342,7 @@ export default function Login() {
                                             variant="secondary"
                                             component={Link}
                                             onClick={handleResendDialog}
-                                            sx={{ mt: { xs: "1rem", md: 0 } }}
+                                            sx={{ mt: { xs: "1rem", sm: 0 } }}
                                         >
                                             Resend verification
                                         </Button>
@@ -355,22 +355,30 @@ export default function Login() {
                         <Card>
                             <CardContent>
                                 <CardTitle title="Login via other methods" icon={<KeyRoundedIcon />} />
-                                <LoadingButton loading={loading} onClick={handlePasskeySetup} fullWidth variant="contained" sx={{ mt: "1rem" }} startIcon={<KeyRoundedIcon />}>
-                                    Login with Passkey
-                                </LoadingButton>
-                                <LoadingButton fullWidth variant="contained" sx={{ mt: "1rem" }} startIcon={<GoogleIcon />} onClick={googleAuth} loading={loading}>
-                                    Login with Google
-                                </LoadingButton>
-                                <FacebookLogin
-                                    appId={import.meta.env.VITE_FACEBOOK_APP_ID}
-                                    onSuccess={handleFacebookSuccess}
-                                    onFail={handleFacebookFailure}
-                                    render={({ onClick, logout }) => (
-                                        <LoadingButton fullWidth variant="contained" sx={{ mt: "1rem" }} onClick={onClick} startIcon={<FacebookRoundedIcon />} loading={loading}>
-                                            Login with Facebook
+                                <Grid container spacing={2}>
+                                    <Grid item xs={4}>
+                                        <LoadingButton loading={loading} onClick={handlePasskeySetup} fullWidth variant="secondary" sx={{ mt: "1rem" }} startIcon={<KeyRoundedIcon />}>
+                                            Passkey
                                         </LoadingButton>
-                                    )}
-                                />
+                                    </Grid>
+                                    <Grid item xs={4}>
+                                        <LoadingButton fullWidth variant="secondary" sx={{ mt: "1rem" }} startIcon={<GoogleIcon />} onClick={googleAuth} loading={loading}>
+                                            Google
+                                        </LoadingButton>
+                                    </Grid>
+                                    <Grid item xs={4}>
+                                        <FacebookLogin
+                                            appId={import.meta.env.VITE_FACEBOOK_APP_ID}
+                                            onSuccess={handleFacebookSuccess}
+                                            onFail={handleFacebookFailure}
+                                            render={({ onClick, logout }) => (
+                                                <LoadingButton fullWidth variant="secondary" sx={{ mt: "1rem" }} onClick={onClick} startIcon={<FacebookRoundedIcon />} loading={loading}>
+                                                    Facebook
+                                                </LoadingButton>
+                                            )}
+                                        />
+                                    </Grid>
+                                </Grid>
                             </CardContent>
                         </Card>
                     </Grid>
