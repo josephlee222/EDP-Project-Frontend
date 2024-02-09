@@ -84,6 +84,16 @@ function ViewCart() {
                                     </Card>
                                 </>
                             }
+                            {cart && cart.cart.length === 0 &&
+                                <Card sx={{ mt: "1rem" }}>
+                                    <CardContent>
+                                        <Box display="flex" justifyContent="center" alignItems="center" flexDirection="column">
+                                            <WarningRounded sx={{ fontSize: 100, color: "black", opacity: "0.5" }} />
+                                            <Typography variant="h6" fontWeight={700}>Cart is Empty</Typography>
+                                        </Box>
+                                    </CardContent>
+                                </Card>
+                            }
                             {cart && cart.cart.map((item) => (
                                 <Card>
                                     <CardContent>
