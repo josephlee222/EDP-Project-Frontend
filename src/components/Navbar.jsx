@@ -30,7 +30,7 @@ export default function Navbar() {
                                 <Stack direction="row" spacing={1}>
                                     <Button sx={{ fontWeight: 700 }} startIcon={<CelebrationRounded />} LinkComponent={Link} variant="text" color="inherit" to="/activityList">All Experiences</Button>
                                     <Button sx={{ fontWeight: 700 }} startIcon={<CardMembershipRounded />} LinkComponent={Link} variant="text" color="inherit" to="/">Friends Of UPLay</Button>
-                                    <Button sx={{ fontWeight: 700 }} startIcon={<QuestionAnswerRounded />} LinkComponent={Link} variant="text" color="inherit" to="/">FAQ</Button>
+                                    <Button sx={{ fontWeight: 700 }} startIcon={<QuestionAnswerRounded />} LinkComponent={Link} variant="text" color="inherit" to="/faq">FAQ</Button>
                                 </Stack>
                             }
                             {adminPage && <Chip label="Admin Panel" color="warning" size="small" icon={<AdminPanelSettingsIcon />} />}
@@ -74,19 +74,19 @@ export default function Navbar() {
                         </ListItemButton>
                     </ListItem>
                     <ListItem key={"All Experiences"} disablePadding>
-                        <ListItemButton LinkComponent={Link} to="/activityList" onClick={() => setIsAdminDrawerOpen(false)}>
+                        <ListItemButton LinkComponent={Link} to="/activityList" onClick={() => setIsDrawerOpen(false)}>
                             <ListItemIcon><CelebrationRounded /></ListItemIcon>
                             <ListItemText primary={"All Experiences"} />
                         </ListItemButton>
                     </ListItem>
                     <ListItem key={"Friends Of UPlay"} disablePadding>
-                        <ListItemButton onClick={() => setIsAdminDrawerOpen(false)}>
+                        <ListItemButton onClick={() => setIsDrawerOpen(false)}>
                             <ListItemIcon><CardMembershipRounded /></ListItemIcon>
                             <ListItemText primary={"Friends of UPlay"} />
                         </ListItemButton>
                     </ListItem>
                     <ListItem key={"FAQ"} disablePadding>
-                        <ListItemButton LinkComponent={Link} to="/admin/activities" onClick={() => setIsAdminDrawerOpen(false)}>
+                        <ListItemButton LinkComponent={Link} to="/faq" onClick={() => setIsDrawerOpen(false)}>
                             <ListItemIcon><QuestionAnswerRounded /></ListItemIcon>
                             <ListItemText primary={"FAQ"} />
                         </ListItemButton>

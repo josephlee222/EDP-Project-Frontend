@@ -89,7 +89,7 @@ export default function ViewBookings() {
                 }
                 
                 <Grid container spacing={2} mt={"1rem"}>
-                    {loading && <>{[...Array(2)].map((card) => (
+                    {loading && <>{[...Array(6)].map((card) => (
                         <Grid item key={card} xs={12} sm={6} md={4}>
                             <CustomSkeletonCard />
                         </Grid>
