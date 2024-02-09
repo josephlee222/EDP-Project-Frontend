@@ -85,7 +85,7 @@ function ActivityList() {
 
     const CustomCard = ({ id, name, expiryDate, description, pictures }) => (
         <Card>
-            <img src={url+'/uploads/'+pictures.items[0]}/>
+            <CardMedia sx={{ height: 140 }} image={pictures ? url+'/uploads/'+pictures.items[0] : "/unknown.png"}/>
             <CardContent>
                 <Link to={`/activityList/${id}`} style={{ textDecoration: 'none' }}>
                     <Typography variant="h6">{name}</Typography>
