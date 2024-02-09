@@ -14,6 +14,9 @@ import ViewActivities from './ViewActivities'
 import CreateActivity from './CreateActivity'
 import EditActivity from './EditActivity'
 import CreateAvailability from './CreateAvailability'
+import CreateCategory from './CreateCategory'
+import ViewCategories from './ViewCategories'
+import EditCategory from './EditCategory'
 
 export const CategoryContext = createContext(null);
 export default function AdminActivitiesRoutes() {
@@ -27,12 +30,18 @@ export default function AdminActivitiesRoutes() {
                         <Box sx={{ display: "flex", alignItems: "center" }}>
                             <Button variant={activePage == 1 ? "contained" : "secondary"} startIcon={<List/>} sx={{mr: ".5rem"}} LinkComponent={Link} to="/admin/activities">Activity List</Button>
                             <Button variant={activePage == 2 ? "contained" : "secondary"} startIcon={<AddRounded/>} LinkComponent={Link} to="/admin/activities/create">Create Activity</Button>
+
+                            <Button variant={activePage == 2 ? "contained" : "secondary"} startIcon={<AddRounded/>} LinkComponent={Link} to="/admin/activities/createCategory">Add Category</Button>
+                            <Button variant={activePage == 1 ? "contained" : "secondary"} startIcon={<List/>} sx={{mr: ".5rem"}} LinkComponent={Link} to="/admin/activities/ViewCategories">Category List</Button>
                         </Box>
                     </CardContent>
                 </Card>
                 <Routes>
                     <Route path="/" element={<ViewActivities />} />
                     <Route path="/create" element={<CreateActivity />} />
+                    <Route path="/createCategory" element={<CreateCategory />} />
+                    <Route path="/viewCategories" element={<ViewCategories />} />
+                    <Route path="/categories/:id" element={<EditCategory />} />
                     <Route path="/createAvailability/:id" element={<CreateAvailability />} />
                     <Route path="/test" element={<Test />} />
                     <Route path="*" element={<NotFound />} />

@@ -20,7 +20,7 @@ function CreateBooking() {
     const navigate = useNavigate();
     const { id: activityId } = useParams();
     const { setActivePage } = useContext(AppContext);
-    const [availability, setAvailability] = useState([]);
+    const [availabilities, setavailabilities] = useState([]);
     const [activity, setActivity] = useState([]);
       const handleGetActivity = () => {
         setLoading(true);
@@ -28,26 +28,21 @@ function CreateBooking() {
           if (res.status === 200) {
             setActivity(res.data);
             setLoading(false);
-            
           }
         });
       };
       
 
     const handleGetAvailabilities = () => {
-        http.get("/Availabilities/").then((res) => {
+        http.get(`/Availabilities/Activity/${activityId}`).then((res) => {
             if (res.status === 200) {
-                setAvailability(res.data)
+                setavailabilities(res.data)
                 setLoading(false)
             }
         })
     }
 
-
-
     titleHelper("Book Activity")
-
-
 
     const formik = useFormik({
         initialValues: {
@@ -63,6 +58,17 @@ function CreateBooking() {
         }),
         onSubmit: (data) => {
             setLoading(true);
+
+            const isDateAvailable = availabilities.some(availability => {
+                return availability.date === date && availability.currentPax < availability.maxPax;
+            });
+        
+            if (!isDateAvailable) {
+                enqueueSnackbar("Selected date is not available or fully booked.", { variant: "error" });
+                setLoading(false);
+                return;
+            }
+        
             
             console.log(data)
             data.activityId = activityId;
