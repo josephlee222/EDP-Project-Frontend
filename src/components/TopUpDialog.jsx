@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Dialog, DialogTitle, DialogContent, DialogActions, DialogContentText, Button, TextField, Stack, Box, InputAdornment } from '@mui/material'
 import { LoadingButton } from '@mui/lab'
 import * as yup from 'yup'
@@ -49,6 +49,10 @@ function TopUpDialog(props) {
         props.onClose();
         setPayment(false);
     }
+
+    useEffect(() => {
+        topupFormik.values.amount = props.amount;
+    }, [props.amount])
 
     const appearance = {
         theme: "stripe",

@@ -18,6 +18,9 @@ import EditBooking from './Activities/EditBooking'
 import CreateReview from './Activities/Review'
 import Faq from './Faq'
 
+import ViewCart from './Cart/ViewCart'
+import Checkout from './Cart/Checkout'
+
 
 function UserRoutes() {
     // Routes for admin pages. To add authenication so that only admins can access these pages, add a check for the user's role in the UserContext
@@ -44,6 +47,8 @@ function UserRoutes() {
             <Route path="/test" element={<Test />} />
             <Route path="/faq" element={<Faq />} />
             <Route path="/profile/*" element={<ProfileRoutes />} />
+            <Route path="/cart" element={<ViewCart />} />
+            <Route path="/checkout" element={<Checkout />} />
         </Routes>
     )
 }
