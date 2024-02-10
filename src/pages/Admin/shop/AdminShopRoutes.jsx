@@ -25,7 +25,7 @@ export default function AdminShopRoutes() {
                         <Box sx={{ alignItems: "center", overflowX: "auto", whiteSpace: "nowrap" }}>
                             <Button variant={activePage == 1 ? "contained" : "secondary"} startIcon={<BarChartRounded/>} sx={{mr: ".5rem"}} LinkComponent={Link} to="/admin/shop">Sales Overview</Button>
                             <Button variant={activePage == 2 ? "contained" : "secondary"} startIcon={<ViewCarouselRounded/>} sx={{mr: ".5rem"}} LinkComponent={Link} to="/admin/shop/banners">Homepage Banners</Button>
-                            <Button variant={activePage == 2 ? "contained" : "secondary"} startIcon={<ViewCarouselRounded/>} sx={{mr: ".5rem"}} LinkComponent={Link} to="/admin/shop/coupons">Coupon List</Button>
+                            <Button variant={activePage == 3 ? "contained" : "secondary"} startIcon={<ViewCarouselRounded/>} sx={{mr: ".5rem"}} LinkComponent={Link} to="/admin/shop/coupons">Coupon List</Button>
                             <Button variant={activePage == 4 ? "contained" : "secondary"} startIcon={<AddRounded/>}  LinkComponent={Link} to="/admin/shop/createCoupon">Add Coupon</Button>
                         </Box>
                     </CardContent>

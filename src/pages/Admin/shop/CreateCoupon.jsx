@@ -68,7 +68,7 @@ function CreateCoupon() {
     })
 
     useEffect(() => {
-        setActivePage(2);
+        setActivePage(4);
     }, [])
 
   
