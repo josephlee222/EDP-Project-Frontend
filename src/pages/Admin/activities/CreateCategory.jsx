@@ -48,7 +48,7 @@ function CreateCategory() {
             http.post("/Admin/Category/", data).then((res) => {
                 if (res.status === 200) {
                     enqueueSnackbar("Category created successfully!", { variant: "success" });
-                    navigate("/admin/activities")
+                    navigate("/admin/activities/ViewCategories")
                 } else {
                     enqueueSnackbar("Category creation failed!.", { variant: "error" });
                     setLoading(false);

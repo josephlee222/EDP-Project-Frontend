@@ -11,7 +11,7 @@ import ProfileRoutes from './Profile/ProfileRoutes'
 
 import ActivityList from './Activities/ActivityList'
 import ActivityDetails from './Activities/ActivityDetails';
-
+import ReviewDetails from './Activities/ReviewDetails';
 import { AppContext } from '../App'
 import CreateBooking from './Activities/Booking'
 import EditBooking from './Activities/EditBooking'
@@ -40,6 +40,7 @@ function UserRoutes() {
             <Route path="/booking/:id" element={<CreateBooking />}/>
             <Route path="/editBooking/:id" element={<EditBooking />}/>
             <Route path="/review/:id" element={<CreateReview />}/>
+            <Route path="/reviewDetails/:id" element={<ReviewDetails />}/>
             <Route path="/login" element={!user ? <Login /> : <Navigate to={"/"} />} />
             <Route path="/register" element={!user ? <Register /> : <Navigate to={"/"} />} />
             <Route path="/verify" element={<Verify />} />

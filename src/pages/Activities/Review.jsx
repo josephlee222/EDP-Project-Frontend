@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { Container, Card, CardContent, Box, Checkbox, TextField, Grid, FormControlLabel, IconButton, Typography, RadioGroup, Radio } from '@mui/material'
+import {  Container, Card, CardContent, Box, Checkbox, TextField,
+    Grid, FormControlLabel, IconButton, Typography, RadioGroup, Radio, List,
+    ListItem,
+    ListItemText } from '@mui/material'
 import LoadingButton from '@mui/lab/LoadingButton';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import AddIcon from '@mui/icons-material/Add';
@@ -21,6 +24,10 @@ function CreateReview() {
     const { id: activityId } = useParams();
     const { setActivePage } = useContext(AppContext);
     const [activity, setActivity] = useState([]);
+    const [uploadedFiles, setUploadedFiles] = useState([]);
+    const [files, setFiles] = useState([]);
+
+
       const handleGetActivity = () => {
         setLoading(true);
         http.get(`/Activity/${activityId}`).then((res) => {
@@ -42,6 +49,7 @@ function CreateReview() {
         initialValues: {
             description: "",
             rating: 0,
+            pictures: [],
             
         },
         validationSchema: Yup.object({
@@ -52,26 +60,82 @@ function CreateReview() {
         }),
         onSubmit: (data) => {
             setLoading(true);
-            
-            console.log(data)
+            var pictures = []
+            console.log("pictures: " + data.pictures);
+            console.log(data.pictures);
+
             data.ActivityId = activityId;
 
+            const formData = new FormData();
+            Array.from(files).forEach((file, index) => {
+                formData.append(`files`, file);
+                console.log(`Appended file ${index}:`, file);
+            });
 
-            http.post("/Review", data).then((res) => {
+            const config = {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            };
+
+            console.log("formdata: ", formData);
+            console.log(formData);
+
+            http.post("/File/multiUpload/", formData, config).then((res) => {
+
                 if (res.status === 200) {
-                    enqueueSnackbar("Booking successful!", { variant: "success" });
-                    console.log("success yayyyy")
-                    navigate("/profile/booking")
+                    enqueueSnackbar("Pictures uploaded successfully!", { variant: "success" });
+                    console.log("res data: ", res.data);
+                    const resPic = { Items: res.data };
+                    console.log("respic: ", resPic);
+                    data.pictures = res.data.uploadedFiles
+                    console.log(pictures)
+                    data.description = data.description.trim();
+                    data.ActivityId = activityId;
+
+                    console.log(data)
+
+                    http.post("/Review/", data).then((res) => {
+                        if (res.status === 200) {
+                            enqueueSnackbar("Activity created successfully!", { variant: "success" });
+                            navigate(`/activityList/${activityId}`)
+                        } else {
+                            enqueueSnackbar("Activity creation failed!.", { variant: "error" });
+                            setLoading(false);
+                        }
+                    }).catch((err) => {
+                        enqueueSnackbar("Activity creation failed! " + err.response.data.error, { variant: "error" });
+                        setLoading(false);
+                    })
                 } else {
-                    enqueueSnackbar("Booking failed!.", { variant: "error" });
+                    enqueueSnackbar("Pictures uploaded failed!. else", { variant: "error" });
                     setLoading(false);
                 }
             }).catch((err) => {
-                enqueueSnackbar("Booking failed! " + err.response.data.error, { variant: "error" });
+                console.log(err)
+                enqueueSnackbar("Pictures uploaded failed! catch" + err.response.data.error, { variant: "error" });
                 setLoading(false);
             })
         }
+        
     })
+
+    const handlePicturesChange = (event) => {
+        const files = event.target.files;
+
+        // Convert FileList to an array
+        const fileList = Array.from(files);
+        // Concatenate the new array of files with the existing list of uploaded files
+        const newUploadedFiles = [...uploadedFiles, ...fileList.map(file => file.name)];
+        // Set the updated list of uploaded files
+        setUploadedFiles(newUploadedFiles);
+        // Set the array of files to the formik values
+        //formik.setFieldValue('pictures', newUploadedFiles);
+        // Set the files state to the selected files
+        setFiles(files);
+
+        console.log("Files state:", files);
+    };
 
     useEffect(() => {
         handleGetActivity();
@@ -116,7 +180,37 @@ function CreateReview() {
                                         error={formik.touched.description && Boolean(formik.errors.description)}
                                         helperText={formik.touched.description && formik.errors.description}
                                     />
-                                </Grid>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <input
+                                            accept="image/*"
+                                            id="pictures"
+                                            name="pictures"
+                                            type="file"
+                                            onChange={handlePicturesChange}
+                                            multiple // Allow multiple file selection
+                                            style={{ display: 'none' }}
+                                        />
+                                        <label htmlFor="pictures">
+                                            <IconButton
+                                                color="primary"
+                                                aria-label="upload picture"
+                                                component="span"
+                                            >
+                                                <AddIcon />
+                                            </IconButton>
+                                            <Typography variant="body1">Upload Pictures</Typography>
+                                        </label>
+                                        {uploadedFiles.length > 0 && (
+                                            <List>
+                                                {uploadedFiles.map((fileName, index) => (
+                                                    <ListItem key={index}>
+                                                        <ListItemText primary={fileName} />
+                                                    </ListItem>
+                                                ))}
+                                            </List>
+                                        )}
+                                    </Grid>
                                 </Grid>
                                 
                                 
