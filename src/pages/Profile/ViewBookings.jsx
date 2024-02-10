@@ -36,11 +36,11 @@ export default function ViewBookings() {
         return activity ? activity.name : "Activity Not Found";
     };
 
-    
+
 
     const CustomCard = ({ id, activityId, date, pax, notes }) => (
         <Card>
-          <CardContent>
+            <CardContent>
                 <Link to={`/activityList/${activityId}`} style={{ textDecoration: 'none' }}>
                     <Typography variant="h6">Activity: {getActivityName(activityId)}</Typography>
                 </Link>
@@ -69,38 +69,38 @@ export default function ViewBookings() {
 
     useEffect(() => {
         setActivePage(2);
-        document.title = "Bookings - UPlay" ;
+        document.title = "Bookings - UPlay";
         handleGetBookings();
         handleGetActivities()
     }, [])
 
     return (
         <>
-                
-                {!loading && booking.length === 0 && 
-                    <Card sx={{mt: "1rem"}}>
+
+            {!loading && booking.length === 0 &&
+                <Card sx={{ mt: "1rem" }}>
                     <CardContent>
                         <Box display="flex" justifyContent="center" alignItems="center" flexDirection="column">
-                            <WarningRounded sx={{ fontSize: 100, color:"black", opacity:"0.5" }} />
+                            <WarningRounded sx={{ fontSize: 100, color: "black", opacity: "0.5" }} />
                             <Typography variant="h6" fontWeight={700}>No Bookings Found</Typography>
                         </Box>
                     </CardContent>
                 </Card>
-                }
-                
-                <Grid container spacing={2} mt={"1rem"}>
-                    {loading && <>{[...Array(6)].map((card) => (
-                        <Grid item key={card} xs={12} sm={6} md={4}>
-                            <CustomSkeletonCard />
-                        </Grid>
-                    ))}</>}
+            }
 
-                    {!loading && <>{booking.map((card) => (
-                        <Grid item key={card.id} xs={12} sm={6} md={4}>
-                            <CustomCard {...card} />
-                        </Grid>
-                    ))}</>}
-                </Grid>
+            <Grid container spacing={2} mt={"1rem"}>
+                {loading && <>{[...Array(6)].map((card) => (
+                    <Grid item key={card} xs={12} sm={6} md={4}>
+                        <CustomSkeletonCard />
+                    </Grid>
+                ))}</>}
+
+                {!loading && <>{booking.map((card) => (
+                    <Grid item key={card.id} xs={12} sm={6} md={4}>
+                        <CustomCard {...card} />
+                    </Grid>
+                ))}</>}
+            </Grid>
         </>
     )
 }

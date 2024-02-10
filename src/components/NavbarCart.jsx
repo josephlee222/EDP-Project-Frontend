@@ -7,7 +7,7 @@ import { Diversity3Rounded, ShoppingCartRounded } from "@mui/icons-material";
 
 export default function NavbarCart() {
     //const { notifications, currentNotification, setCurrentNotification } = useContext(AppContext);
-    const [friendRequests, setFriendRequests] = useState([])
+    const { user } = useContext(AppContext);
     const [isPopoverOpen, setIsPopoverOpen] = useState(false)
     const [anchorEl, setAnchorEl] = useState(null)
     const buttonRef = useRef(null)
@@ -27,13 +27,13 @@ export default function NavbarCart() {
     return (
         <>
             <Tooltip title="My Cart" arrow sx={{display: {xs: "none", md: "flex"}}}>
-                <IconButton onClick={(e) => handlePopoverOpen(e)} ref={buttonRef}>
-                    {friendRequests.length > 0 &&
-                        <Badge badgeContent={friendRequests.length} color="yellow" overlap="circular">
+                <IconButton LinkComponent={Link} to="/cart">
+                    {user.cart.length > 0 &&
+                        <Badge badgeContent={user.cart.length} color="yellow" overlap="circular">
                             <ShoppingCartRounded sx={{ fill: "white" }} />
                         </Badge>
                     }
-                    {friendRequests.length === 0 &&
+                    {user.cart.length === 0 &&
                         <ShoppingCartRounded sx={{ fill: "white" }} />
                     }
                 </IconButton>
