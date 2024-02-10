@@ -79,3 +79,31 @@ Gna do activity details, i guess.
 
 made some carousel looking thing for activity details with animation too yay.
 Still have a LOT of work to do before the site actually looks good, but this is great progress.
+
+
+tmr we'll do review details page. Probably can use a similar layout as the activityDetails
+Then after that, I'll have to wait for joseph to do his cart stuff before i integrate with it.
+
+Oh yeah, search bar and category filtering. Still haven't done that.
+maybe a search and filter for reviews as well.
+And also the stupid custom calendar thing.
+
+That should be it for features.
+For styling, I want to do the activity list, review details, and maybe I'll tweak a bit of the homepage as well.
+
+Good job today. We really did a lot.
+
+
+10/2/2024
+
+the user flow for booking activity is now officially finished. 
+I managed to send stuff to the cart. From there on, it's joseph's problem
+The calendar thing works too, although not necessarily the way I want it to work specifically. 
+It does work, though so whatever.
+
+so now we hv to:
+tweak the calendar to look nicer
+implement it in the booking page as well
+
+btw it might look better for the carousel thing if the thumbmnails are all the same size.
+The acutal pictures can be left in different sizes but the thumbnails should look consistent.

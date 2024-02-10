@@ -34,10 +34,11 @@ function CreateBooking() {
       
 
     const handleGetAvailabilities = () => {
-        http.get(`/Availabilities/Activity/${activityId}`).then((res) => {
+        http.get(`/Availability/Activity/${activityId}`).then((res) => {
             if (res.status === 200) {
                 setavailabilities(res.data)
                 setLoading(false)
+                console.log("availabilities: ", res.data)
             }
         })
     }
@@ -58,9 +59,16 @@ function CreateBooking() {
         }),
         onSubmit: (data) => {
             setLoading(true);
+            console.log("date: ",data.date)
+            let availableId = null;
 
             const isDateAvailable = availabilities.some(availability => {
-                return availability.date === date && availability.currentPax < availability.maxPax;
+                const availabilityDate = new Date(availability.date).toISOString().split('T')[0];
+                if (availabilityDate === data.date && availability.currentPax < availability.maxPax) {
+                    availableId = availability.id;
+                    return true;
+                }
+                return false;
             });
         
             if (!isDateAvailable) {
@@ -68,25 +76,28 @@ function CreateBooking() {
                 setLoading(false);
                 return;
             }
+
         
-            
-            console.log(data)
-            data.activityId = activityId;
+            const postData = {
+                availabilityId: availableId,
+                pax: data.pax
+            };
 
 
-            http.post("/Booking", data).then((res) => {
+            http.post("/Shop/Cart", postData).then((res) => {
                 if (res.status === 200) {
-                    enqueueSnackbar("Booking successful!", { variant: "success" });
+                    enqueueSnackbar("Cart successful!", { variant: "success" });
                     console.log("success yayyyy")
                     navigate("/profile/booking")
                 } else {
-                    enqueueSnackbar("Booking failed!.", { variant: "error" });
+                    enqueueSnackbar("Cart failed! else", { variant: "error" });
                     setLoading(false);
                 }
             }).catch((err) => {
-                enqueueSnackbar("Booking failed! " + err.response.data.error, { variant: "error" });
+                enqueueSnackbar("Cart failed! catch "  + err.response.data.error, { variant: "error" });
                 setLoading(false);
-            })
+            }
+            )
         }
     })
 
