@@ -56,14 +56,8 @@ function ServerDay(props) {
     </Badge>
   );
 }
-const useStyles = makeStyles((theme) => ({
-    customCell: {
-      margin: theme.spacing(1), // Adjust the spacing between cells as needed
-    },
-  }));
   
 export default function DateCalendarServerRequest({ activityId, availabilities, setDialogOpen, onChange }) {
-    const classes = useStyles();
     const requestAbortController = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
 

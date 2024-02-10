@@ -85,16 +85,16 @@ function ActivityList() {
 
 
     const CustomCard = ({ id, name, expiryDate, description, pictures }) => (
-        <Card>
-            <CardMedia sx={{ height: 140 }} image={pictures ? url+'/uploads/'+pictures.items[0] : "/unknown.png"}/>
-            <CardContent>
-                <Link to={`/activityList/${id}`} style={{ textDecoration: 'none' }}>
-                    <Typography variant="h6">{name}</Typography>
-                </Link>
-                <Typography>{description}</Typography>
-                <Typography>Expiry Date: {expiryDate}</Typography>
-            </CardContent>
-        </Card>
+        <Link to={`/activityList/${id}`} style={{ textDecoration: 'none' }}>
+            <Card>
+                <CardMedia sx={{ height: 140 }} image={pictures ? url + '/uploads/' + pictures.items[0] : "/unknown.png"} />
+                <CardContent>
+                    <Typography variant="h6" fontWeight={700}>{name}</Typography>
+                    <Typography>{description}</Typography>
+                    <Typography>Expiry Date: {expiryDate}</Typography>
+                </CardContent>
+            </Card>
+        </Link>
     );
 
     const CustomSkeletonCard = () => (
@@ -115,8 +115,8 @@ function ActivityList() {
     }, [])
     return (
         <>
-            <PageHeader title="Activities" icon={BackpackRounded}/>
-           
+            <PageHeader title="Activities" icon={BackpackRounded} />
+
             <Container sx={{ mt: "1rem" }} maxWidth="xl">
                 <Grid container spacing={2}>
                     {loading && <>{[...Array(6)].map((card) => (

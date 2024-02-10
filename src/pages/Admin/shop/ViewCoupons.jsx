@@ -102,7 +102,7 @@ function ViewCoupons() {
     }
 
     useEffect(() => {
-        setActivePage(1)
+        setActivePage(3)
         handleGetCoupons()
     }, [])
     return (
