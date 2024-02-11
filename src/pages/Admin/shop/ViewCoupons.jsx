@@ -37,10 +37,10 @@ function ViewCoupons() {
     titleHelper("View Coupons")
     const columns = [
         { field: 'code', headerName: 'Code', width: 200 },
-        { field: 'expiryDate', headerName: 'Expiry Date', width: 200, valueFormatter: params => moment(params?.value).format("DD/MM/YYYY"), },
+        { field: 'expiry', headerName: 'Expiry Date', width: 200, valueFormatter: params => moment(params?.value).format("DD/MM/YYYY"), },
         { field: 'description', headerName: 'Description', flex: 1, minWidth: 250 },
-        { field: 'discountType', headerName: 'DiscountType', width: 200 },
-        { field: 'discountAmount', headerName: 'DiscountAmount', width: 200 }
+        { field: 'discountType', headerName: 'Discount Type', minWidth: 100 },
+        { field: 'discountAmount', headerName: 'Discount Amount', minWidth: 100 }
 
         ,
 

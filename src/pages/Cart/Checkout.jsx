@@ -97,7 +97,7 @@ function Checkout() {
             data.name = data.name.trim();
             data.birthday = moment(data.birthday).format("YYYY-MM-DD");
             data.nric = data.nric.trim();
-            data.coupon = coupon ? coupon.code : null;
+            data.coupon = coupon ? coupon.id : null;
 
             http.post("/Shop/Cart/Checkout", data).then((res) => {
                 if (res.status === 200) {
@@ -131,6 +131,16 @@ function Checkout() {
     useEffect(() => {
         getCart()
     }, [])
+
+    useEffect(() => {
+        checkoutFormik.setValues({
+            email: user?.email,
+            phone: user?.phoneNumber,
+            name: user?.name,
+            birthday: moment(user?.birthDate).format("YYYY-MM-DD"),
+            nric: user?.nric,
+        })
+    }, [user])
 
 
     useEffect(() => {
