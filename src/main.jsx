@@ -86,6 +86,7 @@ let theme = createTheme({
                         '&:hover': {
                             backgroundColor: "#E8533F80",
                         },
+                        backdropFilter: "blur(10px)",
                     },
                 },
             ]

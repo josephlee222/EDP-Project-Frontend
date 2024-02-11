@@ -8,6 +8,7 @@ import InfoBox from "../../components/InfoBox";
 import TodayRoundedIcon from '@mui/icons-material/TodayRounded';
 import http from '../../http';
 import { Link } from 'react-router-dom';
+import moment from "moment";
 
 
 export default function ViewBookings() {
@@ -43,9 +44,9 @@ export default function ViewBookings() {
             <Card>
                 <CardContent>
 
-                    <Typography variant="h6">Activity: {availability.activity.name}</Typography>
+                    <Typography variant="h6" fontWeight={700}>{availability.activity.name}</Typography>
 
-                    <Typography>Date: {date}</Typography>
+                    <Typography>Date: {moment(date).format("DD/MM/YYYY")}</Typography>
                     <Typography>Pax: {pax}</Typography>
                     <Typography>Notes: {notes ? notes : "No notes"}</Typography>
 
@@ -88,7 +89,7 @@ export default function ViewBookings() {
                 </Card>
             }
 
-            <Grid container spacing={2} mt={"1rem"}>
+            <Grid container spacing={2} mt={"0rem"}>
                 {loading && <>{[...Array(6)].map((card) => (
                     <Grid item key={card} xs={12} sm={6} md={4}>
                         <CustomSkeletonCard />
