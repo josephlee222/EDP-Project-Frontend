@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Card, CardContent, Grid, Typography, Button, Container, CardMedia, Skeleton } from '@mui/material';
+import {
+  Box, Card, CardContent, Grid, Typography, Button, Container, CardMedia, Skeleton,
+  Dialog, DialogTitle, DialogContent, DialogActions, TextField,Accordion, AccordionSummary, AccordionDetails
+} from '@mui/material';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import http from '../../http';
@@ -10,6 +13,12 @@ import ShareIcon from '@mui/icons-material/Share';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import ImageSelector from '../../components/ImageSelector';
+import BookingDialog from '../../components/BookingDialog';
+import { useFormik } from 'formik';
+import * as Yup from "yup";
+import LoadingButton from '@mui/lab/LoadingButton';
+import DateCalendarServerRequest from '../../components/CustomDateCalendarBooking';
+import ProfilePicture from '../../components/ProfilePicture';
 
 function ActivityDetails() {
   const url = import.meta.env.VITE_API_URL
@@ -33,6 +42,98 @@ function ActivityDetails() {
   // });
   const [activity, setActivity] = useState([])
   titleHelper("Activity Details", activity.name);
+
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [availabilities, setavailabilities] = useState([]);
+  const [date, setDate] = React.useState('');
+  const [pax, setPax] = React.useState('');
+
+  const handleGetAvailabilities = () => {
+    http.get(`/Availability/Activity/${activityId}`).then((res) => {
+      if (res.status === 200) {
+        setavailabilities(res.data)
+        setLoading(false)
+        console.log("availabilities: ", res.data)
+      }
+    })
+  }
+
+  const handleDateChange = (event) => {
+    setDate(event.target.value);
+  };
+
+  const handlePaxChange = (event) => {
+    setPax(event.target.value);
+  };
+
+  const handleSubmit = () => {
+
+  };
+
+  const formik = useFormik({
+    initialValues: {
+      date: "",
+      pax: 0,
+
+    },
+    validationSchema: Yup.object({
+      date: Yup.date().required("Date is required"),
+      pax: Yup.number().required("Discount Amount is required"),
+
+
+    }),
+    onSubmit: (data) => {
+      setLoading(true);
+      console.log("date: ", data.date)
+      let availableId = null;
+
+      const isDateAvailable = availabilities.some(availability => {
+        const availabilityDate = new Date(availability.date).toISOString().split('T')[0];
+        if (availabilityDate === data.date && availability.currentPax < availability.maxPax) {
+          availableId = availability.id;
+          return true;
+        }
+        return false;
+      });
+
+      if (!isDateAvailable) {
+        enqueueSnackbar("Selected date is not available or fully booked.", { variant: "error" });
+        setLoading(false);
+        return;
+      }
+
+
+      const postData = {
+        availabilityId: availableId,
+        pax: data.pax
+      };
+
+
+      http.post("/Shop/Cart", postData).then((res) => {
+        if (res.status === 200) {
+          enqueueSnackbar("Cart successful!", { variant: "success" });
+          console.log("success yayyyy")
+          navigate("/profile/booking")
+        } else {
+          enqueueSnackbar("Cart failed! else", { variant: "error" });
+          setLoading(false);
+        }
+      }).catch((err) => {
+        enqueueSnackbar("Cart failed! catch " + err.response.data.error, { variant: "error" });
+        setLoading(false);
+      }
+      )
+    }
+  })
+
+
+  const handleOpenDialog = () => {
+    setIsDialogOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setIsDialogOpen(false);
+  };
 
   const handleGetActivity = () => {
     setLoading(true);
@@ -89,7 +190,17 @@ function ActivityDetails() {
   useEffect(() => {
     handleGetActivity();
     handleGetReviews();
+    handleGetAvailabilities();
   }, []);
+
+
+  const handleBookingSubmit = (formData) => {
+    // Handle form submission here, formData will contain date and pax
+    console.log('Booking form submitted:', formData);
+    // You can make HTTP request to submit the booking details to the server
+    // After successful submission, close the dialog
+    setIsDialogOpen(false);
+  };
 
   return (
     <>
@@ -128,13 +239,62 @@ function ActivityDetails() {
                     <Typography variant="body1">{activity.description}</Typography>
                   </div>
 
-                  <Button
+                  {/* <Button
                     onClick={() => {
                       navigate("/Booking/" + activityId)
                     }}
                   >
                     book
-                  </Button>
+                  </Button> */}
+
+                  <Button onClick={handleOpenDialog}>Book</Button>
+                  <Dialog open={isDialogOpen} onClose={handleCloseDialog}>
+                    <DialogTitle>Book Activity</DialogTitle>
+                    <DialogContent>
+                      <Box component="form" mt={3}>
+                            {/* <TextField
+                              fullWidth
+                              id="date"
+                              name="date"
+                              label="Date"
+                              variant="outlined"
+                              value={formik.values.date}
+                              onChange={formik.handleChange}
+                              error={formik.touched.date && Boolean(formik.errors.date)}
+                              helperText={formik.touched.date && formik.errors.date}
+                              type='date'
+                              InputLabelProps={{ shrink: true }}
+                            /> */}
+
+                            <DateCalendarServerRequest
+                              onChange={formik.values.date}
+                              activityId={activityId}
+                              availabilities={availabilities}
+                              formik={formik} // Pass the formik prop here
+                            />
+
+
+                          
+                            <TextField
+                              fullWidth
+                              id="pax"
+                              name="pax"
+                              label="pax"
+                              variant="outlined"
+                              value={formik.values.pax}
+                              onChange={formik.handleChange}
+                              error={formik.touched.pax && Boolean(formik.errors.pax)}
+                              helperText={formik.touched.pax && formik.errors.pax}
+                              type='number'
+                            />
+                        
+                      </Box>
+                    </DialogContent>
+                    <DialogActions>
+                      <Button onClick={handleCloseDialog}>Cancel</Button>
+                      <Button onClick={formik.handleSubmit} color="primary">Book</Button>
+                    </DialogActions>
+                  </Dialog>
                 </Grid>
               </Grid>
 
@@ -159,24 +319,44 @@ function ActivityDetails() {
             ))}
           </CardContent> */}
           </Card>
-
+          {/* <ProfilePicture user={user} sx={{ width: "72px", height: "72px" }} /> */}
           <Container sx={{ mt: "1rem" }} maxWidth="xl">
             <Link to={`/review/${activityId}`} style={{ textDecoration: 'none' }}>
               <Typography variant="h6">add review</Typography>
             </Link>
             <Grid container spacing={2}>
-              {loading && <>{[...Array(6)].map((card) => (
-                <Grid item key={card} xs={12} sm={6} md={4}>
-                  <CustomSkeletonCard />
-                </Grid>
-              ))}</>}
-
-              {!loading && <>{Reviews.map((card) => (
-                <Grid item key={card.id} xs={12} sm={6} md={4}>
-                  <CustomCard {...card} />
-                </Grid>
-              ))}</>}
+      {loading && (
+        <>
+          {[...Array(6)].map((card, index) => ( // changed key={card} to key={index}
+            <Grid item key={index} xs={12} sm={6} md={4}>
+              <CustomSkeletonCard />
             </Grid>
+          ))}
+        </>
+      )}
+
+      {!loading && (
+        <>
+          {Reviews.map((card) => (
+            <Grid item key={card.id} xs={12} sm={12} md={12}>
+              <Accordion>
+                <AccordionSummary expandIcon={<KeyboardArrowDownIcon />} aria-controls="panel1a-content" id="panel1a-header">
+                  <div>
+                  <ProfilePicture user={card.user} sx={{ width: "72px", height: "72px" }} /> 
+                    <h3>{card.title}</h3> {/* Assuming title exists in card */}
+                    <p>Rating: {card.rating}</p> {/* Assuming rating exists in card */}
+                  </div>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <CustomCard {...card} />
+                </AccordionDetails>
+              </Accordion>
+            </Grid>
+          ))}
+        </>
+      )}
+    </Grid>
+
           </Container>
         </Box>
       </Container>

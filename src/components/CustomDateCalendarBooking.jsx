@@ -9,6 +9,7 @@ import { DayCalendarSkeleton } from '@mui/x-date-pickers/DayCalendarSkeleton';
 import { styled } from '@mui/material/styles';
 import { Tooltip } from '@mui/material';
 
+
 function getRandomNumber(min, max) {
     return Math.round(Math.random() * (max - min) + min);
 }
@@ -45,79 +46,41 @@ function ServerDay(props) {
     const price = availability ? availability.price : null;
     const pax = availability ? availability.maxPax : null;
 
+    const handleClick = () => {
+        if (availability) {
+            // Call the parent component's onSelectDay function
+            // and pass the selected day as an argument
+            other.onSelectDay(day);
+        }
+    };
+
     return (
         <Badge
             key={day.toString()}
             overlap="circular"
-            // badgeContent={(
-            //     <div
-            //         style={{
-            //             fontSize:"8px"
-            //         }}
-            //     >
-            //         <div
-            //             style={{
-            //                 width:'10px',
-            //                 height:'25px'
-
-            //             }}
-            //         ></div>
-            //         {price != null && <div
-            //             style={{
-            //                 backgroundColor: "#E8533F",
-            //                 color: 'white',
-            //                 padding: '4px',
-            //                 borderRadius: '25px'
-            //             }}
-            //         >${price}</div>}
-            //         <br
-            //         style={{
-            //             height:'5px'
-
-            //         }}
-            //         />
-            //         {pax != null && <div
-            //             style={{
-            //                 backgroundColor: "#E8533F",
-            //                 color: 'white',
-            //                 padding: '4px',
-            //                 borderRadius: '25px',
-                            
-
-            //             }}
-            //         >${pax}</div>}
-            //     </div>
-            // )}
-        badgeContent={(
-            <Tooltip title={pax + " pax"} arrow
-            >
-            <div>
-                {price != null && <div
-                    style={{
-                        backgroundColor: "#E8533F",
-                        color: 'white',
-                        padding: '4px',
-                        borderRadius: '25px'
-                    }}
-                >${price}</div>}
-            </div>
-            </Tooltip>
-        )}
+            badgeContent={price != null && <div
+                style={{
+                    backgroundColor: "#E8533F",
+                    color: 'white',
+                    padding: '4px',
+                    borderRadius: '25px'
+                }}
+            >${price}</div>}
         >
             <div
-            //style={{ padding: '10px' }}
-            > {/* Adjust spacing here */}
-                <PickersDay {...other} outsideCurrentMonth={outsideCurrentMonth} day={day} sx={{ paddingLeft: '8px', paddingRight: '8px' }} /> {/* Adjust paddingLeft and paddingRight */}
+                onClick={handleClick}
+                style={{ cursor: availability ? 'pointer' : 'default', opacity: availability ? 1 : 0.3, backgroundColor: availability ? '' : "#ccbcbb", borderRadius:'12px' }}
+            >
+                <PickersDay {...other} outsideCurrentMonth={outsideCurrentMonth} day={day} sx={{ paddingLeft: '8px', paddingRight: '8px' }} />
             </div>
         </Badge>
     );
 }
 
-
-
-export default function DateCalendarServerRequest({ activityId, availabilities, setDialogOpen, onChange, big }) {
+export default function DateCalendarServerRequest({ activityId, availabilities, setDialogOpen, onChange, big, formik }) {
     const requestAbortController = useRef(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [selectedDate, setSelectedDate] = useState(null);
 
     const fetchHighlightedDays = (date) => {
         const controller = new AbortController();
@@ -154,6 +117,12 @@ export default function DateCalendarServerRequest({ activityId, availabilities, 
         fetchHighlightedDays(date);
     };
 
+    const handleSelectDay = (day) => {
+        setSelectedDate(day);
+        formik.setFieldValue('date', day.format('YYYY-MM-DD'));
+    };
+    
+
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DateCalendar
@@ -162,18 +131,20 @@ export default function DateCalendarServerRequest({ activityId, availabilities, 
                 onMonthChange={handleMonthChange}
                 renderLoading={() => <DayCalendarSkeleton />}
                 onChange={onChange}
+                onSelectDay={handleSelectDay}
+                selected={selectedDate}
                 slots={{
                     day: ServerDay,
                 }}
                 slotProps={{
                     day: {
                         availabilities,
-                        sx: { fontSize: '1.2rem' }
+                        sx: { fontSize: '1.2rem' },
+                        onSelectDay: handleSelectDay,
                     },
                 }}
-                sx={big ? { transform: 'scale(1.5,1.5)' } :  {  }}
-
-
+                sx={big ? { transform: 'scale(1.5,1.5)' } : {}}
+                formik={formik}
             />
         </LocalizationProvider>
     );
