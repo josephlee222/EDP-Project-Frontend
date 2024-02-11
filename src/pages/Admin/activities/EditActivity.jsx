@@ -211,7 +211,7 @@ function EditActivity() {
 
     useEffect(() => {
         // Set default value for uploadedFiles when activity data is fetched
-        if (Array.isArray(activity.pictures.items)) {
+        if (activity.pictures?.items) {
             const files = [];
             for (let i = 0; i < activity.pictures.items.length; i++) {
                 const picture = activity.pictures.items[i];
@@ -231,7 +231,7 @@ function EditActivity() {
                 <Card>
 
                     <CardContent>
-                        <CardTitle title="Edit Activity" icon={<PersonAddRounded />} />
+                        <CardTitle title="Edit Activity" icon={<EditRounded />} />
                         <Box component="form" mt={3}>
                             <Grid container spacing={2}>
                                 <Grid item xs={12} sm={6}>

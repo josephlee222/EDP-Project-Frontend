@@ -90,7 +90,7 @@ function EditCoupon() {
                 <Card>
 
                     <CardContent>
-                        <CardTitle title="Edit Coupon" icon={<PersonAddRounded />} />
+                        <CardTitle title="Edit Coupon" icon={<EditRounded />} />
                         <Box component="form" mt={3}>
                         <Grid container spacing={2}>
                                 <Grid item xs={12} sm={6}>

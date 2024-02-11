@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Container, Card, CardContent, Box, TextField, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
+import { Container, Card, CardContent, Box, TextField, Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { useSnackbar } from 'notistack';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -103,13 +103,14 @@ function CreateAvailability() {
                     <Dialog open={dialogOpen} onClose={handleDialogClose}>
                         <DialogTitle>Add Availability</DialogTitle>
                         <DialogContent>
+                            <Typography variant="body1" gutterBottom>Add a new availability to this date</Typography>
                             <TextField
                                 label="Max Pax"
                                 variant="outlined"
                                 fullWidth
                                 value={maxPax}
                                 onChange={(e) => setMaxPax(e.target.value)}
-                                margin="normal"
+                                margin="dense"
                             />
                             <TextField
                                 label="Price"
@@ -117,7 +118,7 @@ function CreateAvailability() {
                                 fullWidth
                                 value={price}
                                 onChange={(e) => setPrice(e.target.value)}
-                                margin="normal"
+                                margin="dense"
                             />
                         </DialogContent>
                         <DialogActions>

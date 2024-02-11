@@ -80,7 +80,7 @@ function CreateCoupon() {
                 <Card>
 
                     <CardContent>
-                        <CardTitle title="Create Activity" icon={<AddRounded />} />
+                        <CardTitle title="Create Coupon" icon={<AddRounded />} />
                         <Box component="form" mt={3}>
 
                             <Grid container spacing={2}>
