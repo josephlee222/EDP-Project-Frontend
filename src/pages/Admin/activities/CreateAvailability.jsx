@@ -104,13 +104,14 @@ function CreateAvailability() {
                     <Dialog open={dialogOpen} onClose={handleDialogClose}>
                         <DialogTitle>Add Availability</DialogTitle>
                         <DialogContent>
+                            <Typography variant="body1" gutterBottom>Add a new availability to this date</Typography>
                             <TextField
                                 label="Max Pax"
                                 variant="outlined"
                                 fullWidth
                                 value={maxPax}
                                 onChange={(e) => setMaxPax(e.target.value)}
-                                margin="normal"
+                                margin="dense"
                             />
                             <TextField
                                 label="Price"
@@ -118,7 +119,7 @@ function CreateAvailability() {
                                 fullWidth
                                 value={price}
                                 onChange={(e) => setPrice(e.target.value)}
-                                margin="normal"
+                                margin="dense"
                             />
                         </DialogContent>
                         <DialogActions>

@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Card, CardContent, Typography, Grid, Container, CardMedia, Skeleton, Box } from '@mui/material'
+import { Card, CardContent, Typography, Grid, Container, CardMedia, Skeleton, Box, Button } from '@mui/material'
 import { AppContext } from "../../App";
 import { ProfileContext } from "./ProfileRoutes";
 import CardTitle from "../../components/CardTitle";
@@ -38,21 +38,21 @@ export default function ViewBookings() {
 
 
 
-    const CustomCard = ({ id, activityId, date, pax, notes }) => (
-        <Card>
-            <CardContent>
-                <Link to={`/activityList/${activityId}`} style={{ textDecoration: 'none' }}>
-                    <Typography variant="h6">Activity: {getActivityName(activityId)}</Typography>
-                </Link>
-                <Typography>Date: {date}</Typography>
-                <Typography>Pax: {pax}</Typography>
-                <Typography>Notes: {notes}</Typography>
+    const CustomCard = ({ id, availability, date, pax, notes }) => (
+        <Link to={`/activityList/${availability.activity.id}`} style={{ textDecoration: 'none' }}>
+            <Card>
+                <CardContent>
 
-                <Link to={`/editBooking/${id}`} style={{ textDecoration: 'none' }}>
-                    <Typography variant="h6">Edit</Typography>
-                </Link>
-            </CardContent>
-        </Card>
+                    <Typography variant="h6">Activity: {availability.activity.name}</Typography>
+
+                    <Typography>Date: {date}</Typography>
+                    <Typography>Pax: {pax}</Typography>
+                    <Typography>Notes: {notes ? notes : "No notes"}</Typography>
+
+                    <Button LinkComponent={Link} to={`/editBooking/${id}`} variant="contained" color="primary" sx={{ mt: "1rem" }}>Edit</Button>
+                </CardContent>
+            </Card>
+        </Link>
     );
 
     const CustomSkeletonCard = () => (

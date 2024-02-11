@@ -16,7 +16,7 @@ import titleHelper from '../../../functions/helpers';
 
 function EditCategory() {
     //const { user } = useContext(AppContext);
-    titleHelper("Edit Activity")
+    titleHelper("Edit Category")
     const [loading, setLoading] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
     const navigate = useNavigate();
@@ -82,10 +82,10 @@ function EditCategory() {
                 <Card>
 
                     <CardContent>
-                        <CardTitle title="Edit Activity" icon={<PersonAddRounded />} />
+                        <CardTitle title="Edit Category" icon={<EditRounded />} />
                         <Box component="form" mt={3}>
                             <Grid container spacing={2}>
-                                <Grid item xs={12} sm={6}>
+                                <Grid item xs={12}>
                                     <TextField
                                         fullWidth
                                         id="name"
@@ -124,6 +124,7 @@ function EditCategory() {
                                 startIcon={<EditRounded />}
                                 onClick={formik.handleSubmit}
                                 fullWidth
+                                sx={{ mt: "1rem" }}
                             >
                                 Edit Activity
                             </LoadingButton>

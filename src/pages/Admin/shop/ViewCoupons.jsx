@@ -14,7 +14,7 @@ import EmailIcon from '@mui/icons-material/Email';
 import PhoneIcon from '@mui/icons-material/Phone';
 import { CategoryContext } from './AdminShopRoutes';
 import CardTitle from '../../../components/CardTitle';
-import { BackpackRounded, EditCalendarRounded, Person } from '@mui/icons-material';
+import { BackpackRounded, ConfirmationNumberRounded, EditCalendarRounded, Person } from '@mui/icons-material';
 import moment from 'moment';
 import titleHelper from '../../../functions/helpers';
 
@@ -34,7 +34,7 @@ function ViewCoupons() {
     const [deactivateActivity, setDeactivateActivity] = useState(null)
     const navigate = useNavigate()
     const { setActivePage } = useContext(CategoryContext);
-    titleHelper("View Activities")
+    titleHelper("View Coupons")
     const columns = [
         { field: 'code', headerName: 'Code', width: 200 },
         { field: 'expiryDate', headerName: 'Expiry Date', width: 200, valueFormatter: params => moment(params?.value).format("DD/MM/YYYY"), },
@@ -102,7 +102,7 @@ function ViewCoupons() {
     }
 
     useEffect(() => {
-        setActivePage(1)
+        setActivePage(3)
         handleGetCoupons()
     }, [])
     return (
@@ -110,7 +110,7 @@ function ViewCoupons() {
             <Box sx={{ marginY: "1rem" }}>
                 <Card>
                     <CardContent>
-                        <CardTitle title="Activity List" icon={<BackpackRounded />} />
+                        <CardTitle title="Coupon List" icon={<ConfirmationNumberRounded />} />
                         <DataGrid
                             rows={Coupons}
                             columns={columns}
@@ -129,9 +129,9 @@ function ViewCoupons() {
                 <DialogTitle>Deactivate Activity</DialogTitle>
                 <DialogContent sx={{ paddingTop: 0 }}>
                     <DialogContentText>
-                        Are you sure you want to deactivate this Activity?
+                        Are you sure you want to deactivate this coupon?
                         <br />
-                        Activity Details:
+                        Coupon Details:
                         <ul>
                             <li>Code: {deactivateActivity?.code}</li>
                             <li>Description: {deactivateActivity?.description}</li>
