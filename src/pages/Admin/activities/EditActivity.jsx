@@ -1,5 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { Container, Card, CardContent, Box, Checkbox, TextField, Grid, FormControlLabel, IconButton, Typography, RadioGroup, Radio } from '@mui/material'
+import {
+    Container, Card, CardContent, Box, Checkbox, TextField,
+    Grid, FormControlLabel, IconButton, Typography, RadioGroup, Radio, List,
+    ListItem, ListItemText, Menu, MenuItem
+} from '@mui/material'
 import LoadingButton from '@mui/lab/LoadingButton';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import AddIcon from '@mui/icons-material/Add';
@@ -13,15 +17,31 @@ import { EditRounded, PersonAddRounded } from '@mui/icons-material';
 import { CategoryContext } from './AdminActivitiesRoutes';
 import moment from 'moment';
 import titleHelper from '../../../functions/helpers';
+import DeleteIcon from '@mui/icons-material/Delete';
+
 
 function EditActivity() {
+    const [Categories, setCategories] = useState([])
     //const { user } = useContext(AppContext);
     titleHelper("Edit Activity")
     const [loading, setLoading] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
     const navigate = useNavigate();
+    const url = import.meta.env.VITE_API_URL
     const { setActivePage } = useContext(CategoryContext);
     const { id: activityId } = useParams();
+    const [uploadedFiles, setUploadedFiles] = useState([]);
+    const [files, setFiles] = useState([]);
+
+    const handleGetCategories = () => {
+        http.get("/Admin/Category/").then((res) => {
+            if (res.status === 200) {
+                setCategories(res.data)
+                setLoading(false)
+            }
+        })
+    }
+
     const [activity, setActivity] = useState({
         name: "",
         expiryDate: "",
@@ -32,7 +52,8 @@ function EditActivity() {
         location: "",
         company: "",
         discountType: "",
-        discountAmount: ""
+        discountAmount: "",
+        pictures: [],
     })
 
     const handleGetActivity = () => {
@@ -94,35 +115,115 @@ function EditActivity() {
         }),
         onSubmit: (data) => {
             setLoading(true);
-            data.name = data.name.trim();
-            data.description = data.description.trim();
-            data.category = data.category.trim();
-            data.location = data.location.trim();
-            data.company = data.company.trim();
-            data.discountType = data.discountType.trim();
+            var pictures = []
+            console.log("pictures: " + data.pictures);
+            console.log(data.pictures);
 
-            console.log(data)
+            const formData = new FormData();
+            Array.from(files).forEach((file, index) => {
+                formData.append(`files`, file);
+                console.log(`Appended file ${index}:`, file);
+            });
 
-            http.put(`/Admin/Activity/${activityId}`, data).then((res) => {
+            const config = {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            };
+
+            console.log("formdata: ", formData);
+            console.log(formData);
+
+            http.post("/File/multiUpload/", formData, config).then((res) => {
+
                 if (res.status === 200) {
-                    enqueueSnackbar("Activity created successfully!", { variant: "success" });
-                    navigate("/admin/activities")
+                    enqueueSnackbar("Pictures uploaded successfully!", { variant: "success" });
+                    console.log("res data: ", res.data);
+                    const resPic = { Items: res.data };
+                    console.log("respic: ", resPic);
+                    data.pictures = res.data.uploadedFiles
+                    console.log(pictures)
+                    data.name = data.name.trim();
+                    data.description = data.description.trim();
+                    data.category = data.category.trim();
+                    data.location = data.location.trim();
+                    data.company = data.company.trim();
+                    data.discountType = data.discountType.trim();
+
+                    console.log(data)
+
+                    http.put(`/Admin/Activity/${activityId}`, data).then((res) => {
+                        if (res.status === 200) {
+                            enqueueSnackbar("Activity created successfully!", { variant: "success" });
+                            navigate("/admin/activities")
+                        } else {
+                            enqueueSnackbar("Activity creation failed!.", { variant: "error" });
+                            setLoading(false);
+                        }
+                    }).catch((err) => {
+                        enqueueSnackbar("Activity creation failed! " + err.response.data.error, { variant: "error" });
+                        setLoading(false);
+                    })
                 } else {
-                    enqueueSnackbar("Activity creation failed!.", { variant: "error" });
+                    enqueueSnackbar("Pictures uploaded failed!. else", { variant: "error" });
                     setLoading(false);
                 }
             }).catch((err) => {
-                enqueueSnackbar("Activity creation failed! " + err.response.data.error, { variant: "error" });
+                console.log(err)
+                enqueueSnackbar("Pictures uploaded failed! catch" + err.response.data.error, { variant: "error" });
                 setLoading(false);
             })
         }
     })
 
+    const handlePicturesChange = (event) => {
+        const files = event.target.files;
+
+        // Convert FileList to an array
+        const fileList = Array.from(files);
+        // Concatenate the new array of files with the existing list of uploaded files
+        const newUploadedFiles = [...uploadedFiles, ...fileList.map(file => ({
+            name: file.name,
+            preview: URL.createObjectURL(file) // Generate preview URL
+        }))];
+        // Set the updated list of uploaded files
+        setUploadedFiles(newUploadedFiles);
+
+        setFiles(files);
+
+        console.log("Files state:", files);
+    };
+
+    const handleDeleteFile = (index) => {
+        const updatedFiles = [...uploadedFiles];
+        updatedFiles.splice(index, 1);
+        setUploadedFiles(updatedFiles);
+    };
+
     useEffect(() => {
         setActivePage(0);
-        handleGetActivity()
-
+        handleGetActivity();
+        handleGetCategories();
+        return () => {
+            uploadedFiles.forEach(file => URL.revokeObjectURL(file.preview));
+        };
     }, [])
+
+    useEffect(() => {
+        // Set default value for uploadedFiles when activity data is fetched
+        if (Array.isArray(activity.pictures.items)) {
+            const files = [];
+            for (let i = 0; i < activity.pictures.items.length; i++) {
+                const picture = activity.pictures.items[i];
+                files.push({
+                    name: picture,
+                    preview: url+`/uploads/${picture}` // Set the path to your images
+                });
+            }
+            setUploadedFiles(files);
+        }
+    }, [activity]);
+    
 
     return (
         <>
@@ -181,13 +282,21 @@ function EditActivity() {
                                         fullWidth
                                         id="category"
                                         name="category"
+                                        select  // Use select to create a dropdown
                                         label="Category"
                                         variant="outlined"
                                         value={formik.values.category}
                                         onChange={formik.handleChange}
                                         error={formik.touched.category && Boolean(formik.errors.category)}
                                         helperText={formik.touched.category && formik.errors.category}
-                                    />
+                                    >
+                                        {/* Map through Categories and create an option for each category */}
+                                        {Categories.map((category) => (
+                                            <MenuItem key={category.id} value={category.name}>
+                                                {category.name}
+                                            </MenuItem>
+                                        ))}
+                                    </TextField>
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
                                     <TextField
@@ -243,6 +352,46 @@ function EditActivity() {
                                         type='number'
                                     />
                                 </Grid>
+                                <Grid item xs={12}>
+                                        <input
+                                            accept="image/*"
+                                            id="pictures"
+                                            name="pictures"
+                                            type="file"
+                                            onChange={handlePicturesChange}
+                                            multiple // Allow multiple file selection
+                                            style={{ display: 'none' }}
+                                        />
+                                        <label htmlFor="pictures">
+                                            <IconButton
+                                                color="primary"
+                                                aria-label="upload picture"
+                                                component="span"
+                                            >
+                                                <AddIcon />
+                                            </IconButton>
+                                            <Typography variant="body1">Upload Pictures</Typography>
+                                        </label>
+                                        {uploadedFiles.map((file, index) => (
+                                            <ListItem key={index}>
+                                                <ListItemText primary={file.name} />
+                                                {file.preview && (
+                                                    <img
+                                                        src={file.preview}
+                                                        alt={`Preview of ${file.name}`}
+                                                        style={{ width: '50px', height: 'auto', marginLeft: '10px' }}
+                                                    />
+                                                )}
+                                                <IconButton
+                                                    edge="end"
+                                                    aria-label="delete"
+                                                    onClick={() => handleDeleteFile(index)}
+                                                >
+                                                    <DeleteIcon />
+                                                </IconButton>
+                                            </ListItem>
+                                        ))}
+                                    </Grid>
                                 <Grid item xs={12} sm={6}>
                                     {/* radio buttons for discount type */}
                                     <Typography variant="subtitle1">Discount Type:</Typography>

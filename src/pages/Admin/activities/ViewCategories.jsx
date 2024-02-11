@@ -26,26 +26,18 @@ function getChipProps(params) {
 
 
 
-function ViewActivities() {
-    const [Activities, setActivities] = useState([])
+function ViewCategories() {
+    const [Categories, setCategories] = useState([])
     const [loading, setLoading] = useState(true)
     const [deactivateLoading, setDeactivateLoading] = useState(null)
     const [deactivateActivityDialog, setDeactivateActivityDialog] = useState(false)
     const [deactivateActivity, setDeactivateActivity] = useState(null)
     const navigate = useNavigate()
     const { setActivePage } = useContext(CategoryContext);
-    titleHelper("View Activities")
+    titleHelper("View Categories")
     const columns = [
         { field: 'name', headerName: 'Name', width: 200 },
-        { field: 'expiryDate', headerName: 'Expiry Date', width: 200, valueFormatter: params => moment(params?.value).format("DD/MM/YYYY"), },
         { field: 'description', headerName: 'Description', flex: 1, minWidth: 250 },
-        { field: 'category', headerName: 'Category', width: 200 },
-        /*{ field: 'ntucExclusive', headerName: 'NtucExclusive', width: 200 },
-        { field: 'ageLimit', headerName: 'AgeLimit', width: 200 },
-        { field: 'location', headerName: 'Location', width: 200 },
-        { field: 'company', headerName: 'Company', width: 200 },
-        { field: 'discountType', headerName: 'DiscountType', width: 200 },
-        { field: 'discountAmount', headerName: 'DiscountAmount', width: 200 }*/
 
         ,
 
@@ -53,23 +45,16 @@ function ViewActivities() {
             field: 'actions', type: 'actions', width: 40, getActions: (params) => [
                 <GridActionsCellItem
                     icon={<EditIcon />}
-                    label="Edit Activity"
+                    label="Edit Category"
                     onClick={() => {
-                        navigate("/admin/activities/" + params.row.id)
+                        navigate("/admin/activities/categories/" + params.row.id)
                     }}
                     showInMenu
                 />,
-                <GridActionsCellItem
-                    icon={<EditCalendarRounded />}
-                    label="Edit availability"
-                    onClick={() => {
-                        navigate("/admin/activities/createAvailability/" + params.row.id)
-                    }}
-                    showInMenu
-                />,
+                
                 <GridActionsCellItem
                     icon={<DeleteIcon />}
-                    label="Delete Activity"
+                    label="Delete Category"
                     onClick={() => {
                         setDeactivateActivity(params.row)
                         handleDeactivateActivityDialogOpen()
@@ -90,23 +75,25 @@ function ViewActivities() {
 
     const handleDeactivateActivity = () => {
         setDeactivateLoading(true)
-        http.delete("/Admin/Activity/" + deactivateActivity.id).then((res) => {
+        http.delete("/Admin/Category/" + deactivateActivity.id).then((res) => {
             if (res.status === 200) {
                 setDeactivateLoading(false)
                 setDeactivateActivityDialog(false)
-                handleGetActivities()
+                handleGetCategories()
             }
         })
     }
 
-    const handleGetActivities = () => {
-        http.get("/Admin/Activity/").then((res) => {
+    const handleGetCategories = () => {
+        http.get("/Admin/Category/").then((res) => {
             if (res.status === 200) {
-                setActivities(res.data)
+                setCategories(res.data)
                 setLoading(false)
             }
         })
     }
+
+   
 
     const customToolbar = () => {
         return (
@@ -115,17 +102,17 @@ function ViewActivities() {
     }
 
     useEffect(() => {
-        setActivePage(1)
-        handleGetActivities()
+        setActivePage(3)
+        handleGetCategories()
     }, [])
     return (
         <>
             <Box sx={{ marginY: "1rem" }}>
                 <Card>
                     <CardContent>
-                        <CardTitle title="Activity List" icon={<BackpackRounded />} />
+                        <CardTitle title="Category List" icon={<BackpackRounded />} />
                         <DataGrid
-                            rows={Activities}
+                            rows={Categories}
                             columns={columns}
                             pageSize={10}
                             loading={loading}
@@ -147,7 +134,7 @@ function ViewActivities() {
                         Activity Details:
                         <ul>
                             <li>Name: {deactivateActivity?.name}</li>
-                            <li>Category: {deactivateActivity?.category}</li>
+                            <li>Category: {deactivateActivity?.description}</li>
                         </ul>
                     </DialogContentText>
                 </DialogContent>
@@ -160,4 +147,4 @@ function ViewActivities() {
     )
 }
 
-export default ViewActivities
+export default ViewCategories

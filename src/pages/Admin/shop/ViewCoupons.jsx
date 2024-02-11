@@ -12,7 +12,7 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import CloseIcon from '@mui/icons-material/Close';
 import EmailIcon from '@mui/icons-material/Email';
 import PhoneIcon from '@mui/icons-material/Phone';
-import { CategoryContext } from './AdminActivitiesRoutes';
+import { CategoryContext } from './AdminShopRoutes';
 import CardTitle from '../../../components/CardTitle';
 import { BackpackRounded, EditCalendarRounded, Person } from '@mui/icons-material';
 import moment from 'moment';
@@ -26,8 +26,8 @@ function getChipProps(params) {
 
 
 
-function ViewActivities() {
-    const [Activities, setActivities] = useState([])
+function ViewCoupons() {
+    const [Coupons, setCoupons] = useState([])
     const [loading, setLoading] = useState(true)
     const [deactivateLoading, setDeactivateLoading] = useState(null)
     const [deactivateActivityDialog, setDeactivateActivityDialog] = useState(false)
@@ -36,16 +36,11 @@ function ViewActivities() {
     const { setActivePage } = useContext(CategoryContext);
     titleHelper("View Activities")
     const columns = [
-        { field: 'name', headerName: 'Name', width: 200 },
+        { field: 'code', headerName: 'Code', width: 200 },
         { field: 'expiryDate', headerName: 'Expiry Date', width: 200, valueFormatter: params => moment(params?.value).format("DD/MM/YYYY"), },
         { field: 'description', headerName: 'Description', flex: 1, minWidth: 250 },
-        { field: 'category', headerName: 'Category', width: 200 },
-        /*{ field: 'ntucExclusive', headerName: 'NtucExclusive', width: 200 },
-        { field: 'ageLimit', headerName: 'AgeLimit', width: 200 },
-        { field: 'location', headerName: 'Location', width: 200 },
-        { field: 'company', headerName: 'Company', width: 200 },
         { field: 'discountType', headerName: 'DiscountType', width: 200 },
-        { field: 'discountAmount', headerName: 'DiscountAmount', width: 200 }*/
+        { field: 'discountAmount', headerName: 'DiscountAmount', width: 200 }
 
         ,
 
@@ -53,23 +48,15 @@ function ViewActivities() {
             field: 'actions', type: 'actions', width: 40, getActions: (params) => [
                 <GridActionsCellItem
                     icon={<EditIcon />}
-                    label="Edit Activity"
+                    label="Edit Coupon"
                     onClick={() => {
-                        navigate("/admin/activities/" + params.row.id)
-                    }}
-                    showInMenu
-                />,
-                <GridActionsCellItem
-                    icon={<EditCalendarRounded />}
-                    label="Edit availability"
-                    onClick={() => {
-                        navigate("/admin/activities/createAvailability/" + params.row.id)
+                        navigate("/admin/shop/coupons/" + params.row.id)
                     }}
                     showInMenu
                 />,
                 <GridActionsCellItem
                     icon={<DeleteIcon />}
-                    label="Delete Activity"
+                    label="Delete Coupon"
                     onClick={() => {
                         setDeactivateActivity(params.row)
                         handleDeactivateActivityDialogOpen()
@@ -90,19 +77,19 @@ function ViewActivities() {
 
     const handleDeactivateActivity = () => {
         setDeactivateLoading(true)
-        http.delete("/Admin/Activity/" + deactivateActivity.id).then((res) => {
+        http.delete("/Admin/Coupon/" + deactivateActivity.id).then((res) => {
             if (res.status === 200) {
                 setDeactivateLoading(false)
                 setDeactivateActivityDialog(false)
-                handleGetActivities()
+                handleGetCoupons()
             }
         })
     }
 
-    const handleGetActivities = () => {
-        http.get("/Admin/Activity/").then((res) => {
+    const handleGetCoupons = () => {
+        http.get("/Admin/Coupon/").then((res) => {
             if (res.status === 200) {
-                setActivities(res.data)
+                setCoupons(res.data)
                 setLoading(false)
             }
         })
@@ -116,7 +103,7 @@ function ViewActivities() {
 
     useEffect(() => {
         setActivePage(1)
-        handleGetActivities()
+        handleGetCoupons()
     }, [])
     return (
         <>
@@ -125,12 +112,12 @@ function ViewActivities() {
                     <CardContent>
                         <CardTitle title="Activity List" icon={<BackpackRounded />} />
                         <DataGrid
-                            rows={Activities}
+                            rows={Coupons}
                             columns={columns}
                             pageSize={10}
                             loading={loading}
                             autoHeight
-                            getRowId={(row) => row.name}
+                            getRowId={(row) => row.code}
                             slots={{ toolbar: customToolbar }}
                             sx={{ mt: "1rem" }}
                         />
@@ -146,8 +133,8 @@ function ViewActivities() {
                         <br />
                         Activity Details:
                         <ul>
-                            <li>Name: {deactivateActivity?.name}</li>
-                            <li>Category: {deactivateActivity?.category}</li>
+                            <li>Code: {deactivateActivity?.code}</li>
+                            <li>Description: {deactivateActivity?.description}</li>
                         </ul>
                     </DialogContentText>
                 </DialogContent>
@@ -160,4 +147,4 @@ function ViewActivities() {
     )
 }
 
-export default ViewActivities
+export default ViewCoupons

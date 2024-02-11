@@ -1,4 +1,4 @@
-import { AppBar, Toolbar, Typography, Box, Button, IconButton, Drawer, List, ListItem, ListItemIcon, ListItemText, Divider, Chip, Skeleton, ListItemButton } from "@mui/material"
+import { AppBar, Toolbar, Typography, Box, Button, IconButton, Drawer, List, ListItem, ListItemIcon, ListItemText, Divider, Chip, Skeleton, ListItemButton, Stack } from "@mui/material"
 import { Link } from "react-router-dom"
 import { useState, useContext } from "react"
 import LoginIcon from '@mui/icons-material/LoginRounded';
@@ -6,8 +6,10 @@ import { AppContext } from "../App";
 import NavbarProfile from "./NavbarProfile";
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettingsRounded';
 import NavbarNotifications from "./NavbarNotifications";
-import { BackpackRounded, GroupRounded, LogoutRounded, MenuRounded, PersonRounded, StorefrontRounded } from "@mui/icons-material";
+import { BackpackRounded, CardMembershipRounded, CelebrationRounded, GroupRounded, LogoutRounded, MenuRounded, PersonRounded, QuestionAnswerRounded, StorefrontRounded } from "@mui/icons-material";
 import { HomeRounded } from "@mui/icons-material";
+import NavbarFriends from "./NavbarFriends";
+import NavbarCart from "./NavbarCart";
 
 
 export default function Navbar() {
@@ -22,11 +24,15 @@ export default function Navbar() {
                 <Toolbar>
                     <Box sx={{ flexGrow: 1, alignItems: "center", display: "flex" }}>
                         <Box sx={{ flexGrow: 1, display: ["none", "none", "flex"], alignItems: "center" }}>
-                            <Typography variant="h6" component="div">
-                                <Link to="/" style={{ textDecoration: 'none', color: 'white' }}>UPlay WIP</Link>
-                            </Typography>
+                                <Link to="/" style={{ textDecoration: 'none', color: 'white', fontWeight: 700, display:"flex", alignItems:"center" }}><img src="/logo_uplay_white.png" style={{ height: "32px" }}/></Link>
                             <Divider orientation="vertical" flexItem sx={{ mx: "1rem" }} />
-
+                            {!adminPage &&
+                                <Stack direction="row" spacing={1}>
+                                    <Button sx={{ fontWeight: 700 }} startIcon={<CelebrationRounded />} LinkComponent={Link} variant="text" color="inherit" to="/activityList">All Experiences</Button>
+                                    <Button sx={{ fontWeight: 700 }} startIcon={<CardMembershipRounded />} LinkComponent={Link} variant="text" color="inherit" to="/">Friends Of UPLay</Button>
+                                    <Button sx={{ fontWeight: 700 }} startIcon={<QuestionAnswerRounded />} LinkComponent={Link} variant="text" color="inherit" to="/faq">FAQ</Button>
+                                </Stack>
+                            }
                             {adminPage && <Chip label="Admin Panel" color="warning" size="small" icon={<AdminPanelSettingsIcon />} />}
                         </Box>
                         <Box sx={{ flexGrow: 1, display: ["flex", "flex", "none"], alignItems: "center" }}>
@@ -36,9 +42,13 @@ export default function Navbar() {
                                 {title}
                             </Typography>
                         </Box>
-                        {(!user && userLoading) && <Skeleton variant="circular" width={40} height={40} sx={{ m: "8px" }} animation="wave" />}
+                        {(!user && userLoading) && <Skeleton variant="circular" width={32} height={32} sx={{ m: "8px" }} animation="wave" />}
+                        {(!user && userLoading) && <Skeleton variant="circular" width={32} height={32} sx={{ m: "8px", display: {xs: "none", md: "initial"} }} animation="wave" />}
+                        {(!user && userLoading) && <Skeleton variant="circular" width={32} height={32} sx={{ m: "8px", display: {xs: "none", md: "initial"} }} animation="wave" />}
                         {(!user && userLoading) && <Skeleton variant="circular" width={40} height={40} sx={{ m: "8px" }} animation="wave" />}
                         {(!user && !userLoading) && <Button LinkComponent={Link} variant="text" color="inherit" to="/login" startIcon={<LoginIcon />}>Login</Button>}
+                        {user && <NavbarCart />}
+                        {user && <NavbarFriends />}
                         {user && <NavbarNotifications />}
                         {user && <NavbarProfile />}
                     </Box>
@@ -53,7 +63,7 @@ export default function Navbar() {
                 <List sx={{ width: "250px" }}>
                     <Box marginX={"1rem"} marginY={".5rem"}>
                         <img src="/logo_uplay.png" alt="UPlay Logo" style={{ height: "32px" }} />
-                        <br/>
+                        <br />
                         <Typography variant="body" fontWeight={700}>Navigation Menu</Typography>
                     </Box>
                     <Divider sx={{ marginBottom: 1 }} />
@@ -63,7 +73,24 @@ export default function Navbar() {
                             <ListItemText primary={"Home"} />
                         </ListItemButton>
                     </ListItem>
-
+                    <ListItem key={"All Experiences"} disablePadding>
+                        <ListItemButton LinkComponent={Link} to="/activityList" onClick={() => setIsDrawerOpen(false)}>
+                            <ListItemIcon><CelebrationRounded /></ListItemIcon>
+                            <ListItemText primary={"All Experiences"} />
+                        </ListItemButton>
+                    </ListItem>
+                    <ListItem key={"Friends Of UPlay"} disablePadding>
+                        <ListItemButton onClick={() => setIsDrawerOpen(false)}>
+                            <ListItemIcon><CardMembershipRounded /></ListItemIcon>
+                            <ListItemText primary={"Friends of UPlay"} />
+                        </ListItemButton>
+                    </ListItem>
+                    <ListItem key={"FAQ"} disablePadding>
+                        <ListItemButton LinkComponent={Link} to="/faq" onClick={() => setIsDrawerOpen(false)}>
+                            <ListItemIcon><QuestionAnswerRounded /></ListItemIcon>
+                            <ListItemText primary={"FAQ"} />
+                        </ListItemButton>
+                    </ListItem>
                 </List>
             </Drawer>
             <Drawer
@@ -74,7 +101,7 @@ export default function Navbar() {
                 <List sx={{ width: "250px" }}>
                     <Box marginX={"1rem"} marginY={".5rem"}>
                         <img src="/logo_uplay.png" alt="UPlay Logo" style={{ height: "32px" }} />
-                        <br/>
+                        <br />
                         <Chip label="Admin Panel" color="warning" size="small" icon={<AdminPanelSettingsIcon />} />
                     </Box>
                     <Divider sx={{ marginBottom: 1 }} />

@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import { useGoogleLogin } from "@react-oauth/google";
 import FacebookLogin from '@greatsumini/react-facebook-login';
 import { Link, useNavigate } from "react-router-dom";
-import { Container, Button, Card, Grid, CardContent, Box, TextField, Typography, Dialog, DialogActions, DialogContent, DialogTitle, DialogContentText, useTheme, Stack } from "@mui/material";
+import { Container, Button, Card, Grid, CardContent, Box, TextField, Dialog, DialogActions, DialogContent, DialogTitle, DialogContentText, useTheme, Stack } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import CardTitle from "../components/CardTitle";
 import { useFormik } from "formik";
@@ -21,6 +21,7 @@ import { AppContext } from "../App";
 import PageHeader from "../components/PageHeader";
 import { HubConnectionBuilder } from "@microsoft/signalr";
 import titleHelper from "../functions/helpers";
+import { coerceToBase64Url } from "../functions/fidoHelpers";
 
 
 export default function Login() {
@@ -78,15 +79,7 @@ export default function Login() {
             data.password = data.password.trim();
             http.post("/User/Login", data).then((res) => {
                 if (res.status === 200) {
-                    enqueueSnackbar("Login successful. Welcome back!", { variant: "success" });
-                    // Store token in local storage
-                    localStorage.setItem("token", res.data.token);
-                    // Set user context
-                    setUser(res.data.user);
-                    // Set notifications
-                    setNotifications(res.data.user.notifications);
-                    handleStartSignalR();
-                    navigate("/")
+                    handleLoginSuccess(res);
                 } else {
                     enqueueSnackbar("Login failed! Check your e-mail and password.", { variant: "error" });
                     setLoading(false);
@@ -158,20 +151,81 @@ export default function Login() {
         }
     })
 
+    const handlePasskeySetup = async () => {
+        setLoading(true);
+        var credentials = await http.get("/User/Login/Passkey");
+        credentials = credentials.data;
+        var rawCredentials = credentials;
+        console.log("Credential Options Object", credentials);  // DEBUG
+
+
+        // show options error to user
+        if (credentials.status !== "ok") {
+            enqueueSnackbar("Failed to get passkey options. " + credentials.errorMessage, { variant: "error" });
+            return;
+        }
+
+        const challenge = credentials.challenge.replace(/-/g, "+").replace(/_/g, "/");
+        credentials.challenge = Uint8Array.from(atob(challenge), c => c.charCodeAt(0));
+
+        credentials.allowCredentials.forEach(function (listItem) {
+            var fixedId = listItem.id.replace(/\_/g, "/").replace(/\-/g, "+");
+            listItem.id = Uint8Array.from(atob(fixedId), c => c.charCodeAt(0));
+        });
+
+        var newCredential;
+        try {
+            newCredential = await navigator.credentials.get({ publicKey: credentials })
+            await handlePasskeyLogin(newCredential, rawCredentials);
+        } catch (e) {
+            enqueueSnackbar("Could not sign in using the passkey", { variant: "error" });
+            //console.log(msg);
+            console.log(e);
+        }
+
+        setLoading(false);
+    }
+
+    async function handlePasskeyLogin(newCredential, credentialsOptions) {
+        let authData = new Uint8Array(newCredential.response.authenticatorData);
+        let clientDataJSON = new Uint8Array(newCredential.response.clientDataJSON);
+        let rawId = new Uint8Array(newCredential.rawId);
+        let sig = new Uint8Array(newCredential.response.signature);
+        let userHandle = new Uint8Array(newCredential.response.userHandle)
+        const data = {
+            id: newCredential.id,
+            rawId: coerceToBase64Url(rawId),
+            type: newCredential.type,
+            extensions: newCredential.getClientExtensionResults(),
+            response: {
+                authenticatorData: coerceToBase64Url(authData),
+                clientDataJSON: coerceToBase64Url(clientDataJSON),
+                userHandle: userHandle !== null ? coerceToBase64Url(userHandle) : null,
+                signature: coerceToBase64Url(sig)
+            }
+        };
+
+        credentialsOptions.challenge = coerceToBase64Url(credentialsOptions.challenge);
+
+        http.post("/User/Login/Passkey", { AttestationResponse: data, Options: JSON.stringify(credentialsOptions) }).then((res) => {
+            if (res.status === 200) {
+                handleLoginSuccess(res);
+            } else {
+                enqueueSnackbar("Login failed! " + res.errorMessage, { variant: "error" });
+            }
+        }).catch((err) => {
+            enqueueSnackbar("Login failed! " + err.response.data.error, { variant: "error" });
+        })
+    }
+
+
     const googleAuth = useGoogleLogin({
         onSuccess: async (res) => {
             setLoading(true);
             setLoginType("google");
             http.post("/User/Google", { token: res.access_token }).then((res) => {
                 if (res.status === 200) {
-                    enqueueSnackbar("Login successful. Welcome back!", { variant: "success" });
-                    // Store token in local storage
-                    localStorage.setItem("token", res.data.token);
-                    // Set user context
-                    setUser(res.data.user);
-                    setNotifications(res.data.user.notifications);
-                    handleStartSignalR();
-                    navigate("/")
+                    handleLoginSuccess(res);
                 } else {
                     enqueueSnackbar("Login failed! " + err.response.data.error, { variant: "error" });
                     setLoading(false);
@@ -189,14 +243,7 @@ export default function Login() {
         console.log(res.accessToken);
         http.post("/User/Facebook", { token: res.accessToken }).then((res) => {
             if (res.status === 200) {
-                enqueueSnackbar("Login successful. Welcome back!", { variant: "success" });
-                // Store token in local storage
-                localStorage.setItem("token", res.data.token);
-                // Set user context
-                setUser(res.data.user);
-                setNotifications(res.data.user.notifications);
-                handleStartSignalR();
-                navigate("/")
+                handleLoginSuccess(res);
             } else {
                 enqueueSnackbar("Login failed! " + err.response.data.error, { variant: "error" });
                 setLoading(false);
@@ -216,6 +263,17 @@ export default function Login() {
             enqueueSnackbar("Login failed! " + err.status, { variant: "error" });
             setLoading(false);
         }
+    }
+
+    function handleLoginSuccess(res) {
+        enqueueSnackbar("Login successful. Welcome back!", { variant: "success" });
+        // Store token in local storage
+        localStorage.setItem("token", res.data.token);
+        // Set user context
+        setUser(res.data.user);
+        setNotifications(res.data.user.notifications);
+        handleStartSignalR();
+        navigate("/")
     }
 
 
@@ -269,13 +327,13 @@ export default function Login() {
                                     >
                                         Login
                                     </LoadingButton>
-                                    <Stack direction={["column", "column", "row"]} sx={{ mt: "1rem" }}>
+                                    <Stack direction={["column", "row"]} sx={{ mt: "1rem" }}>
                                         <Button
                                             fullWidth
                                             variant="secondary"
                                             component={Link}
                                             onClick={handleResetPasswordDialog}
-                                            sx={{ mr: { xs: 0, md: "1rem" } }}
+                                            sx={{ mr: { xs: 0, sm: "1rem" } }}
                                         >
                                             Forgot password?
                                         </Button>
@@ -284,7 +342,7 @@ export default function Login() {
                                             variant="secondary"
                                             component={Link}
                                             onClick={handleResendDialog}
-                                            sx={{ mt: { xs: "1rem", md: 0 } }}
+                                            sx={{ mt: { xs: "1rem", sm: 0 } }}
                                         >
                                             Resend verification
                                         </Button>
@@ -297,22 +355,30 @@ export default function Login() {
                         <Card>
                             <CardContent>
                                 <CardTitle title="Login via other methods" icon={<KeyRoundedIcon />} />
-                                <Button fullWidth variant="contained" sx={{ mt: "1rem" }} disabled startIcon={<KeyRoundedIcon />}>
-                                    Login with PassKey
-                                </Button>
-                                <LoadingButton fullWidth variant="contained" sx={{ mt: "1rem" }} startIcon={<GoogleIcon />} onClick={googleAuth} loading={loading}>
-                                    Login with Google
-                                </LoadingButton>
-                                <FacebookLogin
-                                    appId={import.meta.env.VITE_FACEBOOK_APP_ID}
-                                    onSuccess={handleFacebookSuccess}
-                                    onFail={handleFacebookFailure}
-                                    render={({ onClick, logout }) => (
-                                        <LoadingButton fullWidth variant="contained" sx={{ mt: "1rem" }} onClick={onClick} startIcon={<FacebookRoundedIcon />} loading={loading}>
-                                            Login with Facebook
+                                <Grid container spacing={2}>
+                                    <Grid item xs={4}>
+                                        <LoadingButton loading={loading} onClick={handlePasskeySetup} fullWidth variant="secondary" sx={{ mt: "1rem" }} startIcon={<KeyRoundedIcon />}>
+                                            Passkey
                                         </LoadingButton>
-                                    )}
-                                />
+                                    </Grid>
+                                    <Grid item xs={4}>
+                                        <LoadingButton fullWidth variant="secondary" sx={{ mt: "1rem" }} startIcon={<GoogleIcon />} onClick={googleAuth} loading={loading}>
+                                            Google
+                                        </LoadingButton>
+                                    </Grid>
+                                    <Grid item xs={4}>
+                                        <FacebookLogin
+                                            appId={import.meta.env.VITE_FACEBOOK_APP_ID}
+                                            onSuccess={handleFacebookSuccess}
+                                            onFail={handleFacebookFailure}
+                                            render={({ onClick, logout }) => (
+                                                <LoadingButton fullWidth variant="secondary" sx={{ mt: "1rem" }} onClick={onClick} startIcon={<FacebookRoundedIcon />} loading={loading}>
+                                                    Facebook
+                                                </LoadingButton>
+                                            )}
+                                        />
+                                    </Grid>
+                                </Grid>
                             </CardContent>
                         </Card>
                     </Grid>
