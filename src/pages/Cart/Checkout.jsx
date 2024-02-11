@@ -257,26 +257,26 @@ function Checkout() {
                                 <Box mt={"1rem"}>
                                     <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                                         <Typography>Wallet Balance</Typography>
-                                        <Typography>{user ? "$" + user.balance.toFixed(2) : <Skeleton />}</Typography>
+                                        <Typography>{user ? "$" + user.balance.toFixed(2) : <Skeleton width={"48px"}/>}</Typography>
                                     </Box>
                                     <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                                         <Typography>Subtotal</Typography>
-                                        <Typography>{cart ? "$" + cart.subTotal.toFixed(2) : <Skeleton />}</Typography>
+                                        <Typography>{cart ? "$" + cart.subTotal.toFixed(2) : <Skeleton width={"48px"}/>}</Typography>
                                     </Box>
                                     <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                                         <Typography>GST (9%)</Typography>
-                                        <Typography>{cart ? "$" + cart.taxTotal.toFixed(2) : <Skeleton />}</Typography>
+                                        <Typography>{cart ? "$" + cart.taxTotal.toFixed(2) : <Skeleton width={"48px"}/>}</Typography>
                                     </Box>
                                     {coupon &&
                                         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                                             <Typography>Coupon Discount</Typography>
-                                            <Typography>{cart ? "$" + couponDiscount.toFixed(2) : <Skeleton />}</Typography>
+                                            <Typography>{cart ? "$" + couponDiscount.toFixed(2) : <Skeleton width={"48px"}/>}</Typography>
                                         </Box>
                                     }
                                     <Divider sx={{ marginY: "1rem" }} />
                                     <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                                         <Typography>Total</Typography>
-                                        <Typography variant='h5' fontWeight={700}>{cart ? "$" + totalPrice.toFixed(2) : <Skeleton />}</Typography>
+                                        <Typography variant='h5' fontWeight={700}>{cart ? "$" + totalPrice.toFixed(2) : <Skeleton width={"64px"} height={"48px"}/>}</Typography>
                                     </Box>
                                 </Box>
                                 {user?.balance < totalPrice &&
