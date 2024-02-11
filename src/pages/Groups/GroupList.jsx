@@ -55,8 +55,8 @@ function GroupList() {
             http.post("/Group", data).then((res) => {
                 if (res.status === 200) {
                     console.log(res.data);
-                    enqueueSnackbar("Group creation successful", { variant: "success" });
                     window.location.reload();
+                    enqueueSnackbar("Group creation successful", { variant: "success" });
                 } else {
                     enqueueSnackbar("Something went wrong.", { variant: "error" });
                 }
@@ -92,18 +92,19 @@ function GroupList() {
         );
     }
 
-    const GroupTab = ({ id, name }) => (
-        <Card sx={{}}>
+    const GroupTab = ({ params, name }) => (
+        <Card>
             <CardActionArea onClick={() => {
                 navigate("/groups/" + params.row.id)
             }}>
-                <CardHeader
+                <CardHeader 
+                    sx={{}}
                     avatar={
                         <Avatar sx={{ bgcolor: grey }}>
 
                         </Avatar>
                     }
-                    title={name}
+                    title={<Typography variant='h5'>{name}</Typography>}
                 />
             </CardActionArea>
         </Card>
