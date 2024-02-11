@@ -22,8 +22,7 @@ import EditBooking from './Activities/EditBooking'
 import CreateReview from './Activities/Review'
 import Faq from './Faq'
 
-import ViewCart from './Cart/ViewCart'
-import Checkout from './Cart/Checkout'
+import CartRoutes from './Cart/CartRoutes'
 
 
 function UserRoutes() {
@@ -55,8 +54,7 @@ function UserRoutes() {
             <Route path="/test" element={<Test />} />
             <Route path="/faq" element={<Faq />} />
             <Route path="/profile/*" element={<ProfileRoutes />} />
-            <Route path="/cart" element={<ViewCart />} />
-            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/cart/*" element={<CartRoutes />} />
         </Routes>
     )
 }

@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react'
-import { Route, Routes, Navigate, Link } from 'react-router-dom'
+import { Route, Routes, Navigate, Link, useNavigate } from 'react-router-dom'
 //import NotFound from './errors/NotFound'
 //import { UserContext } from '..'
 import { Button, Container, Divider, Typography, Grid, Box, Card, TextField, Skeleton, CardContent, Accordion, AccordionDetails, AccordionSummary, Stack, Alert } from '@mui/material'
@@ -32,6 +32,7 @@ function Checkout() {
     const { enqueueSnackbar } = useSnackbar();
     const [topupOpen, setTopupOpen] = useState(false);
     const apiUrl = import.meta.env.VITE_API_URL;
+    const navigate = useNavigate();
     titleHelper("Checkout")
 
     const handleTopUpOpen = () => {
@@ -102,6 +103,8 @@ function Checkout() {
                 if (res.status === 200) {
                     enqueueSnackbar("Checkout successful!", { variant: "success" });
                     setLoading(false)
+                    navigate("/cart/checkout/success")
+                    
                 } else {
                     enqueueSnackbar("Checkout failed!.", { variant: "error" });
                     setLoading(false);
@@ -132,7 +135,11 @@ function Checkout() {
 
     useEffect(() => {
         if (coupon) {
-            setTotalPrice(cart.totalPrice - coupon.discountAmount)
+            const discount = cart.totalPrice - coupon.discountAmount
+            if (discount < 0) {
+                setTotalPrice(0)
+            }
+            setTotalPrice(discount)
             setCouponDiscount(coupon.discountAmount)
         }
     }, [coupon])
@@ -238,6 +245,10 @@ function Checkout() {
                             <CardContent>
                                 <CardTitle title="Payment Summary" icon={<AttachMoneyRounded />} />
                                 <Box mt={"1rem"}>
+                                    <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                                        <Typography>Wallet Balance</Typography>
+                                        <Typography>{user ? "$" + user.balance.toFixed(2) : <Skeleton />}</Typography>
+                                    </Box>
                                     <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                                         <Typography>Subtotal</Typography>
                                         <Typography>{cart ? "$" + cart.subTotal.toFixed(2) : <Skeleton />}</Typography>

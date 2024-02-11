@@ -101,23 +101,27 @@ export default function ProfileRoutes() {
         <ProfileContext.Provider value={{ activePage, setActivePage }}>
             <PageHeader icon={BadgeRoundedIcon} title="My Profile" />
             <Container maxWidth="xl">
-                {user && !user.password && 
+                {user && !user.password &&
                     <Alert severity="warning" sx={{ mt: "1rem" }}>You have not set a password for your account. Please set a password to ensure your account is secure.</Alert>
                 }
                 <Grid container spacing={2} maxWidth={"xl"} mb={3}>
                     <Grid item xs={12} md="4" lg="3">
                         <Card sx={{ mt: "1rem", width: "100%" }}>
                             <CardContent>
-                                <Box sx={{ display: "flex", alignItems: "center", flexDirection: "column" }}>
-                                    {user &&
-                                        <Tooltip title="Change Profile Picture" arrow>
-                                            <IconButton onClick={handleChangePictureDialogOpen}>
-                                                <ProfilePicture user={user} sx={{ width: ["72px", "96px", "128px"], height: ["72px", "96px", "128px"] }} />
-                                            </IconButton>
-                                        </Tooltip>
-                                    }
-                                    <Typography variant="h5" fontWeight={700} sx={{ textAlign: "center", mt: ".5rem" }}>{user && user.name}</Typography>
-                                    <Typography variant="body1" sx={{ textAlign: "center" }}>{user && user.email}</Typography>
+                                <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" }}>
+                                    <Box width={"100%"} sx={{ display: "flex", flexDirection: { xs: "row", md: "column" }, alignItems: "center" }}>
+                                        {user &&
+                                            <Tooltip title="Change Profile Picture" arrow>
+                                                <IconButton onClick={handleChangePictureDialogOpen}>
+                                                    <ProfilePicture user={user} sx={{ width: ["72px", "96px", "128px"], height: ["72px", "96px", "128px"] }} />
+                                                </IconButton>
+                                            </Tooltip>
+                                        }
+                                        <Box textAlign={{xs: "start", md: "center"}} sx={{ml: {xs: "1rem", md: "0"}}}>
+                                            <Typography variant="h5" fontWeight={700} sx={{ mt: ".5rem" }}>{user && user.name}</Typography>
+                                            <Typography variant="body1">{user && user.email}</Typography>
+                                        </Box>
+                                    </Box>
                                     <Button fullWidth variant="contained" sx={{ mt: "1rem" }} LinkComponent={Link} to="/profile/edit" startIcon={<EditRoundedIcon />}>Edit Profile</Button>
                                 </Box>
                             </CardContent>

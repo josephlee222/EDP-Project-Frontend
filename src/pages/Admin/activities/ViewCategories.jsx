@@ -14,7 +14,7 @@ import EmailIcon from '@mui/icons-material/Email';
 import PhoneIcon from '@mui/icons-material/Phone';
 import { CategoryContext } from './AdminActivitiesRoutes';
 import CardTitle from '../../../components/CardTitle';
-import { BackpackRounded, EditCalendarRounded, Person } from '@mui/icons-material';
+import { BackpackRounded, CategoryRounded, EditCalendarRounded, Person } from '@mui/icons-material';
 import moment from 'moment';
 import titleHelper from '../../../functions/helpers';
 
@@ -110,7 +110,7 @@ function ViewCategories() {
             <Box sx={{ marginY: "1rem" }}>
                 <Card>
                     <CardContent>
-                        <CardTitle title="Category List" icon={<BackpackRounded />} />
+                        <CardTitle title="Category List" icon={<CategoryRounded />} />
                         <DataGrid
                             rows={Categories}
                             columns={columns}

@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Container, Card, CardContent, Box, TextField, Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography } from '@mui/material';
-import LoadingButton from '@mui/lab/LoadingButton';
+import { Box, Card, CardContent, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button } from '@mui/material';
+import http from '../../../http';
 import { useSnackbar } from 'notistack';
 import { useParams, useNavigate } from 'react-router-dom';
-import http from '../../../http';
 import { CategoryContext } from './AdminActivitiesRoutes';
 import titleHelper from '../../../functions/helpers';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -17,7 +16,6 @@ function CreateAvailability() {
     const { id: activityId } = useParams();
     const { setActivePage } = useContext(CategoryContext);
     const [availabilities, setAvailabilities] = useState([]);
-    const [activity, setActivity] = useState([]);
     const [selectedDate, setSelectedDate] = useState(null);
     const [maxPax, setMaxPax] = useState('');
     const [price, setPrice] = useState('');
@@ -26,38 +24,26 @@ function CreateAvailability() {
     titleHelper("Set availabilities");
 
     const handleGetAvailabilities = () => {
-        //`/Admin/Availability/Activity/${activityId}`
-        http.get(`/Admin/Availability/Activity/${activityId}`).then((res) => {
-            if (res.status === 200) {
-                setAvailabilities(res.data)
-                setLoading(false)
-                
-            console.log(res.data);
-            }
-        })
-        
+        http.get(`/Admin/Availability/Activity/${activityId}`)
+            .then((res) => {
+                if (res.status === 200) {
+                    setAvailabilities(res.data);
+                }
+            })
+            .catch((error) => {
+                console.error("Error fetching availabilities:", error);
+            });
     }
-
-    const handleGetActivity = () => {
-        http.get(`/Activity/${activityId}`).then((res) => {
-            if (res.status === 200) {
-                setActivity(res.data);
-            }
-        });
-    };
 
     useEffect(() => {
         handleGetAvailabilities();
-        handleGetActivity();
         setActivePage(2);
     }, []);
 
     const handleDateSelection = (date) => {
-        console.log("dialog opening");
-        setSelectedDate(date); // Set the selected date
-        setDialogOpen(true); // Open the dialog
+        setSelectedDate(date);
+        setDialogOpen(true);
     };
-    
 
     const handleDialogClose = () => {
         setMaxPax('');
@@ -65,24 +51,30 @@ function CreateAvailability() {
         setDialogOpen(false);
     };
 
+
     const handleSaveAvailability = () => {
+        setLoading(true);
         http.post("/Admin/Availability", {
-            "ActivityId": activityId,
-            "Date": selectedDate, // Make sure to provide the selectedDate
-            "MaxPax": maxPax,
-            "Price": price
-        }).then((res) => {
+            "ActivityId" : activityId,
+            "Date" : selectedDate,
+            "MaxPax" : maxPax,
+            "Price" : price
+        })
+        .then((res) => {
             if (res.status === 200) {
                 enqueueSnackbar("Activity created successfully!", { variant: "success" });
                 navigate("/admin/activities");
             } else {
                 enqueueSnackbar("Activity creation failed!.", { variant: "error" });
             }
-        }).catch((err) => {
+        })
+        .catch((err) => {
             enqueueSnackbar("Activity creation failed! " + err.response.data.error, { variant: "error" });
+        })
+        .finally(() => {
+            setLoading(false);
+            handleDialogClose();
         });
-
-        handleDialogClose();
     };
 
     return (
@@ -91,11 +83,9 @@ function CreateAvailability() {
                 <CardContent>
                     <Box component="form" mt={3}>
                         <LocalizationProvider dateAdapter={AdapterMoment}>
-                            {/* Use DateCalendarServerRequest component */}
                             <DateCalendarServerRequest
-                            onChange={handleDateSelection}
                                 activityId={activityId}
-                                availabilities={availabilities} // Pass the availabilities array
+                                availabilities={availabilities}
                                 setDialogOpen={setDialogOpen}
                             />
                         </LocalizationProvider>
@@ -103,14 +93,13 @@ function CreateAvailability() {
                     <Dialog open={dialogOpen} onClose={handleDialogClose}>
                         <DialogTitle>Add Availability</DialogTitle>
                         <DialogContent>
-                            <Typography variant="body1" gutterBottom>Add a new availability to this date</Typography>
                             <TextField
                                 label="Max Pax"
                                 variant="outlined"
                                 fullWidth
                                 value={maxPax}
                                 onChange={(e) => setMaxPax(e.target.value)}
-                                margin="dense"
+                                margin="normal"
                             />
                             <TextField
                                 label="Price"
@@ -118,12 +107,14 @@ function CreateAvailability() {
                                 fullWidth
                                 value={price}
                                 onChange={(e) => setPrice(e.target.value)}
-                                margin="dense"
+                                margin="normal"
                             />
                         </DialogContent>
                         <DialogActions>
                             <Button onClick={handleDialogClose}>Cancel</Button>
-                            <Button onClick={handleSaveAvailability}>Save</Button>
+                            <Button onClick={handleSaveAvailability} disabled={loading}>
+                                {loading ? 'Saving...' : 'Save'}
+                            </Button>
                         </DialogActions>
                     </Dialog>
                 </CardContent>
