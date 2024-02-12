@@ -24,48 +24,50 @@ const ImageSelector = ({ imageUrls }) => {
 
   return (
     <Grid container rowSpacing={1} sx={{ height: '20rem' }}>
-            <Grid item xs={6} md={8} sx={{ position: 'relative' }}>
-            <Grid container rowSpacing={1} sx={{ height: '20rem', overflow: 'hidden' }}>
-      <Grid item xs={12} sx={{ position: 'relative', display: 'flex', transition: 'transform 0.7s ease-in-out', transform: `translateX(-${selectedImageIndex * 100}%)` }}>
-        {imageUrls.map((imageUrl, index) => (
-          <img
-            key={index}
-            src={url + imageUrl}
-            alt={`Preview ${index}`}
-            style={{ flex: '0 0 auto', width: '100%', maxHeight: '20rem', objectFit: 'contain', cursor: 'pointer' }}
-            onClick={() => handleClickImage(index)}
-          />
-        ))}
-      </Grid>
-      <KeyboardArrowLeftIcon
-        sx={{ position: 'absolute', top: '50%', left: '0', transform: 'translateY(-50%)', cursor: 'pointer', zIndex: 1 }}
-        onClick={() => handleNavigate('left')}
-      />
-      <KeyboardArrowRightIcon
-        sx={{ position: 'absolute', top: '50%', right: '0', transform: 'translateY(-50%)', cursor: 'pointer', zIndex: 1 }}
-        onClick={() => handleNavigate('right')}
-      />
-    </Grid>
-        </Grid>
-    <Grid item xs={6} md={4} sx={{ padding: '10px', maxHeight: '20rem' }}>
-      <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{ maxHeight: '20rem', overflow: 'auto' }}>
-        {imageUrls.map((imageUrl, index) => (
-          <Grid item xs={6} key={index} >
-            <img
-              src={url + imageUrl}
-              alt={`Preview ${index}`}
-              style={{ width: '100%', cursor: 'pointer', maxHeight:'100%', height: 'auto',
-              border: `2px solid ${selectedImageIndex === index ? 'black' : 'transparent'}` }}
-              onClick={() => handleClickImage(index)}
-              
-            />
+      <Grid item xs={6} md={8} sx={{ position: 'relative' }}>
+        <Grid container rowSpacing={1} sx={{ height: '20rem', overflow: 'hidden' }}>
+          <Grid item xs={12} sx={{ position: 'relative', display: 'flex', transition: 'transform 0.7s ease-in-out', transform: `translateX(-${selectedImageIndex * 100}%)` }}>
+            {imageUrls.map((imageUrl, index) => (
+              <img
+                key={index}
+                src={url + imageUrl}
+                alt={`Preview ${index}`}
+                style={{ flex: '0 0 auto', width: '100%', maxHeight: '20rem', objectFit: 'contain', cursor: 'pointer' }}
+                onClick={() => handleClickImage(index)}
+              />
+            ))}
           </Grid>
-        ))}
+          <KeyboardArrowLeftIcon
+            sx={{ position: 'absolute', top: '50%', left: '0', transform: 'translateY(-50%)', cursor: 'pointer', zIndex: 1 }}
+            onClick={() => handleNavigate('left')}
+          />
+          <KeyboardArrowRightIcon
+            sx={{ position: 'absolute', top: '50%', right: '0', transform: 'translateY(-50%)', cursor: 'pointer', zIndex: 1 }}
+            onClick={() => handleNavigate('right')}
+          />
+        </Grid>
+      </Grid>
+      <Grid item xs={6} md={4} sx={{ padding: '10px', maxHeight: '20rem' }}>
+        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{ maxHeight: '20rem', overflow: 'auto' }}>
+          {imageUrls.map((imageUrl, index) => (
+            <Grid item xs={6} key={index} >
+              <img
+                src={url + imageUrl}
+                alt={`Preview ${index}`}
+                style={{
+                  width: '100%', cursor: 'pointer', maxHeight: '100%', height: 'auto',
+                  border: `2px solid ${selectedImageIndex === index ? 'black' : 'transparent'}`
+                }}
+                onClick={() => handleClickImage(index)}
+
+              />
+            </Grid>
+          ))}
+        </Grid>
       </Grid>
     </Grid>
-  </Grid>
-  
-  
+
+
 
   );
 };

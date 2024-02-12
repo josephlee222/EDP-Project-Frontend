@@ -129,8 +129,9 @@ the uh
 the edit review thingy yes. Users should be able to edit their own reviews. yeah that's it i guess.
 
 
+12/2/2024:
 
-check checklist:
+funcitionality checklist:
 
 activity:
     create-
@@ -138,24 +139,38 @@ activity:
     delete-
 
 category:
-    create
-    update
-    delete
+    create-
+    update-
+    delete-
 
-activity:
-    create
-    update
-    delete
+availability:
+    create-
+    update-
+    delete-
 
 book:
     create
 
 review:
-    create
+    create-
     update
     delete
 
 coupon:
-    create
-    update
-    delete
+    create-
+    update-
+    delete-
+
+
+I just fixed the photo upload thing for create and edit activity. 
+Also now the photos of the activity get deleted as well.
+
+todo:
+    check functionalities
+    finalise validation checks for all forms
+    minor stuff like changing snackBar messages
+    do review ui
+    implement edit and delete for reviews
+
+ok i just finished fixing the photo upload for reviews. My brain is dying.
+review display is uhhh almost done ig
