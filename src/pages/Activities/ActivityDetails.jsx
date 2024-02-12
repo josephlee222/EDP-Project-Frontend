@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import {
   Box, Card, CardContent, Grid, Typography, Button, Container, CardMedia, Skeleton,
-  Dialog, DialogTitle, DialogContent, DialogActions, TextField,Accordion, AccordionSummary, AccordionDetails
+  Dialog, DialogTitle, DialogContent, DialogActions, TextField, Accordion,
+  AccordionSummary, AccordionDetails, Rating, IconButton
 } from '@mui/material';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
@@ -19,6 +20,8 @@ import * as Yup from "yup";
 import LoadingButton from '@mui/lab/LoadingButton';
 import DateCalendarServerRequest from '../../components/CustomDateCalendarBooking';
 import ProfilePicture from '../../components/ProfilePicture';
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 
 function ActivityDetails() {
   const url = import.meta.env.VITE_API_URL
@@ -27,19 +30,6 @@ function ActivityDetails() {
   const { enqueueSnackbar } = useSnackbar();
   const { id: activityId } = useParams();
   const [Reviews, setReviews] = useState([])
-  // const [activity, setActivity] = useState({
-  //   name: "",
-  //   expiryDate: "",
-  //   description: "",
-  //   category: "",
-  //   ntucExclusive: "",
-  //   ageLimit: "",
-  //   location: "",
-  //   company: "",
-  //   discountType: "",
-  //   discountAmount: "",
-  //   pictures:[]
-  // });
   const [activity, setActivity] = useState([])
   titleHelper("Activity Details", activity.name);
 
@@ -47,6 +37,16 @@ function ActivityDetails() {
   const [availabilities, setavailabilities] = useState([]);
   const [date, setDate] = React.useState('');
   const [pax, setPax] = React.useState('');
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [averageRating, setAverageRating] = useState(0);
+
+  const handlePrevImage = (card) => {
+    setCurrentImageIndex((prevIndex) => (prevIndex === 0 ? card.pictures.items.length - 1 : prevIndex - 1));
+  };
+
+  const handleNextImage = (card) => {
+    setCurrentImageIndex((prevIndex) => (prevIndex === card.pictures.items.length - 1 ? 0 : prevIndex + 1));
+  };
 
   const handleGetAvailabilities = () => {
     http.get(`/Availability/Activity/${activityId}`).then((res) => {
@@ -109,6 +109,8 @@ function ActivityDetails() {
       };
 
 
+
+
       http.post("/Shop/Cart", postData).then((res) => {
         if (res.status === 200) {
           enqueueSnackbar("Cart successful!", { variant: "success" });
@@ -143,11 +145,8 @@ function ActivityDetails() {
         console.log("res data ", res.data);
         console.log("activity ", activity);
         setLoading(false);
-
       }
-
     });
-
   };
 
   const testArray = ['wsG2mTDfY1.png', 'Ro2fXB3hj7.png', 'mGgIXukd6l.avif', 'uwuV3PnEIy.jpeg', 'q9hk-jGPbk.jpeg', 'Mf8uu6lGdw.avif']
@@ -155,11 +154,16 @@ function ActivityDetails() {
   const handleGetReviews = () => {
     setLoading(true);
     http.get(`/Review/Activity/${activityId}`).then((res) => {
-      console.log("reviews: " + res.data + " status code: " + res.status)
+      console.log("reviews: ", res.data, " status code: ", res.status)
 
       if (res.status === 200) {
         setReviews(res.data);
         setLoading(false);
+
+        const totalRating = res.data.reduce((acc, review) => acc + review.rating, 0);
+        const avgRating = totalRating / res.data.length;
+        console.log(avgRating)
+        setAverageRating(avgRating);
       }
     });
   };
@@ -187,20 +191,13 @@ function ActivityDetails() {
     </Card>
   );
 
+
+
   useEffect(() => {
     handleGetActivity();
     handleGetReviews();
     handleGetAvailabilities();
   }, []);
-
-
-  const handleBookingSubmit = (formData) => {
-    // Handle form submission here, formData will contain date and pax
-    console.log('Booking form submitted:', formData);
-    // You can make HTTP request to submit the booking details to the server
-    // After successful submission, close the dialog
-    setIsDialogOpen(false);
-  };
 
   return (
     <>
@@ -222,13 +219,11 @@ function ActivityDetails() {
         <ImageSelector imageUrls={activity.pictures ? activity.pictures.items : []} />
 
 
-
         <Box sx={{ marginY: "1rem" }}>
           <Card>
             <CardContent>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
-
 
                   <div>
                     <Typography variant="subtitle1">Expiry Date:</Typography>
@@ -239,55 +234,32 @@ function ActivityDetails() {
                     <Typography variant="body1">{activity.description}</Typography>
                   </div>
 
-                  {/* <Button
-                    onClick={() => {
-                      navigate("/Booking/" + activityId)
-                    }}
-                  >
-                    book
-                  </Button> */}
-
                   <Button onClick={handleOpenDialog}>Book</Button>
                   <Dialog open={isDialogOpen} onClose={handleCloseDialog}>
                     <DialogTitle>Book Activity</DialogTitle>
                     <DialogContent>
                       <Box component="form" mt={3}>
-                            {/* <TextField
-                              fullWidth
-                              id="date"
-                              name="date"
-                              label="Date"
-                              variant="outlined"
-                              value={formik.values.date}
-                              onChange={formik.handleChange}
-                              error={formik.touched.date && Boolean(formik.errors.date)}
-                              helperText={formik.touched.date && formik.errors.date}
-                              type='date'
-                              InputLabelProps={{ shrink: true }}
-                            /> */}
 
-                            <DateCalendarServerRequest
-                              onChange={formik.values.date}
-                              activityId={activityId}
-                              availabilities={availabilities}
-                              formik={formik} // Pass the formik prop here
-                            />
+                        <DateCalendarServerRequest
+                          onChange={formik.values.date}
+                          activityId={activityId}
+                          availabilities={availabilities}
+                          formik={formik} // Pass the formik prop here
+                        />
 
+                        <TextField
+                          fullWidth
+                          id="pax"
+                          name="pax"
+                          label="pax"
+                          variant="outlined"
+                          value={formik.values.pax}
+                          onChange={formik.handleChange}
+                          error={formik.touched.pax && Boolean(formik.errors.pax)}
+                          helperText={formik.touched.pax && formik.errors.pax}
+                          type='number'
+                        />
 
-                          
-                            <TextField
-                              fullWidth
-                              id="pax"
-                              name="pax"
-                              label="pax"
-                              variant="outlined"
-                              value={formik.values.pax}
-                              onChange={formik.handleChange}
-                              error={formik.touched.pax && Boolean(formik.errors.pax)}
-                              helperText={formik.touched.pax && formik.errors.pax}
-                              type='number'
-                            />
-                        
                       </Box>
                     </DialogContent>
                     <DialogActions>
@@ -297,65 +269,102 @@ function ActivityDetails() {
                   </Dialog>
                 </Grid>
               </Grid>
-
             </CardContent>
-
-
-            {/* <CardContent>
-            <CardTitle title="Reviews" icon={<AddIcon />} />
-            <Link to={`/review/${activityId}`} style={{ textDecoration: 'none' }}>
-                    <Typography variant="h6">add review</Typography>
-                </Link>
-
-            {Reviews.map((review) => (
-              <div key={review.id}>
-                <Typography variant="subtitle1">User:</Typography>
-                <Typography variant="body1">{review.userId}</Typography>
-                <Typography variant="subtitle1">Rating:</Typography>
-                <Typography variant="body1">{review.rating}</Typography>
-                <Typography variant="subtitle1">Description:</Typography>
-                <Typography variant="body1">{review.description}</Typography>
-              </div>
-            ))}
-          </CardContent> */}
           </Card>
+
+
+
+
+          {/* review section */}
+
+
+
+
+
+          <Box mt={2} mb={2}>
+            <Typography variant='h5'>Average Rating: {averageRating.toFixed(2)}</Typography>
+            <Rating name="read-only" value={averageRating} readOnly precision={0.1} />
+          </Box>
+
           {/* <ProfilePicture user={user} sx={{ width: "72px", height: "72px" }} /> */}
           <Container sx={{ mt: "1rem" }} maxWidth="xl">
             <Link to={`/review/${activityId}`} style={{ textDecoration: 'none' }}>
               <Typography variant="h6">add review</Typography>
             </Link>
             <Grid container spacing={2}>
-      {loading && (
-        <>
-          {[...Array(6)].map((card, index) => ( // changed key={card} to key={index}
-            <Grid item key={index} xs={12} sm={6} md={4}>
-              <CustomSkeletonCard />
-            </Grid>
-          ))}
-        </>
-      )}
+              {loading && (
+                <>
+                  {[...Array(6)].map((card, index) => ( // changed key={card} to key={index}
+                    <Grid item key={index} xs={12} sm={6} md={4}>
+                      <CustomSkeletonCard />
+                    </Grid>
+                  ))}
+                </>
+              )}
 
-      {!loading && (
-        <>
-          {Reviews.map((card) => (
-            <Grid item key={card.id} xs={12} sm={12} md={12}>
-              <Accordion>
-                <AccordionSummary expandIcon={<KeyboardArrowDownIcon />} aria-controls="panel1a-content" id="panel1a-header">
-                  <div>
-                  <ProfilePicture user={card.user} sx={{ width: "72px", height: "72px" }} /> 
-                    <h3>{card.title}</h3> {/* Assuming title exists in card */}
-                    <p>Rating: {card.rating}</p> {/* Assuming rating exists in card */}
-                  </div>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <CustomCard {...card} />
-                </AccordionDetails>
-              </Accordion>
+              {!loading && (
+                <>
+                  {Reviews.map((card) => (
+                    <Grid item key={card.id} xs={12} sm={12} md={12}>
+                      <Accordion>
+                        <AccordionSummary expandIcon={<KeyboardArrowDownIcon />}
+                          aria-controls="panel1a-content" id="panel1a-header"
+                          sx={{ height: "90px", overflow: "hidden" }}>
+                          <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <ProfilePicture user={card.user} sx={{ width: "72px", height: "72px" }} />
+                            <p style={{ marginLeft: '10px' }}>@{card.user.name}</p>
+                            <Rating name="read-only" value={card.rating} readOnly style={{ marginLeft: '10px' }} />
+
+                            <Typography style={{
+                              marginLeft: '10px', whiteSpace: 'nowrap', overflow: "hidden",
+                              textOverflow: "ellipsis", maxWidth: '1000px'
+                            }}>
+                              {card.description}
+                            </Typography>
+                          </div>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                          <Grid container rowSpacing={1} sx={{ height: '20rem', overflow: 'hidden' }}>
+                            <Grid item xs={12} sx={{ position: 'relative', display: 'flex', transition: 'transform 0.7s ease-in-out', transform: `translateX(-${currentImageIndex * 100}%)` }}>
+                              {card.pictures.items.length > 0 ? (
+                                card.pictures.items.map((picture, index) => (
+                                  <img
+                                    key={index}
+                                    src={url + '/uploads/' + picture}
+                                    alt={`Preview ${index}`}
+                                    style={{ flex: '0 0 auto', width: '100%', maxHeight: '20rem', objectFit: 'contain', cursor: 'pointer' }}
+                                    onClick={() => handleImageClick(card, index)}
+                                  />
+                                ))
+                              ) : (
+                                <img
+                                  src="/logo_uplay_warm_grey.png" // Replace with your placeholder image URL
+                                  alt="No Image"
+                                  style={{ width: '100%', maxHeight: '20rem', objectFit: 'fit', opacity:"0.7" }}
+                                  //style={{ width: '100%', maxHeight: '20rem', objectFit: 'cover', filter:"invert(1)", opacity:"0.25" }}
+                                />
+                              )}
+                            </Grid>
+                            {card.pictures.items.length > 1 && (
+                              <>
+                                <KeyboardArrowLeftIcon
+                                  sx={{ position: 'absolute', top: '50%', left: '0', transform: 'translateY(-50%)', cursor: 'pointer', zIndex: 1 }}
+                                  onClick={() => handlePrevImage(card)}
+                                />
+                                <KeyboardArrowRightIcon
+                                  sx={{ position: 'absolute', top: '50%', right: '0', transform: 'translateY(-50%)', cursor: 'pointer', zIndex: 1 }}
+                                  onClick={() => handleNextImage(card)}
+                                />
+                              </>
+                            )}
+                          </Grid>
+                        </AccordionDetails>
+                      </Accordion>
+                    </Grid>
+                  ))}
+                </>
+              )}
             </Grid>
-          ))}
-        </>
-      )}
-    </Grid>
 
           </Container>
         </Box>

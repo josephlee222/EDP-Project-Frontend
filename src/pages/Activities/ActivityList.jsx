@@ -1,6 +1,9 @@
 import React, { useEffect, useState, useContext, useRef } from 'react'
-import { Button, Container, Divider, Typography, Grid, Box, Card, 
-    Tabs, TextField, Skeleton, CardContent, CardMedia, Tab } from '@mui/material'
+import {
+    Button, Container, Divider, Typography, Grid, Box, Card,
+    Tabs, TextField, Skeleton, CardContent, CardMedia, Tab, MenuItem
+    , IconButton
+} from '@mui/material'
 import LoadingButton from '@mui/lab/LoadingButton/LoadingButton';
 import { DataGrid, GridActionsCellItem, GridToolbarExport } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
@@ -15,8 +18,9 @@ import BackpackRounded from '@mui/icons-material/BackpackRounded';
 import titleHelper from '../../functions/helpers';
 //import { CategoryContext } from '../UserRoutes';
 import { HomeRounded, SearchRounded } from '@mui/icons-material';
-import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import AccessibilityNewIcon from '@mui/icons-material/AccessibilityNew';
 
 
 function getChipProps(params) {
@@ -34,14 +38,66 @@ function ActivityList() {
     const [deactivateActivityDialog, setDeactivateActivityDialog] = useState(false)
     const [deactivateActivity, setDeactivateActivity] = useState(null)
     const [value, setValue] = React.useState(0);
+    const [filteredActivities, setFilteredActivities] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState('All');
+    const [searchQuery, setSearchQuery] = useState('');
+    const [maxAgeLimit, setMaxAgeLimit] = useState(0);
+    const [sortingCriteria, setSortingCriteria] = useState('name'); // Default sorting by name
+    const [sortingDirection, setSortingDirection] = useState('asc'); // Default sorting in ascending order
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-  const handleChangeCategory = (event, newValue) => {
-    setSelectedCategory(newValue);
-};
+
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    };
+    const handleSearch = (e) => {
+        const query = e.target.value;
+        setSearchQuery(query);
+    };
+
+    const toggleSortingDirection = () => {
+        setSortingDirection(prevDirection => prevDirection === 'asc' ? 'desc' : 'asc');
+    };
+
+    const handleCategoryChange = (category) => {
+        setSelectedCategory(category);
+        filterActivities(Activities, category, searchQuery);
+    };
+
+    // Function to handle changes in sorting criteria
+    const handleSortingCriteriaChange = (event) => {
+        setSortingCriteria(event.target.value);
+    };
+
+    // Function to handle changes in sorting direction
+    const handleSortingDirectionChange = (event) => {
+        setSortingDirection(event.target.value);
+    };
+
+    const sortActivities = (activities) => {
+        return activities.slice().sort((a, b) => {
+            let comparison = 0;
+            if (a[sortingCriteria] > b[sortingCriteria]) {
+                comparison = 1;
+            } else if (a[sortingCriteria] < b[sortingCriteria]) {
+                comparison = -1;
+            }
+            return sortingDirection === 'asc' ? comparison : -comparison;
+        });
+    };
+
+    // Function to filter and sort activities
+    const filterAndSortActivities = (activities) => {
+        let filtered = activities.filter(activity => (
+            (selectedCategory === 'All' || activity.category === selectedCategory) &&
+            (maxAgeLimit === 0 || activity.ageLimit <= maxAgeLimit) &&
+            (activity.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                activity.description.toLowerCase().includes(searchQuery.toLowerCase()))
+        ));
+        return sortActivities(filtered);
+    };
+
+
+
     const categoriesRef = useRef(null);
     const navigate = useNavigate()
     titleHelper("View Activities")
@@ -87,6 +143,7 @@ function ActivityList() {
                 setActivities(res.data)
                 console.log(res.data);
                 setLoading(false)
+                setFilteredActivities(res.data);
             }
         })
     }
@@ -100,6 +157,12 @@ function ActivityList() {
             }
         })
     }
+
+    // Function to handle changes in maximum age limit
+    const handleMaxAgeLimitChange = (maxAge) => {
+        setMaxAgeLimit(maxAge);
+    };
+
 
     const customToolbar = () => {
         return (
@@ -149,31 +212,89 @@ function ActivityList() {
     }, [])
     return (
         <>
-             <PageHeader title="Activities" icon={BackpackRounded} />
-             <Grid container justifyContent="center" sx={{ mt: 4, mb: 4, marginLeft: '10px', marginRight: '10px' }}>
-                <Grid item xs={10} md={12} sx={{ overflowX: 'auto', display: 'flex', alignItems: 'center' }}>
-                    <Tabs value={selectedCategory} onChange={(event, newValue) => setSelectedCategory(newValue)} variant="scrollable" scrollButtons="auto" aria-label="scrollable auto tabs example">
-                        <Tab label="All" value="All" />
-                        {categories.map((category, index) => (
-                            <Tab key={index} label={category.name} value={category.name} />
-                        ))}
-                    </Tabs>
+            <PageHeader title="Activities" icon={BackpackRounded} background="/golf_edit.jpg"/>
+            <Card sx={{backgroundImage: ""}}>
+                <Grid container justifyContent="center" sx={{ mt: 4, mb: 4, marginLeft: '10px', marginRight: '10px' }}>
+
+                    <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <TextField
+                            label="Search Activities"
+                            variant="outlined"
+                            value={searchQuery}
+                            onChange={handleSearch}
+                            InputProps={{
+                                endAdornment: <SearchRounded />,
+                            }}
+                        />
+                    </Grid>
+                    <Grid item xs={7} sx={{ display: 'flex', justifyContent: 'right', marginRight: '5px' }}>
+                        <TextField
+                            label="Maximum Age Limit"
+                            type="number"
+                            variant="outlined"
+                            value={maxAgeLimit}
+                            onChange={(e) => handleMaxAgeLimitChange(parseInt(e.target.value))}
+                            InputProps={{
+                                endAdornment: <AccessibilityNewIcon />,
+                            }}
+                        />
+
+                        <TextField
+                            select
+                            label="Sorting Criteria"
+                            value={sortingCriteria}
+                            onChange={handleSortingCriteriaChange}
+                            variant="outlined"
+
+                            InputProps={{
+                                endAdornment: (
+                                    <>
+                                        <IconButton onClick={toggleSortingDirection}>
+                                            {sortingDirection === 'asc' ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                                        </IconButton>
+                                        <SearchRounded />
+                                    </>
+                                ),
+                            }}
+                        >
+                            <MenuItem value="name">Name</MenuItem>
+                            <MenuItem value="expiryDate">Expiry Date</MenuItem>
+                            <MenuItem value="dateAdded">Date Added</MenuItem> {/* Add "Date Added" option */}
+                            {/* Add more sorting criteria options here */}
+                        </TextField>
+                    </Grid>
+
+
+                    <Grid item xs={10} md={12} sx={{ overflowX: 'auto', display: 'flex', alignItems: 'center' }}>
+                        <Tabs value={selectedCategory} onChange={(event, newValue) => setSelectedCategory(newValue)} variant="scrollable" scrollButtons="auto" aria-label="scrollable auto tabs example">
+                            <Tab label="All" value="All" />
+                            {categories.map((category, index) => (
+                                <Tab key={index} label={category.name} value={category.name} />
+                            ))}
+                        </Tabs>
+                    </Grid>
                 </Grid>
-            </Grid>
+            </Card>
+
+
 
             <Container sx={{ mt: "1rem" }} maxWidth="xl">
                 <Grid container spacing={2}>
-                    {loading && <>{[...Array(6)].map((card, index) => (
-                        <Grid item key={index} xs={12} sm={6} md={4}>
-                            <CustomSkeletonCard />
-                        </Grid>
-                    ))}</>}
-
-                    {!loading && Activities.filter(activity => selectedCategory === 'All' || activity.category === selectedCategory).map((card) => (
-                        <Grid item key={card.id} xs={12} sm={6} md={4}>
-                            <CustomCard {...card} />
-                        </Grid>
-                    ))}
+                    {loading ? (
+                        // Display skeleton cards while loading
+                        [...Array(6)].map((_, index) => (
+                            <Grid item key={index} xs={12} sm={6} md={4}>
+                                <CustomSkeletonCard />
+                            </Grid>
+                        ))
+                    ) : (
+                        // Display filtered and sorted activities
+                        filterAndSortActivities(Activities).map((card) => (
+                            <Grid item key={card.id} xs={12} sm={6} md={4}>
+                                <CustomCard {...card} />
+                            </Grid>
+                        ))
+                    )}
                 </Grid>
             </Container>
         </>

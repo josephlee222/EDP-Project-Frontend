@@ -2,8 +2,7 @@ import React, { useState, useEffect, useContext } from 'react'
 import {
     Container, Card, CardContent, Box, Checkbox, TextField,
     Grid, FormControlLabel, IconButton, Typography, RadioGroup, Radio, List,
-    ListItem,
-    ListItemText
+    ListItem, ListItemText, Rating
 } from '@mui/material'
 import LoadingButton from '@mui/lab/LoadingButton';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
@@ -17,6 +16,8 @@ import { useFormik } from 'formik';
 import { AddRounded, PersonAddRounded } from '@mui/icons-material';
 import titleHelper from '../../functions/helpers';
 import { AppContext } from "../../App";
+import DeleteIcon from '@mui/icons-material/Delete';
+
 
 
 function CreateReview() {
@@ -52,6 +53,7 @@ function CreateReview() {
             description: "",
             rating: 0,
             pictures: [],
+            activityId: activityId
 
         },
         validationSchema: Yup.object({
@@ -61,12 +63,11 @@ function CreateReview() {
 
         }),
         onSubmit: (data) => {
-            setLoading(true);
+
             var pictures = [];
+            setLoading(true);
             console.log("pictures: " + data.pictures);
             console.log(data.pictures);
-
-            data.ActivityId = activityId;
 
             const formData = new FormData();
             Array.from(files).forEach((file, index) => {
@@ -74,52 +75,59 @@ function CreateReview() {
                 console.log(`Appended file ${index}:`, file);
             });
 
+            console.log("formdata: ", formData);
+            console.log(formData);
+            console.log(formData.length);
             const config = {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
             };
 
-            console.log("formdata: ", formData);
-            console.log(formData);
+            data.description = data.description.trim();
+            const formDataEntries = formData.getAll('files');
+            if (formDataEntries.length > 0) {
 
-            if (pictures != []) {
+                http.post("/File/multiUpload/", formData, config).then((res) => {
 
-                http.post("/File/multiUpload/", formData, config)
-                    .then((res) => {
-                        if (res.status === 200) {
-                            enqueueSnackbar("Pictures uploaded successfully!", { variant: "success" });
-                            console.log("res data: ", res.data);
-                            const resPic = { Items: res.data };
-                            console.log("respic: ", resPic);
-                            data.pictures = res.data.uploadedFiles;
-                            console.log(pictures);
-                            data.description = data.description.trim();
-                            data.ActivityId = activityId;
+                    if (res.status === 200) {
+                        enqueueSnackbar("Pictures uploaded successfully!", { variant: "success" });
+                        console.log("res data: ", res.data);
+                        const resPic = { Items: res.data };
+                        console.log("respic: ", resPic);
+                        data.pictures = res.data.uploadedFiles
+                        console.log(pictures)
 
-                            console.log(data);
+                        console.log(data)
 
-
-                        } else {
-                            enqueueSnackbar("Pictures uploaded failed!. else", { variant: "error" });
+                        http.post("/Review/", data).then((res) => {
+                            if (res.status === 200) {
+                                enqueueSnackbar("Activity created successfully!", { variant: "success" });
+                                navigate(`/activityList/${activityId}`);
+                            } else {
+                                enqueueSnackbar("Activity creation failed!.", { variant: "error" });
+                                setLoading(false);
+                            }
+                        }).catch((err) => {
+                            enqueueSnackbar("Activity creation failed! " + err.response.data.error, { variant: "error" });
                             setLoading(false);
-                        }
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                        enqueueSnackbar("Pictures uploaded failed! catch" + err.response.data.error, { variant: "error" });
+                        })
+                    } else {
+                        enqueueSnackbar("Pictures uploaded failed!. else", { variant: "error" });
                         setLoading(false);
-                    });
+                    }
+                }).catch((err) => {
+                    console.log(err)
+                    enqueueSnackbar("Pictures uploaded failed! catch" + err.response.data.error, { variant: "error" });
+                    setLoading(false);
+                })
             }
-
-            uploadReview(data);
-
-            // Function to upload review
-            function uploadReview(data) {
+            else {
                 http.post("/Review/", data)
                     .then((res) => {
                         if (res.status === 200) {
                             enqueueSnackbar("Activity created successfully!", { variant: "success" });
+                            console.log(res.data);
                             navigate(`/activityList/${activityId}`);
                         } else {
                             enqueueSnackbar("Activity creation failed!.", { variant: "error" });
@@ -132,24 +140,49 @@ function CreateReview() {
                     });
             }
 
+
+
         }
     })
 
+
+
     const handlePicturesChange = (event) => {
-        const files = event.target.files;
+        const Files = event.target.files;
 
         // Convert FileList to an array
-        const fileList = Array.from(files);
+        const fileList = Array.from(Files);
+        const newFiles = files.concat(fileList)
+
         // Concatenate the new array of files with the existing list of uploaded files
-        const newUploadedFiles = [...uploadedFiles, ...fileList.map(file => file.name)];
+        const newUploadedFiles = [...uploadedFiles, ...fileList.map(file => ({
+            name: file.name,
+            preview: URL.createObjectURL(file) // Generate preview URL
+        }))];
         // Set the updated list of uploaded files
         setUploadedFiles(newUploadedFiles);
-        // Set the array of files to the formik values
-        //formik.setFieldValue('pictures', newUploadedFiles);
-        // Set the files state to the selected files
-        setFiles(files);
+
+        console.log(Files);
+
+
+        setFiles(newFiles);
 
         console.log("Files state:", files);
+    };
+
+    const handleDeleteFile = (index) => {
+        //the list of file details
+        const updatedFileDetails = [...uploadedFiles];
+        updatedFileDetails.splice(index, 1);
+        setUploadedFiles(updatedFileDetails);
+
+        //the actual list of file that contain the FILE files
+        //this is 100% definitely best practice
+        const updatedFiles = [...files];
+        console.log(updatedFiles)
+        updatedFiles.splice(index, 1);
+        console.log(updatedFiles)
+        setFiles(updatedFiles);
     };
 
     useEffect(() => {
@@ -165,23 +198,18 @@ function CreateReview() {
 
                     <CardContent>
                         <CardTitle title={`Booking Activity: ${activity.name}`} icon={<AddRounded />} />
-                        <div>{activity.name}</div>
-                        <Box component="form" mt={3}>
+                        <Box component="form" mt={2}>
 
                             <Grid container spacing={2}>
 
                                 <Grid item xs={12} sm={6}>
-                                    <TextField
-                                        fullWidth
-                                        id="rating"
+                                    <Rating
                                         name="rating"
-                                        label="rating"
-                                        variant="outlined"
                                         value={formik.values.rating}
-                                        onChange={formik.handleChange}
-                                        error={formik.touched.rating && Boolean(formik.errors.rating)}
-                                        helperText={formik.touched.rating && formik.errors.rating}
-                                        type='number'
+                                        onChange={(event, newValue) => {
+                                            formik.setFieldValue("rating", newValue);
+                                        }}
+                                        size="large"
                                     />
                                     <Grid item xs={12} sm={6}>
                                         <TextField
@@ -216,15 +244,25 @@ function CreateReview() {
                                             </IconButton>
                                             <Typography variant="body1">Upload Pictures</Typography>
                                         </label>
-                                        {uploadedFiles.length > 0 && (
-                                            <List>
-                                                {uploadedFiles.map((fileName, index) => (
-                                                    <ListItem key={index}>
-                                                        <ListItemText primary={fileName} />
-                                                    </ListItem>
-                                                ))}
-                                            </List>
-                                        )}
+                                        {uploadedFiles.map((file, index) => (
+                                            <ListItem key={index}>
+                                                <ListItemText primary={file.name} />
+                                                {file.preview && (
+                                                    <img
+                                                        src={file.preview}
+                                                        alt={`Preview of ${file.name}`}
+                                                        style={{ width: '50px', height: 'auto', marginLeft: '10px' }}
+                                                    />
+                                                )}
+                                                <IconButton
+                                                    edge="end"
+                                                    aria-label="delete"
+                                                    onClick={() => handleDeleteFile(index)}
+                                                >
+                                                    <DeleteIcon />
+                                                </IconButton>
+                                            </ListItem>
+                                        ))}
                                     </Grid>
                                 </Grid>
 
