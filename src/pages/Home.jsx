@@ -7,7 +7,7 @@ import { AppContext } from '../App';
 import { HomeRounded, NewReleasesRounded, SearchRounded } from '@mui/icons-material';
 import titleHelper from '../functions/helpers';
 import http from '../http';
-
+import { useSnackbar } from "notistack";
 
 function Home() {
     // Routes for admin pages. To add authenication so that only admins can access these pages, add a check for the user's role in the UserContext

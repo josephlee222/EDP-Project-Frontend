@@ -27,7 +27,7 @@ export default function NavbarFriends() {
     return (
         <>
             <Tooltip title="Friends & Groups" arrow sx={{display: {xs: "none", md: "flex"}}}>
-                <IconButton onClick={(e) => handlePopoverOpen(e)} ref={buttonRef}>
+                <IconButton onClick={(e) => handlePopoverOpen(e)} ref={buttonRef} LinkComponent={Link} to="/groupList">
                     {friendRequests.length > 0 &&
                         <Badge badgeContent={friendRequests.length} color="yellow" overlap="circular">
                             <Diversity3Rounded sx={{ fill: "white" }} />

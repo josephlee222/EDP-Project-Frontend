@@ -75,7 +75,7 @@ export default function NavbarProfile() {
                         </ListItemButton>
                     </ListItem>
                     <ListItem key={"Friends & Groups"} disablePadding sx={{display: {xs: "initial", md: "none"}}}>
-                        <ListItemButton component={Link} to="/friends" onClick={() => setIsPopoverOpen(false)}>
+                        <ListItemButton component={Link} to="/groupList" onClick={() => setIsPopoverOpen(false)}>
                             <ListItemIcon><Diversity3Rounded /></ListItemIcon>
                             <ListItemText primary={"Friends & Groups"} />
                         </ListItemButton>
