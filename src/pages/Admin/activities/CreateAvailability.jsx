@@ -74,7 +74,7 @@ function CreateAvailability() {
         }).then((res) => {
             if (res.status === 200) {
                 enqueueSnackbar("Activity created successfully!", { variant: "success" });
-                navigate("/admin/activities");
+                handleGetAvailabilities();
             } else {
                 enqueueSnackbar("Activity creation failed!.", { variant: "error" });
             }
@@ -88,9 +88,11 @@ function CreateAvailability() {
     return (
         <Box sx={{ marginY: "1rem" }}>
             <Card>
+                <Typography variant="h5" sx={{margin:"1.5rem"}}>
+                    Availabilities for {activity.name}
+                </Typography>
                 <CardContent>
                     <Box component="form" mt={3}>
-                        <LocalizationProvider dateAdapter={AdapterMoment}>
                             {/* Use DateCalendarServerRequest component */}
                             <DateCalendarServerRequest
                             onChange={handleDateSelection}
@@ -98,7 +100,6 @@ function CreateAvailability() {
                                 availabilities={availabilities} // Pass the availabilities array
                                 setDialogOpen={setDialogOpen}
                             />
-                        </LocalizationProvider>
                     </Box>
                     <Dialog open={dialogOpen} onClose={handleDialogClose}>
                         <DialogTitle>Add Availability</DialogTitle>
