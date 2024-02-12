@@ -104,7 +104,7 @@ function GroupList() {
 
                             </Avatar>
                         }
-                        title={<Typography variant='h5'>{name}</Typography>}
+                        title={<Typography variant='h6' fontWeight={700}>{name}</Typography>}
                     />
                     <CardContent>
                         <Typography variant='body1'>{description}</Typography>
@@ -134,18 +134,18 @@ function GroupList() {
     }, [])
     return (
         <>
-            <PageHeader title="Groups & Friends" icon={GroupRounded} />
-            <Container sx={{ mt: "1rem" }} maxWidth="xl">
-                <Button onClick={handleOpen} variant='contained' sx={{ mb: "1rem" }}>Create Group</Button>
+            <PageHeader title="Discussion Groups" icon={GroupRounded} />
+            <Container sx={{ my: "1rem" }} maxWidth="xl">
+                <Typography variant='body1' mb={2}>Welcome to the discussion groups page. Here you can find and join groups to discuss various topics with other users.</Typography>
                 <Grid container spacing={2}>
                     {loading && <>{[...Array(6)].map((card) => (
-                        <Grid item key={card} xs={12}>
+                        <Grid item key={card} xs={12} md={6}>
                             <SkeletonTab />
                         </Grid>
                     ))}</>}
 
                     {!loading && <>{Groups.map((card) => (
-                        <Grid item key={card.id} xs={12}>
+                        <Grid item key={card.id} xs={12} md={6}>
                             <GroupTab {...card} />
                         </Grid>
                     ))}</>}

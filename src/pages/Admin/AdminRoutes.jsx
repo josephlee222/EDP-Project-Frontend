@@ -13,6 +13,7 @@ import StorefrontIcon from '@mui/icons-material/StorefrontRounded';
 import AdminUsersRoutes from './users/AdminUsersRoutes'
 import AdminActivitiesRoutes from './activities/AdminActivitiesRoutes'
 import AdminShopRoutes from './shop/AdminShopRoutes'
+import AdminGroupsRoutes from './groups/AdminGroupsRoutes'
 
 export default function AdminRoutes() {
     //Routes for admin pages. To add authenication so that only admins can access these pages, add a check for the user's role in the UserContext
@@ -68,7 +69,7 @@ export default function AdminRoutes() {
                                     </ListItemButton>
                                 </ListItem>
                                 <ListItem key={"Groups"} disablePadding sx={{ mb: "1rem" }}>
-                                    <ListItemButton>
+                                    <ListItemButton LinkComponent={Link} to="/admin/groups">
                                         <GroupIcon />
                                         <ListItemText disableTypography primary={"Groups"} />
                                     </ListItemButton>
@@ -96,6 +97,7 @@ export default function AdminRoutes() {
                         <Route path="/users/*" element={<AdminUsersRoutes />} />
                         <Route path="/activities/*" element={<AdminActivitiesRoutes />} />
                         <Route path="/shop/*" element={<AdminShopRoutes />} />
+                        <Route path="/groups/*" element={<AdminGroupsRoutes />} />
                     </Routes>
                 </Grid>
             </Grid>
