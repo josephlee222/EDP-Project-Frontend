@@ -9,7 +9,7 @@ export default function PageHeader(props) {
     setTitle(props.navTitle ? props.navTitle : props.title)
 
     return (
-        <Box display={["none", "none", "flex"]} sx={{ py: "3rem", justifyContent: "center", alignItems: "center", flexDirection: "column", backgroundColor: theme.palette.background.paper }}>
+        <Box display={["none", "none", "flex"]} sx={{ py: "3rem", justifyContent: "center", alignItems: "center", flexDirection: "column", backgroundColor: theme.palette.background.paper, backgroundImage: "url('" + props.background + "')", backgroundRepeat: "no-repeat", backgroundSize: "cover" }}>
             <props.icon sx={{ height: "72px", width: "72px", color: "primary" }} color="primary" />
             <Typography fontWeight={700} variant="h4" component="h1" align="center" mt={"0.5rem"}>
                 {props.title}
