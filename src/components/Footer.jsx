@@ -20,7 +20,7 @@ function Footer() {
                         marginY: "1rem",
                     }}
                 >
-                    <img src='./logo_uplay.png' alt='logo' style={{ height: "36px", marginTop: "1rem", marginBottom: ".5rem" }} />
+                    <img src='logo_uplay.png' alt='logo' style={{ height: "36px", marginTop: "1rem", marginBottom: ".5rem" }} />
                     <Grid container spacing={2}>
 
                         <Grid item xs={12} lg={6}>

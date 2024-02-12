@@ -11,6 +11,10 @@ import ProfileRoutes from './Profile/ProfileRoutes'
 
 import ActivityList from './Activities/ActivityList'
 import ActivityDetails from './Activities/ActivityDetails';
+
+import GroupList from './Groups/GroupList'
+import GroupDetails from './Groups/GroupDetails'
+
 import ReviewDetails from './Activities/ReviewDetails';
 import { AppContext } from '../App'
 import CreateBooking from './Activities/Booking'
@@ -33,6 +37,9 @@ function UserRoutes() {
         <Routes>
             <Route path="*" element={<NotFound />} />
             <Route path="/" element={<Home />} />
+
+            <Route path="/groupList" element={<GroupList />} />
+            <Route path="/groups/:id" element={<GroupDetails />} />
 
             <Route path="/activityList" element={<ActivityList />} />
             <Route path="/activityList/:id" element={<ActivityDetails />} />
