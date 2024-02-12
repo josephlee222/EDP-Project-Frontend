@@ -85,8 +85,6 @@ function GroupDetails() {
             http.post("/Group/Message", data).then((res) => {
                 if (res.status === 200) {
                     setSendLoading(false)
-                    navigate("/cart/checkout/success")
-
                 } else {
                     enqueueSnackbar("Message send failed!.", { variant: "error" });
                     setSendLoading(false);
@@ -111,7 +109,8 @@ function GroupDetails() {
 
                     connection.on("message", (message) => {
                         console.log("ping")
-                        setMessages([...messages, message])
+                        console.log([...messages, message])
+                        setMessages(messages => [...messages, message])
                     });
                 })
                 .catch((error) => console.log(error));

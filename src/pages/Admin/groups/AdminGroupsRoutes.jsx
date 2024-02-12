@@ -7,10 +7,8 @@ import { useSnackbar } from 'notistack'
 import { Card, CardContent, Container, Grid, ListItemIcon, ListItemButton, ListItem, ListItemText, Box, Button } from '@mui/material'
 import PersonAddIcon from '@mui/icons-material/PersonAddRounded';
 import { CellTowerRounded, GroupRounded, List } from '@mui/icons-material'
-import ViewUsers from './ViewUsers'
-import CreateUser from './CreateUser'
-import EditUser from './EditUser'
-import BroadcastNotification from './BroadcastNotification'
+import ViewGroups from './ViewGroups'
+import CreateGroup from './CreateGroup'
 
 export const CategoryContext = createContext(null);
 export default function AdminGroupsRoutes() {
@@ -22,15 +20,15 @@ export default function AdminGroupsRoutes() {
                 <Card sx={{ mt: "1rem" }}>
                     <CardContent>
                         <Box sx={{ alignItems: "center", overflowX: "auto", whiteSpace: "nowrap" }}>
-                            <Button variant={activePage == 1 ? "contained" : "secondary"} startIcon={<GroupRounded/>} sx={{mr: ".5rem"}} LinkComponent={Link} to="/admin/users">Groups</Button>
-                            <Button variant={activePage == 2 ? "contained" : "secondary"} startIcon={<PersonAddIcon/>} sx={{mr: ".5rem"}} LinkComponent={Link} to="/admin/users/create">Create Group</Button>
+                            <Button variant={activePage == 1 ? "contained" : "secondary"} startIcon={<GroupRounded/>} sx={{mr: ".5rem"}} LinkComponent={Link} to="/admin/groups">Groups</Button>
+                            <Button variant={activePage == 2 ? "contained" : "secondary"} startIcon={<PersonAddIcon/>} sx={{mr: ".5rem"}} LinkComponent={Link} to="/admin/groups/create">Create Group</Button>
                         </Box>
                     </CardContent>
                 </Card>
                 <Routes>
-                    <Route path="/" element={<ViewUsers />} />
-                    <Route path="/create" element={<CreateUser />} />
-                    <Route path="/edit/:id" element={<EditUser />} />
+                    <Route path="/" element={<ViewGroups />} />
+                    <Route path="/create" element={<CreateGroup />} />
+                    {/* <Route path="/edit/:id" element={<EditUser />} /> */}
                     <Route path="*" element={<NotFound />} />
                 </Routes>
             </CategoryContext.Provider>
