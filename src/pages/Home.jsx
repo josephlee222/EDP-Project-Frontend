@@ -30,7 +30,7 @@ function Home() {
 
     const getBanners = () => {
         setLoading(true)
-        http.get("/Admin/Shop/Banner").then((res) => {
+        http.get("/Shop/Banner").then((res) => {
             if (res.status === 200) {
                 setBanners(res.data)
                 setLoading(false)
