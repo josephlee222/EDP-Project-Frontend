@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react'
-import { Button, Card, Modal, Box, TextField, CardContent, Typography, Grid, Container, Skeleton, CardHeader, Avatar, CardActionArea } from '@mui/material'
+import { Button, Card, Modal, Box, TextField, CardContent, Typography, Grid, Container, Skeleton, CardHeader, Avatar, CardActionArea, DialogTitle, DialogContent, Dialog, DialogActions } from '@mui/material'
 import LoadingButton from '@mui/lab/LoadingButton/LoadingButton';
 import { DataGrid, GridActionsCellItem, GridToolbarExport } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
@@ -14,6 +14,7 @@ import titleHelper from '../../functions/helpers';
 import { grey } from '@mui/material/colors';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
+import { AddRounded, CloseRounded, GroupRounded } from '@mui/icons-material';
 
 function getChipProps(params) {
     return {
@@ -92,22 +93,26 @@ function GroupList() {
         );
     }
 
-    const GroupTab = ({ params, name }) => (
-        <Card>
-            <CardActionArea onClick={() => {
-                navigate("/groups/" + params.row.id)
-            }}>
-                <CardHeader 
-                    sx={{}}
-                    avatar={
-                        <Avatar sx={{ bgcolor: grey }}>
+    const GroupTab = ({ params, name, description, id }) => (
+        <Link to={"/groups/" + id} style={{textDecoration: "none"}}>
+            <Card>
+                <CardActionArea>
+                    <CardHeader
+                        sx={{}}
+                        avatar={
+                            <Avatar sx={{ bgcolor: grey }}>
 
-                        </Avatar>
-                    }
-                    title={<Typography variant='h5'>{name}</Typography>}
-                />
-            </CardActionArea>
-        </Card>
+                            </Avatar>
+                        }
+                        title={<Typography variant='h5'>{name}</Typography>}
+                    />
+                    <CardContent>
+                        <Typography variant='body1'>{description}</Typography>
+                    </CardContent>
+
+                </CardActionArea>
+            </Card>
+        </Link>
     );
 
     const SkeletonTab = () => (
@@ -129,55 +134,9 @@ function GroupList() {
     }, [])
     return (
         <>
-            <PageHeader title="Groups & Friends" icon={GroupIcon} />
-            <Button onClick={handleOpen} sx={{ top: 7 }} variant='contained'>Create Group</Button>
-            <Modal
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-            >
-                <Box sx={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    width: 400,
-                    bgcolor: 'background.paper',
-                    border: '2px solid #000',
-                    borderRadius: 1,
-                    boxShadow: 24,
-                    p: 4,
-                }} component="form" onSubmit={formik.handleSubmit}>
-                    <Typography id="modal-modal-title" variant="h6" component="h2">
-                        Create Group
-                    </Typography>
-                    <TextField
-                        fullWidth margin="dense" autoComplete="off"
-                        label="Name"
-                        name="name"
-                        value={formik.values.name}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        error={formik.touched.name && Boolean(formik.errors.name)}
-                        helperText={formik.touched.name && formik.errors.name}
-                    />
-                    <TextField
-                        fullWidth margin="dense" autoComplete="off"
-                        label="Description" 
-                        name="description"
-                        value={formik.values.description}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        error={formik.touched.description && Boolean(formik.errors.description)}
-                        helperText={formik.touched.description && formik.errors.description}
-                    />
-                    <Button sx={{ mt: 2 }} variant="contained" type="submit">
-                        Create
-                    </Button>
-                </Box>
-            </Modal >
+            <PageHeader title="Groups & Friends" icon={GroupRounded} />
             <Container sx={{ mt: "1rem" }} maxWidth="xl">
+                <Button onClick={handleOpen} variant='contained' sx={{ mb: "1rem" }}>Create Group</Button>
                 <Grid container spacing={2}>
                     {loading && <>{[...Array(6)].map((card) => (
                         <Grid item key={card} xs={12}>
@@ -192,6 +151,47 @@ function GroupList() {
                     ))}</>}
                 </Grid>
             </Container>
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <DialogTitle>
+                    Create Group
+                </DialogTitle>
+                <Box component="form" onSubmit={formik.handleSubmit}>
+                    <DialogContent>
+                        <TextField
+                            fullWidth margin="dense" autoComplete="off"
+                            label="Name"
+                            name="name"
+                            value={formik.values.name}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            error={formik.touched.name && Boolean(formik.errors.name)}
+                            helperText={formik.touched.name && formik.errors.name}
+
+                        />
+                        <TextField
+                            fullWidth margin="dense" autoComplete="off"
+                            label="Description"
+                            name="description"
+                            value={formik.values.description}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            error={formik.touched.description && Boolean(formik.errors.description)}
+                            helperText={formik.touched.description && formik.errors.description}
+                            multiline
+                            rows={4}
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleClose} startIcon={<CloseRounded />}>Cancel</Button>
+                        <Button type="submit" startIcon={<AddRounded />}>Create Group</Button>
+                    </DialogActions>
+                </Box>
+            </Dialog >
         </>
     )
 }
