@@ -23,7 +23,7 @@ function ViewCart() {
     const [deleteLoading, setDeleteLoading] = useState(false)
     const [cart, setCart] = useState(null)
     const [deleteCart, setDeleteCart] = useState(null) // Used to store the id of the cart item to be deleted
-    const enqueueSnackbar = useSnackbar()
+    const { enqueueSnackbar } = useSnackbar();
     const apiUrl = import.meta.env.VITE_API_URL;
     titleHelper("My Cart")
 
@@ -163,7 +163,7 @@ function ViewCart() {
                                     <Divider sx={{ marginY: "1rem" }} />
                                     <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                                         <Typography>Total</Typography>
-                                        <Typography variant='h5' fontWeight={700}>{cart ? "$" + cart.totalPrice.toFixed(2) : <Skeleton />}</Typography>
+                                        <Typography variant='h5' fontWeight={700}>{cart ? "$" + cart.totalPrice.toFixed(2) : <Skeleton width={"64px"} height={"48px"}/>}</Typography>
                                     </Box>
                                 </Box>
 

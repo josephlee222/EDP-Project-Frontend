@@ -8,6 +8,7 @@ import InfoBox from "../../components/InfoBox";
 import http from "../../http";
 import { useSnackbar } from "notistack";
 import { LoadingButton } from "@mui/lab";
+import moment from "moment";
 
 
 export default function ViewProfile() {
@@ -51,7 +52,7 @@ export default function ViewProfile() {
                             <InfoBox title="Phone Number" value={user && (user.phoneNumber ? user.phoneNumber : "Not Provided")} />
                         </Grid>
                         <Grid item xs={12} md={6}>
-                            <InfoBox title="Birthday" value={user && (user.birthday ? user.birthday : "Not Provided")} />
+                            <InfoBox title="Birthday" value={user && (user.birthDate ? moment(user.birthDate).format("DD/MM/YYYY") : "Not Provided")} />
                         </Grid>
                         <Grid item xs={12} md={6}>
                             <InfoBox title="NRIC (Last 4 Digits)" value={user && (user.nric ? user.nric : "Not Provided")} />
@@ -64,7 +65,7 @@ export default function ViewProfile() {
                     <CardTitle title="Membership & Other Information" icon={<BadgeRounded />} />
                     <Grid container mt=".5rem" spacing={2}>
                         <Grid item xs={12} md={6}>
-                            <InfoBox title="Membership Status" value={"Not implemented"} />
+                            <InfoBox title="Membership Status" value={user?.member ? "Yes" : "No"} boolean={user?.member}  />
                         </Grid>
                         <Grid item xs={12} md={6}>
                             <InfoBox title="Newsletter Subscription" boolean={user?.newsletter} value={user?.newsletter ? "Subscribed" : "Not Subscribed"} />

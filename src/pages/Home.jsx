@@ -4,7 +4,7 @@ import { Route, Routes, Navigate, Link } from 'react-router-dom'
 //import { UserContext } from '..'
 import { Button, Container, Divider, Typography, Grid, Box, Card, TextField, Skeleton, CardContent } from '@mui/material'
 import { AppContext } from '../App';
-import { HomeRounded, SearchRounded } from '@mui/icons-material';
+import { HomeRounded, NewReleasesRounded, SearchRounded } from '@mui/icons-material';
 import titleHelper from '../functions/helpers';
 import http from '../http';
 
@@ -106,23 +106,47 @@ function Home() {
                     </Typography>
                     <Grid container spacing={2}>
                         <Grid item xs={6} md={3}>
-                            <Card sx={{ height: "100%", width: "100%", display: "flex", justifyContent: "center", alignItems: "center", aspectRatio: "1/1", backgroundColor: "#ffffff" }}>
+                            <Card sx={{ height: "100%", width: "100%", display: "flex", justifyContent: "center", alignItems: "center", aspectRatio: "1/1" }}>
                                 {banners.banner1 ? <img src={apiUrl + "/uploads/" + banners.banner1.imagePath} alt="Banner 1" style={{ width: "100%", height: "100%" }} /> : (loading && <Skeleton variant="rectangular" width={"100%"} height={"100%"} />)}
+                                {!banners.banner1 && !loading &&
+                                    <Box textAlign={"center"} sx={{ opacity: 0.5 }}>
+                                        <NewReleasesRounded sx={{ fontSize: "6rem" }} />
+                                        <Typography variant="h6" fontWeight={700} textAlign={"center"}>Check back later...</Typography>
+                                    </Box>
+                                }
                             </Card>
                         </Grid>
                         <Grid item xs={6} md={3}>
-                            <Card sx={{ height: "100%", width: "100%", display: "flex", justifyContent: "center", alignItems: "center", aspectRatio: "1/1", backgroundColor: "#ffffff" }}>
+                            <Card sx={{ height: "100%", width: "100%", display: "flex", justifyContent: "center", alignItems: "center", aspectRatio: "1/1" }}>
                                 {banners.banner2 ? <img src={apiUrl + "/uploads/" + banners.banner2.imagePath} alt="Banner 2" style={{ width: "100%", height: "100%" }} /> : (loading && <Skeleton variant="rectangular" width={"100%"} height={"100%"} />)}
+                                {!banners.banner2 && !loading &&
+                                    <Box textAlign={"center"} sx={{ opacity: 0.5 }}>
+                                        <NewReleasesRounded sx={{ fontSize: "6rem" }} />
+                                        <Typography variant="h6" fontWeight={700} textAlign={"center"}>Check back later...</Typography>
+                                    </Box>
+                                }
                             </Card>
                         </Grid>
                         <Grid item xs={6} md={3}>
-                            <Card sx={{ height: "100%", width: "100%", display: "flex", justifyContent: "center", alignItems: "center", aspectRatio: "1/1", backgroundColor: "#ffffff" }}>
+                            <Card sx={{ height: "100%", width: "100%", display: "flex", justifyContent: "center", alignItems: "center", aspectRatio: "1/1" }}>
                                 {banners.banner3 ? <img src={apiUrl + "/uploads/" + banners.banner3.imagePath} alt="Banner 3" style={{ width: "100%", height: "100%" }} /> : (loading && <Skeleton variant="rectangular" width={"100%"} height={"100%"} />)}
+                                {!banners.banner3 && !loading &&
+                                    <Box textAlign={"center"} sx={{ opacity: 0.5 }}>
+                                        <NewReleasesRounded sx={{ fontSize: "6rem" }} />
+                                        <Typography variant="h6" fontWeight={700} textAlign={"center"}>Check back later...</Typography>
+                                    </Box>
+                                }
                             </Card>
                         </Grid>
                         <Grid item xs={6} md={3}>
-                            <Card sx={{ height: "100%", width: "100%", display: "flex", justifyContent: "center", alignItems: "center", aspectRatio: "1/1", backgroundColor: "#ffffff" }}>
+                            <Card sx={{ height: "100%", width: "100%", display: "flex", justifyContent: "center", alignItems: "center", aspectRatio: "1/1" }}>
                                 {banners.banner4 ? <img src={apiUrl + "/uploads/" + banners.banner4.imagePath} alt="Banner 4" style={{ width: "100%", height: "100%" }} /> : (loading && <Skeleton variant="rectangular" width={"100%"} height={"100%"} />)}
+                                {!banners.banner4 && !loading &&
+                                    <Box textAlign={"center"} sx={{ opacity: 0.5 }}>
+                                        <NewReleasesRounded sx={{ fontSize: "6rem" }} />
+                                        <Typography variant="h6" fontWeight={700} textAlign={"center"}>Check back later...</Typography>
+                                    </Box>
+                                }
                             </Card>
                         </Grid>
                     </Grid>

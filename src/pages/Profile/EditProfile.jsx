@@ -12,6 +12,7 @@ import { FormControl } from "@mui/base";
 import { useSnackbar } from "notistack";
 import http from "../../http";
 import { useNavigate } from "react-router-dom";
+import moment from "moment";
 
 export default function EditProfile() {
     const { user, setUser } = useContext(AppContext);
@@ -32,6 +33,8 @@ export default function EditProfile() {
             editUserFormik.setFieldValue("occupationalStatus", user.occupationalStatus ? user.occupationalStatus : "");
             editUserFormik.setFieldValue("postalCode", user.postalCode ? user.postalCode : "");
             editUserFormik.setFieldValue("address", user.address ? user.address : "");
+            editUserFormik.setFieldValue("nric", user.nric ? user.nric : "");
+            editUserFormik.setFieldValue("birthdate", user.birthDate ? moment(user.birthDate).format("YYYY-MM-DD") : "");
         }
     }, [user])
 
@@ -42,6 +45,8 @@ export default function EditProfile() {
             "occupationalStatus": "",
             "postalCode": "",
             "address": "",
+            "nric": "",
+            "birthdate": "",
         },
         validationSchema: Yup.object({
             name: Yup.string().required("Name is required"),
@@ -49,6 +54,8 @@ export default function EditProfile() {
             occupationalStatus: Yup.string().optional().nullable(),
             postalCode: Yup.string().optional().nullable().matches(/^[0-9]+$/, "Postal code must be a number"),
             address: Yup.string().optional().nullable(),
+            nric: Yup.string().optional().nullable().max(4, "Only the last 4 characters of NRIC is required"),
+            birthdate: Yup.date().optional().nullable(),
         }),
         onSubmit: (data) => {
             setEditProfileLoading(true);
@@ -57,6 +64,8 @@ export default function EditProfile() {
             data.occupationalStatus = data.occupationalStatus.trim();
             data.postalCode = data.postalCode.trim();
             data.address = data.address.trim();
+            data.nric = data.nric.trim();
+            data.birthdate = data.birthdate.trim();
 
             http.put("/User", data).then((res) => {
                 if (res.status === 200) {
@@ -165,6 +174,32 @@ export default function EditProfile() {
                                     onChange={editUserFormik.handleChange}
                                     error={editUserFormik.touched.postalCode && Boolean(editUserFormik.errors.postalCode)}
                                     helperText={editUserFormik.touched.postalCode && editUserFormik.errors.postalCode}
+                                />
+                            </Grid>
+                            <Grid item xs={12} md={6}>
+                                <TextField
+                                    fullWidth
+                                    id="nric"
+                                    name="nric"
+                                    label="NRIC"
+                                    value={editUserFormik.values.nric}
+                                    onChange={editUserFormik.handleChange}
+                                    error={editUserFormik.touched.nric && Boolean(editUserFormik.errors.nric)}
+                                    helperText={editUserFormik.touched.nric && editUserFormik.errors.nric}
+                                />
+                            </Grid>
+                            <Grid item xs={12} md={6}>
+                                <TextField
+                                    fullWidth
+                                    id="birthdate"
+                                    name="birthdate"
+                                    label="Birthdate"
+                                    InputLabelProps={{ shrink: true }}
+                                    type="date"
+                                    value={editUserFormik.values.birthdate}
+                                    onChange={editUserFormik.handleChange}
+                                    error={editUserFormik.touched.birthdate && Boolean(editUserFormik.errors.birthdate)}
+                                    helperText={editUserFormik.touched.birthdate && editUserFormik.errors.birthdate}
                                 />
                             </Grid>
                             <Grid item xs={12}>
