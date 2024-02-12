@@ -92,12 +92,10 @@ function GroupList() {
         );
     }
 
-    const GroupTab = ({ params, name }) => (
-        <Card>
-            <CardActionArea onClick={() => {
-                navigate("/groups/" + params.row.id)
-            }}>
-                <CardHeader 
+    const GroupTab = ({ id, name }) => (
+        <Link to={`/groups/${id}`} style={{textDecoration: 'none'}}>
+            <Card>
+                <CardHeader
                     sx={{}}
                     avatar={
                         <Avatar sx={{ bgcolor: grey }}>
@@ -106,8 +104,8 @@ function GroupList() {
                     }
                     title={<Typography variant='h5'>{name}</Typography>}
                 />
-            </CardActionArea>
-        </Card>
+            </Card>
+        </Link>
     );
 
     const SkeletonTab = () => (
@@ -164,7 +162,7 @@ function GroupList() {
                     />
                     <TextField
                         fullWidth margin="dense" autoComplete="off"
-                        label="Description" 
+                        label="Description"
                         name="description"
                         value={formik.values.description}
                         onChange={formik.handleChange}
