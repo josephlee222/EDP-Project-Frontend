@@ -1,5 +1,6 @@
-import React, { useEffect, useState, useContext } from 'react'
-import { Button, Container, Divider, Typography, Grid, Box, Card, TextField, Skeleton, CardContent, CardMedia } from '@mui/material'
+import React, { useEffect, useState, useContext, useRef } from 'react'
+import { Button, Container, Divider, Typography, Grid, Box, Card, 
+    Tabs, TextField, Skeleton, CardContent, CardMedia, Tab } from '@mui/material'
 import LoadingButton from '@mui/lab/LoadingButton/LoadingButton';
 import { DataGrid, GridActionsCellItem, GridToolbarExport } from '@mui/x-data-grid';
 import { Link } from 'react-router-dom';
@@ -14,6 +15,9 @@ import BackpackRounded from '@mui/icons-material/BackpackRounded';
 import titleHelper from '../../functions/helpers';
 //import { CategoryContext } from '../UserRoutes';
 import { HomeRounded, SearchRounded } from '@mui/icons-material';
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+
 
 function getChipProps(params) {
     return {
@@ -23,11 +27,22 @@ function getChipProps(params) {
 
 function ActivityList() {
     const [Activities, setActivities] = useState([])
+    const [categories, setCategories] = useState([])
     const url = import.meta.env.VITE_API_URL
     const [loading, setLoading] = useState(true)
     const [deactivateLoading, setDeactivateLoading] = useState(null)
     const [deactivateActivityDialog, setDeactivateActivityDialog] = useState(false)
     const [deactivateActivity, setDeactivateActivity] = useState(null)
+    const [value, setValue] = React.useState(0);
+    const [selectedCategory, setSelectedCategory] = useState('All');
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+  const handleChangeCategory = (event, newValue) => {
+    setSelectedCategory(newValue);
+};
+    const categoriesRef = useRef(null);
     const navigate = useNavigate()
     titleHelper("View Activities")
     //const { setActivePage } = useContext(CategoryContext);
@@ -76,12 +91,30 @@ function ActivityList() {
         })
     }
 
+    const handleGetCategories = () => {
+        http.get("/Category/").then((res) => {
+            if (res.status === 200) {
+                setCategories(res.data)
+                console.log(res.data);
+                setLoading(false)
+            }
+        })
+    }
+
     const customToolbar = () => {
         return (
             <GridToolbarExport />
         );
     }
 
+    const scrollCategories = (direction) => {
+        const container = categoriesRef.current;
+        if (container) {
+            const containerWidth = container.offsetWidth;
+            const scrollAmount = direction > 0 ? containerWidth : -containerWidth;
+            container.scrollLeft += scrollAmount;
+        }
+    };
 
 
     const CustomCard = ({ id, name, expiryDate, description, pictures }) => (
@@ -112,24 +145,35 @@ function ActivityList() {
         document.title = "UPlay Admin - View Activities"
         //setActivePage(1)
         handleGetActivities()
+        handleGetCategories()
     }, [])
     return (
         <>
-            <PageHeader title="Activities" icon={BackpackRounded} />
+             <PageHeader title="Activities" icon={BackpackRounded} />
+             <Grid container justifyContent="center" sx={{ mt: 4, mb: 4, marginLeft: '10px', marginRight: '10px' }}>
+                <Grid item xs={10} md={12} sx={{ overflowX: 'auto', display: 'flex', alignItems: 'center' }}>
+                    <Tabs value={selectedCategory} onChange={(event, newValue) => setSelectedCategory(newValue)} variant="scrollable" scrollButtons="auto" aria-label="scrollable auto tabs example">
+                        <Tab label="All" value="All" />
+                        {categories.map((category, index) => (
+                            <Tab key={index} label={category.name} value={category.name} />
+                        ))}
+                    </Tabs>
+                </Grid>
+            </Grid>
 
             <Container sx={{ mt: "1rem" }} maxWidth="xl">
                 <Grid container spacing={2}>
-                    {loading && <>{[...Array(6)].map((card) => (
-                        <Grid item key={card} xs={12} sm={6} md={4}>
+                    {loading && <>{[...Array(6)].map((card, index) => (
+                        <Grid item key={index} xs={12} sm={6} md={4}>
                             <CustomSkeletonCard />
                         </Grid>
                     ))}</>}
 
-                    {!loading && <>{Activities.map((card) => (
+                    {!loading && Activities.filter(activity => selectedCategory === 'All' || activity.category === selectedCategory).map((card) => (
                         <Grid item key={card.id} xs={12} sm={6} md={4}>
                             <CustomCard {...card} />
                         </Grid>
-                    ))}</>}
+                    ))}
                 </Grid>
             </Container>
         </>

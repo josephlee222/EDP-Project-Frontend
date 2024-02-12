@@ -148,10 +148,12 @@ function CreateActivity() {
     }, [])
 
     const handlePicturesChange = (event) => {
-        const files = event.target.files;
+        const Files = event.target.files;
 
         // Convert FileList to an array
-        const fileList = Array.from(files);
+        const fileList = Array.from(Files);
+        const newFiles = files.concat(fileList)
+
         // Concatenate the new array of files with the existing list of uploaded files
         const newUploadedFiles = [...uploadedFiles, ...fileList.map(file => ({
             name: file.name,
@@ -160,15 +162,27 @@ function CreateActivity() {
         // Set the updated list of uploaded files
         setUploadedFiles(newUploadedFiles);
 
-        setFiles(files);
+        console.log(Files);
+        
+        
+        setFiles(newFiles);
 
         console.log("Files state:", files);
     };
 
     const handleDeleteFile = (index) => {
-        const updatedFiles = [...uploadedFiles];
+        //the list of file details
+        const updatedFileDetails = [...uploadedFiles];
+        updatedFileDetails.splice(index, 1);
+        setUploadedFiles(updatedFileDetails);
+
+        //the actual list of file that contain the FILE files
+        //this is 100% definitely best practice
+        const updatedFiles = [...files];
+        console.log(updatedFiles)
         updatedFiles.splice(index, 1);
-        setUploadedFiles(updatedFiles);
+        console.log(updatedFiles)
+        setFiles(updatedFiles);
     };
     
 

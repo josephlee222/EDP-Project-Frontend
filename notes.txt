@@ -109,141 +109,53 @@ btw it might look better for the carousel thing if the thumbmnails are all the s
 The acutal pictures can be left in different sizes but the thumbnails should look consistent.
 
 
+11/2/2024
+we finally implemented the category filtering thing yay
+I'm also done with the calendar ig. Not finished, just won't touch it anymore.
+The calendar now shows up in booking so it's easier. 
+Also made booking a dialog instead of a seperate page.
+
+And I'm not done with it but I made each review a dropdown accordion thingy.
+
+todo:
+check if everything works
+general styling, especially for activityList and details.
+Can't really think of anymore functionalities to work on. I think it's just refinement.
+Maybe a search for activityList?
+
+OH right
+the uh
+
+the edit review thingy yes. Users should be able to edit their own reviews. yeah that's it i guess.
 
 
-import React, { useState, useEffect, useRef } from 'react';
-import dayjs from 'dayjs';
-import Badge from '@mui/material/Badge';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { PickersDay } from '@mui/x-date-pickers/PickersDay';
-import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import { DayCalendarSkeleton } from '@mui/x-date-pickers/DayCalendarSkeleton';
-import { styled } from '@mui/material/styles';
 
-function getRandomNumber(min, max) {
-  return Math.round(Math.random() * (max - min) + min);
-}
+check checklist:
 
-/**
- * Mimic fetch with abort controller https://developer.mozilla.org/en-US/docs/Web/API/AbortController/abort
- * ⚠️ No IE11 support
- */
-function fakeFetch(date, { signal }) {
-  return new Promise((resolve, reject) => {
-    const timeout = setTimeout(() => {
-      const daysInMonth = date.daysInMonth();
-      const daysToHighlight = [1, 2, 3].map(() => getRandomNumber(1, daysInMonth));
+activity:
+    create-
+    update-
+    delete-
 
-      resolve({ daysToHighlight });
-    }, 500);
+category:
+    create
+    update
+    delete
 
-    signal.onabort = () => {
-      clearTimeout(timeout);
-      reject(new DOMException('aborted', 'AbortError'));
-    };
-  });
-}
+activity:
+    create
+    update
+    delete
 
-const initialValue = dayjs();
+book:
+    create
 
-const StyledDateCalendar = styled(DateCalendar)({
-  // Override the max height and width here
-  '& .MuiDateCalendar-viewTransitionContainer': {
-    height:'600px',
-    maxWidth: 'none',
-  },
-  'MuiDateCalendar-root css-1bpehs5-MuiDateCalendar-root': {
-    height:'600px',
-    maxWidth: 'none',
-  },
-});
+review:
+    create
+    update
+    delete
 
-function ServerDay(props) {
-  const { availabilities = [], day, outsideCurrentMonth, ...other } = props;
-
-  // Find the availability for the current day
-  const availability = availabilities.find(avail => dayjs(avail.date).startOf('day').isSame(day, 'day'));
-
-  // Extract the price from the availability, if available
-  const price = availability ? availability.price : null;
-
-  return (
-    <Badge
-      key={day.toString()}
-      overlap="circular"
-      badgeContent={(
-        <div>
-          {price != null && <div>${price}</div>} {/* Show the price if available */}
-        </div>
-      )}
-    >
-      <div style={{ padding: '10px' }}> {/* Adjust spacing here */}
-        <PickersDay {...other} outsideCurrentMonth={outsideCurrentMonth} day={day} />
-      </div>
-    </Badge>
-  );
-}
-
-export default function DateCalendarServerRequest({ activityId, availabilities, setDialogOpen, onChange }) {
-  const requestAbortController = useRef(null);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const fetchHighlightedDays = (date) => {
-    const controller = new AbortController();
-    fakeFetch(date, {
-      signal: controller.signal,
-    })
-      .then(({ daysToHighlight }) => {
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        // ignore the error if it's caused by `controller.abort`
-        if (error.name !== 'AbortError') {
-          throw error;
-        }
-      });
-
-    requestAbortController.current = controller;
-  };
-
-  useEffect(() => {
-    fetchHighlightedDays(initialValue);
-    // abort request on unmount
-    return () => requestAbortController.current?.abort();
-  }, []);
-
-  const handleMonthChange = (date) => {
-    if (requestAbortController.current) {
-      // make sure that you are aborting useless requests
-      // because it is possible to switch between months pretty quickly
-      requestAbortController.current.abort();
-    }
-
-    setIsLoading(true);
-    fetchHighlightedDays(date);
-  };
-
-  return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <StyledDateCalendar
-        defaultValue={initialValue}
-        loading={isLoading}
-        onMonthChange={handleMonthChange}
-        renderLoading={() => <DayCalendarSkeleton />}
-        onChange={onChange}
-        slots={{
-          day: ServerDay,
-        }}
-        slotProps={{
-          day: {
-            availabilities,
-            sx:{fontSize:'1.2rem'}
-          },
-        }}
-        sx={{ width: '500px', maxHeight:"800px"}}
-        
-      />
-    </LocalizationProvider>
-  );
-}
+coupon:
+    create
+    update
+    delete

@@ -32,6 +32,7 @@ function EditActivity() {
     const { id: activityId } = useParams();
     const [uploadedFiles, setUploadedFiles] = useState([]);
     const [files, setFiles] = useState([]);
+    const [oldFiles, setOldFiles] = useState([]);
 
     const handleGetCategories = () => {
         http.get("/Admin/Category/").then((res) => {
@@ -64,7 +65,9 @@ function EditActivity() {
                 formik.setValues(res.data);
             }
         })
+
     }
+
 
     const formik = useFormik({
         initialValues: {
@@ -137,11 +140,13 @@ function EditActivity() {
             http.post("/File/multiUpload/", formData, config).then((res) => {
 
                 if (res.status === 200) {
+                    const allFiles = oldFiles.concat(res.data.uploadedFiles)
+                    console.log(allFiles);
                     enqueueSnackbar("Pictures uploaded successfully!", { variant: "success" });
                     console.log("res data: ", res.data);
                     const resPic = { Items: res.data };
                     console.log("respic: ", resPic);
-                    data.pictures = res.data.uploadedFiles
+                    data.pictures = allFiles
                     console.log(pictures)
                     data.name = data.name.trim();
                     data.description = data.description.trim();
@@ -177,27 +182,41 @@ function EditActivity() {
     })
 
     const handlePicturesChange = (event) => {
-        const files = event.target.files;
+        const Files = event.target.files;
 
         // Convert FileList to an array
-        const fileList = Array.from(files);
+        const fileList = Array.from(Files);
+        const newFiles = files.concat(fileList)
+
         // Concatenate the new array of files with the existing list of uploaded files
         const newUploadedFiles = [...uploadedFiles, ...fileList.map(file => ({
             name: file.name,
-            preview: URL.createObjectURL(file) // Generate preview URL
+            preview: URL.createObjectURL(file)
         }))];
         // Set the updated list of uploaded files
         setUploadedFiles(newUploadedFiles);
 
-        setFiles(files);
+        console.log(Files);
+
+
+        setFiles(newFiles);
 
         console.log("Files state:", files);
     };
 
     const handleDeleteFile = (index) => {
-        const updatedFiles = [...uploadedFiles];
+        //the list of file details
+        const updatedFileDetails = [...uploadedFiles];
+        updatedFileDetails.splice(index, 1);
+        setUploadedFiles(updatedFileDetails);
+
+        //the actual list of file that contain the FILE files
+        //this is 100% definitely best practice
+        const updatedFiles = [...files];
+        console.log(updatedFiles)
         updatedFiles.splice(index, 1);
-        setUploadedFiles(updatedFiles);
+        console.log(updatedFiles)
+        setFiles(updatedFiles);
     };
 
     useEffect(() => {
@@ -213,17 +232,28 @@ function EditActivity() {
         // Set default value for uploadedFiles when activity data is fetched
         if (activity.pictures?.items) {
             const files = [];
+            const oldFiles = [];
             for (let i = 0; i < activity.pictures.items.length; i++) {
                 const picture = activity.pictures.items[i];
                 files.push({
                     name: picture,
-                    preview: url+`/uploads/${picture}` // Set the path to your images
+                    preview: url + `/uploads/${picture}`
                 });
             }
+
+            for (let i = 0; i < activity.pictures.items.length; i++) {
+                const picture = activity.pictures.items[i];
+                oldFiles.push(picture);
+            }
+
+            console.log(files);
+
             setUploadedFiles(files);
+
+            setOldFiles(oldFiles);
         }
     }, [activity]);
-    
+
 
     return (
         <>
@@ -353,45 +383,45 @@ function EditActivity() {
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
-                                        <input
-                                            accept="image/*"
-                                            id="pictures"
-                                            name="pictures"
-                                            type="file"
-                                            onChange={handlePicturesChange}
-                                            multiple // Allow multiple file selection
-                                            style={{ display: 'none' }}
-                                        />
-                                        <label htmlFor="pictures">
+                                    <input
+                                        accept="image/*"
+                                        id="pictures"
+                                        name="pictures"
+                                        type="file"
+                                        onChange={handlePicturesChange}
+                                        multiple // Allow multiple file selection
+                                        style={{ display: 'none' }}
+                                    />
+                                    <label htmlFor="pictures">
+                                        <IconButton
+                                            color="primary"
+                                            aria-label="upload picture"
+                                            component="span"
+                                        >
+                                            <AddIcon />
+                                        </IconButton>
+                                        <Typography variant="body1">Upload Pictures</Typography>
+                                    </label>
+                                    {uploadedFiles.map((file, index) => (
+                                        <ListItem key={index}>
+                                            <ListItemText primary={file.name} />
+                                            {file.preview && (
+                                                <img
+                                                    src={file.preview}
+                                                    alt={`Preview of ${file.name}`}
+                                                    style={{ width: '50px', height: 'auto', marginLeft: '10px' }}
+                                                />
+                                            )}
                                             <IconButton
-                                                color="primary"
-                                                aria-label="upload picture"
-                                                component="span"
+                                                edge="end"
+                                                aria-label="delete"
+                                                onClick={() => handleDeleteFile(index)}
                                             >
-                                                <AddIcon />
+                                                <DeleteIcon />
                                             </IconButton>
-                                            <Typography variant="body1">Upload Pictures</Typography>
-                                        </label>
-                                        {uploadedFiles.map((file, index) => (
-                                            <ListItem key={index}>
-                                                <ListItemText primary={file.name} />
-                                                {file.preview && (
-                                                    <img
-                                                        src={file.preview}
-                                                        alt={`Preview of ${file.name}`}
-                                                        style={{ width: '50px', height: 'auto', marginLeft: '10px' }}
-                                                    />
-                                                )}
-                                                <IconButton
-                                                    edge="end"
-                                                    aria-label="delete"
-                                                    onClick={() => handleDeleteFile(index)}
-                                                >
-                                                    <DeleteIcon />
-                                                </IconButton>
-                                            </ListItem>
-                                        ))}
-                                    </Grid>
+                                        </ListItem>
+                                    ))}
+                                </Grid>
                                 <Grid item xs={12} sm={6}>
                                     {/* radio buttons for discount type */}
                                     <Typography variant="subtitle1">Discount Type:</Typography>

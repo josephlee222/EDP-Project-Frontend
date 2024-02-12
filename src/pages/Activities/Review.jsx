@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react'
-import {  Container, Card, CardContent, Box, Checkbox, TextField,
+import {
+    Container, Card, CardContent, Box, Checkbox, TextField,
     Grid, FormControlLabel, IconButton, Typography, RadioGroup, Radio, List,
     ListItem,
-    ListItemText } from '@mui/material'
+    ListItemText
+} from '@mui/material'
 import LoadingButton from '@mui/lab/LoadingButton';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import AddIcon from '@mui/icons-material/Add';
@@ -28,17 +30,17 @@ function CreateReview() {
     const [files, setFiles] = useState([]);
 
 
-      const handleGetActivity = () => {
+    const handleGetActivity = () => {
         setLoading(true);
         http.get(`/Activity/${activityId}`).then((res) => {
-          if (res.status === 200) {
-            setActivity(res.data);
-            setLoading(false);
-            
-          }
+            if (res.status === 200) {
+                setActivity(res.data);
+                setLoading(false);
+
+            }
         });
-      };
-      
+    };
+
 
 
     titleHelper("Book Activity")
@@ -50,17 +52,17 @@ function CreateReview() {
             description: "",
             rating: 0,
             pictures: [],
-            
+
         },
         validationSchema: Yup.object({
             description: Yup.string().required("description is required"),
             rating: Yup.number().required("Discount Amount is required"),
 
-            
+
         }),
         onSubmit: (data) => {
             setLoading(true);
-            var pictures = []
+            var pictures = [];
             console.log("pictures: " + data.pictures);
             console.log(data.pictures);
 
@@ -81,43 +83,56 @@ function CreateReview() {
             console.log("formdata: ", formData);
             console.log(formData);
 
-            http.post("/File/multiUpload/", formData, config).then((res) => {
+            if (pictures != []) {
 
-                if (res.status === 200) {
-                    enqueueSnackbar("Pictures uploaded successfully!", { variant: "success" });
-                    console.log("res data: ", res.data);
-                    const resPic = { Items: res.data };
-                    console.log("respic: ", resPic);
-                    data.pictures = res.data.uploadedFiles
-                    console.log(pictures)
-                    data.description = data.description.trim();
-                    data.ActivityId = activityId;
+                http.post("/File/multiUpload/", formData, config)
+                    .then((res) => {
+                        if (res.status === 200) {
+                            enqueueSnackbar("Pictures uploaded successfully!", { variant: "success" });
+                            console.log("res data: ", res.data);
+                            const resPic = { Items: res.data };
+                            console.log("respic: ", resPic);
+                            data.pictures = res.data.uploadedFiles;
+                            console.log(pictures);
+                            data.description = data.description.trim();
+                            data.ActivityId = activityId;
 
-                    console.log(data)
+                            console.log(data);
 
-                    http.post("/Review/", data).then((res) => {
+
+                        } else {
+                            enqueueSnackbar("Pictures uploaded failed!. else", { variant: "error" });
+                            setLoading(false);
+                        }
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        enqueueSnackbar("Pictures uploaded failed! catch" + err.response.data.error, { variant: "error" });
+                        setLoading(false);
+                    });
+            }
+
+            uploadReview(data);
+
+            // Function to upload review
+            function uploadReview(data) {
+                http.post("/Review/", data)
+                    .then((res) => {
                         if (res.status === 200) {
                             enqueueSnackbar("Activity created successfully!", { variant: "success" });
-                            navigate(`/activityList/${activityId}`)
+                            navigate(`/activityList/${activityId}`);
                         } else {
                             enqueueSnackbar("Activity creation failed!.", { variant: "error" });
                             setLoading(false);
                         }
-                    }).catch((err) => {
+                    })
+                    .catch((err) => {
                         enqueueSnackbar("Activity creation failed! " + err.response.data.error, { variant: "error" });
                         setLoading(false);
-                    })
-                } else {
-                    enqueueSnackbar("Pictures uploaded failed!. else", { variant: "error" });
-                    setLoading(false);
-                }
-            }).catch((err) => {
-                console.log(err)
-                enqueueSnackbar("Pictures uploaded failed! catch" + err.response.data.error, { variant: "error" });
-                setLoading(false);
-            })
+                    });
+            }
+
         }
-        
     })
 
     const handlePicturesChange = (event) => {
@@ -140,7 +155,7 @@ function CreateReview() {
     useEffect(() => {
         handleGetActivity();
     }, []
-    
+
     )
 
     return (
@@ -154,7 +169,7 @@ function CreateReview() {
                         <Box component="form" mt={3}>
 
                             <Grid container spacing={2}>
-                            
+
                                 <Grid item xs={12} sm={6}>
                                     <TextField
                                         fullWidth
@@ -169,17 +184,17 @@ function CreateReview() {
                                         type='number'
                                     />
                                     <Grid item xs={12} sm={6}>
-                                    <TextField
-                                        fullWidth
-                                        id="description"
-                                        name="description"
-                                        label="description"
-                                        variant="outlined"
-                                        value={formik.values.description}
-                                        onChange={formik.handleChange}
-                                        error={formik.touched.description && Boolean(formik.errors.description)}
-                                        helperText={formik.touched.description && formik.errors.description}
-                                    />
+                                        <TextField
+                                            fullWidth
+                                            id="description"
+                                            name="description"
+                                            label="description"
+                                            variant="outlined"
+                                            value={formik.values.description}
+                                            onChange={formik.handleChange}
+                                            error={formik.touched.description && Boolean(formik.errors.description)}
+                                            helperText={formik.touched.description && formik.errors.description}
+                                        />
                                     </Grid>
                                     <Grid item xs={12}>
                                         <input
@@ -212,8 +227,8 @@ function CreateReview() {
                                         )}
                                     </Grid>
                                 </Grid>
-                                
-                                
+
+
                             </Grid>
 
                             <LoadingButton
