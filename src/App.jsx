@@ -9,6 +9,8 @@ import http from './http';
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import { useSnackbar } from 'notistack';
 import { Home } from '@mui/icons-material';
+import Footer from './components/Footer';
+import { Box } from '@mui/material';
 
 export const AppContext = createContext(null);
 function App() {
@@ -95,14 +97,14 @@ function App() {
         <>
             <AppContext.Provider value={{
                 user,
-                setUser, 
-                userLoading, 
-                setUserLoading, 
-                adminPage, 
-                setAdminPage, 
-                connection, 
-                setConnection, 
-                notifications, 
+                setUser,
+                userLoading,
+                setUserLoading,
+                adminPage,
+                setAdminPage,
+                connection,
+                setConnection,
+                notifications,
                 setNotifications,
                 title,
                 setTitle,
@@ -111,11 +113,16 @@ function App() {
                 currentNotification,
                 setCurrentNotification,
             }}>
-                <Navbar />
-                <Routes location={location}>
-                    <Route path='*' element={<UserRoutes />} />
-                    <Route path='/admin/*' element={<AdminRoutes />} />
-                </Routes>
+                <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+                    <Navbar />
+                    <Box sx={{ flexGrow: 1 }}>
+                        <Routes location={location}>
+                            <Route path='*' element={<UserRoutes />} />
+                            <Route path='/admin/*' element={<AdminRoutes />} />
+                        </Routes>
+                    </Box>
+                    <Footer />
+                </Box>
             </AppContext.Provider>
         </>
 

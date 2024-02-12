@@ -13,6 +13,7 @@ import { CategoryContext } from './AdminUsersRoutes';
 import ProfilePicture from '../../../components/ProfilePicture';
 import { AppContext } from '../../../App';
 import titleHelper from '../../../functions/helpers';
+import moment from 'moment';
 
 export default function EditUser() {
     const [loading, setLoading] = useState(true);
@@ -39,6 +40,7 @@ export default function EditUser() {
                 console.log(res.data)
                 setLoading(false)
                 formik.setValues(res.data);
+                formik.setFieldValue("birthdate", res.data.birthDate ? moment(res.data.birthDate).format("YYYY-MM-DD") : "");
             }
         }).catch((err) => {
             enqueueSnackbar("Failed to get user! " + err.response.data.error, { variant: "error" });
@@ -55,6 +57,9 @@ export default function EditUser() {
             occupationalStatus: "",
             postalCode: "",
             address: "",
+            nric: "",
+            birthdate: "",
+            member: false,
         },
         validationSchema: Yup.object({
             email: Yup.string().email("Invalid email address").required("Email is required"),
@@ -63,7 +68,10 @@ export default function EditUser() {
             occupationalStatus: Yup.string().optional().nullable(),
             postalCode: Yup.string().optional().nullable().matches(/^[0-9]+$/, "Postal code must be a number"),
             address: Yup.string().optional().nullable(),
+            nric: Yup.string().optional().nullable().max(4, "Only the last 4 characters of NRIC is required"),
+            birthdate: Yup.date().optional().nullable(),
             isAdmin: Yup.boolean().optional(),
+            member: Yup.boolean().optional(),
         }),
         onSubmit: (data) => {
             setUpdateLoading(true);
@@ -200,22 +208,64 @@ export default function EditUser() {
                                             rows={2}
                                         />
                                     </Grid>
+                                    <Grid item xs={12} md={6}>
+                                        <TextField
+                                            fullWidth
+                                            id="nric"
+                                            name="nric"
+                                            label="NRIC (Last 4 Digits)"
+                                            value={formik.values.nric}
+                                            onChange={formik.handleChange}
+                                            error={formik.touched.nric && Boolean(formik.errors.nric)}
+                                            helperText={formik.touched.nric && formik.errors.nric}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} md={6}>
+                                        <TextField
+                                            fullWidth
+                                            id="birthdate"
+                                            name="birthdate"
+                                            label="Birthdate"
+                                            value={formik.values.birthdate}
+                                            onChange={formik.handleChange}
+                                            error={formik.touched.birthdate && Boolean(formik.errors.birthdate)}
+                                            helperText={formik.touched.birthdate && formik.errors.birthdate}
+                                            type="date"
+                                            InputLabelProps={{
+                                                shrink: true,
+                                            }}
+                                        />
+                                    </Grid>
                                 </Grid>
-                                <FormControlLabel label="Is Admin" control={
-                                    <Checkbox
-                                        id="isAdmin"
-                                        name="isAdmin"
-                                        label="Is Admin"
-                                        variant="outlined"
-                                        value={formik.values.isAdmin}
-                                        onChange={formik.handleChange}
-                                        error={formik.touched.isAdmin && Boolean(formik.errors.isAdmin)}
-                                        helperText={formik.touched.isAdmin && formik.errors.isAdmin}
-                                        checked={formik.values.isAdmin}
-                                    />
-                                } />
+                                <Box display={"flex"}>
+                                    <FormControlLabel label="Is Admin" control={
+                                        <Checkbox
+                                            id="isAdmin"
+                                            name="isAdmin"
+                                            label="Is Admin"
+                                            variant="outlined"
+                                            value={formik.values.isAdmin}
+                                            onChange={formik.handleChange}
+                                            error={formik.touched.isAdmin && Boolean(formik.errors.isAdmin)}
+                                            helperText={formik.touched.isAdmin && formik.errors.isAdmin}
+                                            checked={formik.values.isAdmin}
+                                        />
+                                    } />
+                                    <FormControlLabel label="Is Member" control={
+                                        <Checkbox
+                                            id="member"
+                                            name="member"
+                                            label="Is NTUC Member"
+                                            variant="outlined"
+                                            value={formik.values.member}
+                                            onChange={formik.handleChange}
+                                            error={formik.touched.member && Boolean(formik.errors.member)}
+                                            helperText={formik.touched.member && formik.errors.member}
+                                            checked={formik.values.member}
+                                        />
+                                    } />
+                                </Box>
                             </Box>
-
                         </CardContent>
                     </Card>
                     <Card sx={{ mt: "1rem" }}>
