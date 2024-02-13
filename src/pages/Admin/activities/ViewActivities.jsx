@@ -17,6 +17,7 @@ import CardTitle from '../../../components/CardTitle';
 import { BackpackRounded, EditCalendarRounded, Person } from '@mui/icons-material';
 import moment from 'moment';
 import titleHelper from '../../../functions/helpers';
+import { useSnackbar } from 'notistack'
 
 function getChipProps(params) {
     return {
@@ -34,6 +35,7 @@ function ViewActivities() {
     const [deactivateActivity, setDeactivateActivity] = useState(null)
     const navigate = useNavigate()
     const { setActivePage } = useContext(CategoryContext);
+    const { enqueueSnackbar } = useSnackbar();
     titleHelper("View Activities")
     const columns = [
         { field: 'name', headerName: 'Name', width: 200 },
@@ -90,6 +92,7 @@ function ViewActivities() {
 
     const handleDeactivateActivityDialogClose = () => {
         setDeactivateActivityDialog(false)
+        
     }
 
     const handleDeactivateActivityDialogOpen = () => {
@@ -103,6 +106,7 @@ function ViewActivities() {
                 setDeactivateLoading(false)
                 setDeactivateActivityDialog(false)
                 handleGetActivities()
+                enqueueSnackbar("Activity deleted successfully!", { variant: "success" });
             }
         })
     }

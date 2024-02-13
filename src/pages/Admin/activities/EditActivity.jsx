@@ -33,6 +33,7 @@ function EditActivity() {
     const [uploadedFiles, setUploadedFiles] = useState([]);
     const [files, setFiles] = useState([]);
     const [oldFiles, setOldFiles] = useState([]);
+    const today = new Date();
 
     const handleGetCategories = () => {
         http.get("/Admin/Category/").then((res) => {
@@ -96,7 +97,7 @@ function EditActivity() {
         },
         validationSchema: Yup.object({
             name: Yup.string().required("Name is required"),
-            expiryDate: Yup.date().required("Date is required"),
+            expiryDate: Yup.date().min(today, "Expiry date must be after today").required("Date is required"),
             description: Yup.string().required("Description is required"),
             category: Yup.string().required("Category is required"),
             ntucExclusive: Yup.boolean().optional(),

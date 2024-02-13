@@ -64,6 +64,15 @@ function CreateAvailability() {
     };
 
     const handleDateSelection = (date) => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Set hours to 0 for accurate comparison
+
+        // Check if the selected date is after today
+        if (date <= today) {
+            enqueueSnackbar("Please select a date after today.", { variant: "error" });
+            return;
+        }
+
 
 
         let jsDate;
@@ -194,7 +203,7 @@ function CreateAvailability() {
             handleDialogClose(); // Close the dialog
         }
     };
-    
+
 
 
     return (

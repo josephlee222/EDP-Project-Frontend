@@ -17,6 +17,7 @@ import CardTitle from '../../../components/CardTitle';
 import { BackpackRounded, CategoryRounded, EditCalendarRounded, Person } from '@mui/icons-material';
 import moment from 'moment';
 import titleHelper from '../../../functions/helpers';
+import { useSnackbar } from 'notistack'
 
 function getChipProps(params) {
     return {
@@ -34,6 +35,7 @@ function ViewCategories() {
     const [deactivateActivity, setDeactivateActivity] = useState(null)
     const navigate = useNavigate()
     const { setActivePage } = useContext(CategoryContext);
+    const { enqueueSnackbar } = useSnackbar();
     titleHelper("View Categories")
     const columns = [
         { field: 'name', headerName: 'Name', width: 200 },
@@ -80,6 +82,7 @@ function ViewCategories() {
                 setDeactivateLoading(false)
                 setDeactivateActivityDialog(false)
                 handleGetCategories()
+                enqueueSnackbar("Activity deleted successfully!", { variant: "success" });
             }
         })
     }
