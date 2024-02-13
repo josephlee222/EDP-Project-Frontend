@@ -2,9 +2,9 @@ import { useContext, useEffect, useState } from 'react'
 import { Route, Routes, Navigate, Link } from 'react-router-dom'
 //import NotFound from './errors/NotFound'
 //import { UserContext } from '..'
-import { Button, Container, Divider, Typography, Grid, Box, Card, TextField, Skeleton, CardContent } from '@mui/material'
+import { Button, Container, Divider, Typography, Grid, Box, Card, TextField, Skeleton, CardContent, CardMedia } from '@mui/material'
 import { AppContext } from '../App';
-import { HomeRounded, NewReleasesRounded, SearchRounded } from '@mui/icons-material';
+import { HomeRounded, NewReleasesRounded, SearchRounded, WarningRounded } from '@mui/icons-material';
 import titleHelper from '../functions/helpers';
 import http from '../http';
 import { useSnackbar } from "notistack";
@@ -16,6 +16,9 @@ function Home() {
     const apiUrl = import.meta.env.VITE_API_URL;
     const [banners, setBanners] = useState({})
     const [loading, setLoading] = useState(false)
+    const [activities, setActivities] = useState([])
+    const [loadingActivities, setLoadingActivities] = useState(false)
+    const { enqueueSnackbar } = useSnackbar();
 
     const CustomSkeletonCard = () => (
         <Card>
@@ -42,8 +45,25 @@ function Home() {
         )
     }
 
+    const getActivities = () => {
+        setLoadingActivities(true)
+        http.get("/Activity").then((res) => {
+            if (res.status === 200) {
+                var activities = res.data
+                console.log(activities.reverse())
+                setActivities(activities)
+                setLoadingActivities(false)
+            }
+        }).catch((err) => {
+            enqueueSnackbar("Failed to load activities! " + err.response.data.message, { variant: "error" });
+            setLoadingActivities(false)
+        }
+        )
+    }
+
     useEffect(() => {
         getBanners()
+        getActivities()
     }, [])
 
     return (
@@ -159,24 +179,55 @@ function Home() {
                         Discover the latest activities that we have to offer
                     </Typography>
                     <Grid container spacing={2}>
-                        <Grid item xs={12} sm={6} md={4}>
-                            <CustomSkeletonCard />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4}>
-                            <CustomSkeletonCard />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4}>
-                            <CustomSkeletonCard />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4}>
-                            <CustomSkeletonCard />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4}>
-                            <CustomSkeletonCard />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4}>
-                            <CustomSkeletonCard />
-                        </Grid>
+                        {loadingActivities && (
+                            <>
+                                <Grid item xs={12} sm={6} md={4}>
+                                    <CustomSkeletonCard />
+                                </Grid>
+                                <Grid item xs={12} sm={6} md={4}>
+                                    <CustomSkeletonCard />
+                                </Grid>
+                                <Grid item xs={12} sm={6} md={4}>
+                                    <CustomSkeletonCard />
+                                </Grid>
+                                <Grid item xs={12} sm={6} md={4}>
+                                    <CustomSkeletonCard />
+                                </Grid>
+                                <Grid item xs={12} sm={6} md={4}>
+                                    <CustomSkeletonCard />
+                                </Grid>
+                                <Grid item xs={12} sm={6} md={4}>
+                                    <CustomSkeletonCard />
+                                </Grid>
+                            </>
+                        )}
+                        {!loadingActivities && activities.length === 0 && (
+                            <Grid item xs={12}>
+                                <Card>
+                                    <CardContent>
+                                        <Box display="flex" justifyContent="center" alignItems="center" flexDirection="column">
+                                            <WarningRounded sx={{ fontSize: 100, color: "black", opacity: "0.5" }} />
+                                            <Typography variant="h6" fontWeight={700}>No activities Found</Typography>
+                                        </Box>
+                                    </CardContent>
+                                </Card>
+                            </Grid>
+
+                        )}
+                        {activities.slice(0, 5).map((activity, index) => (
+                            <Grid item xs={12} sm={6} md={4} key={index}>
+                                <Link to={`/activityList/${activity.id}`} style={{ textDecoration: 'none' }}>
+                                    <Card>
+                                        <CardMedia sx={{ height: 140 }} image={activity.pictures ? apiUrl + '/uploads/' + activity.pictures.items[0] : "/unknown.png"} />
+                                        <CardContent>
+                                            <Typography variant="h6" fontWeight={700}>{activity.name}</Typography>
+                                            <Typography>{activity.description}</Typography>
+                                            <Typography>Till: {activity.expiryDate}</Typography>
+                                        </CardContent>
+                                    </Card>
+                                </Link>
+                            </Grid>
+                        ))}
                     </Grid>
                 </Box>
             </Container>

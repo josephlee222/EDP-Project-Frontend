@@ -42,7 +42,7 @@ export default function AdminHome() {
                                         <CardContent sx={{ color: "primary.main" }}>
                                             <ManageAccountsRounded sx={{ width: "36px", height: "36px" }} />
                                             <Typography variant="h6" fontWeight={700}>Users</Typography>
-                                            <Typography variant="body1">Manage user accounts</Typography>
+                                            <Typography variant="body1">Manage User Accounts</Typography>
                                         </CardContent>
                                     </ButtonBase>
                                 </Card>
