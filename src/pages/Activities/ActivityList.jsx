@@ -60,7 +60,7 @@ function ActivityList() {
 
     const handleCategoryChange = (category) => {
         setSelectedCategory(category);
-        filterActivities(Activities, category, searchQuery);
+        filteredActivities(Activities, category, searchQuery);
     };
 
     // Function to handle changes in sorting criteria
@@ -212,8 +212,8 @@ function ActivityList() {
     }, [])
     return (
         <>
-            <PageHeader title="Activities" icon={BackpackRounded} background="/golf_edit.jpg"/>
-            <Card sx={{backgroundImage: ""}}>
+            <PageHeader title="Activities" icon={BackpackRounded} background="/kayak.jpg" />
+            <Card sx={{ backgroundColor: "#ffffff" }}>
                 <Grid container justifyContent="center" sx={{ mt: 4, mb: 4, marginLeft: '10px', marginRight: '10px' }}>
 
                     <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -263,7 +263,6 @@ function ActivityList() {
                             {/* Add more sorting criteria options here */}
                         </TextField>
                     </Grid>
-
 
                     <Grid item xs={10} md={12} sx={{ overflowX: 'auto', display: 'flex', alignItems: 'center' }}>
                         <Tabs value={selectedCategory} onChange={(event, newValue) => setSelectedCategory(newValue)} variant="scrollable" scrollButtons="auto" aria-label="scrollable auto tabs example">

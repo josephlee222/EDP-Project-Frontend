@@ -22,6 +22,7 @@ import DateCalendarServerRequest from '../../components/CustomDateCalendarBookin
 import ProfilePicture from '../../components/ProfilePicture';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import { AddRounded, List } from '@mui/icons-material'
 
 function ActivityDetails() {
   const url = import.meta.env.VITE_API_URL
@@ -289,7 +290,8 @@ function ActivityDetails() {
           {/* <ProfilePicture user={user} sx={{ width: "72px", height: "72px" }} /> */}
           <Container sx={{ mt: "1rem" }} maxWidth="xl">
             <Link to={`/review/${activityId}`} style={{ textDecoration: 'none' }}>
-              <Typography variant="h6">add review</Typography>
+              <Button variant={ "contained" } startIcon={<AddRounded/>} sx={{mb:'1rem'}}>
+                add review</Button>
             </Link>
             <Grid container spacing={2}>
               {loading && (
