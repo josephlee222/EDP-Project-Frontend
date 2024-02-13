@@ -222,7 +222,10 @@ function Home() {
                                         <CardMedia sx={{ height: 140 }} image={activity.pictures ? apiUrl + '/uploads/' + activity.pictures.items[0] : "/unknown.png"} />
                                         <CardContent>
                                             <Typography variant="h6" fontWeight={700}>{activity.name}</Typography>
-                                            <Typography>{activity.description}</Typography>
+                                            <Typography sx={{
+                                                whiteSpace: 'nowrap', overflow: "hidden",
+                                                textOverflow: "ellipsis"
+                                            }}>{activity.description}</Typography>
                                             <Typography>Till: {moment(activity.expiryDate).format("DD/MM/YYYY")}</Typography>
                                         </CardContent>
                                     </Card>
