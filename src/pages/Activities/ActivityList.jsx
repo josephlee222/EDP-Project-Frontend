@@ -212,73 +212,81 @@ function ActivityList() {
     }, [])
     return (
         <>
-            <PageHeader title="Activities" icon={BackpackRounded} background="/kayak.jpg" />
-            <Card sx={{ backgroundColor: "#ffffff" }}>
-                <Grid container justifyContent="center" sx={{ mt: 4, mb: 4, marginLeft: '10px', marginRight: '10px' }}>
+            <PageHeader title="Activities" icon={BackpackRounded} background="/golf_edit.jpg" />
 
-                    <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'center' }}>
-                        <TextField
-                            label="Search Activities"
-                            variant="outlined"
-                            value={searchQuery}
-                            onChange={handleSearch}
-                            InputProps={{
-                                endAdornment: <SearchRounded />,
-                            }}
-                        />
-                    </Grid>
-                    <Grid item xs={7} sx={{ display: 'flex', justifyContent: 'right', marginRight: '5px' }}>
-                        <TextField
-                            label="Maximum Age Limit"
-                            type="number"
-                            variant="outlined"
-                            value={maxAgeLimit}
-                            onChange={(e) => handleMaxAgeLimitChange(parseInt(e.target.value))}
-                            InputProps={{
-                                endAdornment: <AccessibilityNewIcon />,
-                            }}
-                        />
-
-                        <TextField
-                            select
-                            label="Sorting Criteria"
-                            value={sortingCriteria}
-                            onChange={handleSortingCriteriaChange}
-                            variant="outlined"
-
-                            InputProps={{
-                                endAdornment: (
-                                    <>
-                                        <IconButton onClick={toggleSortingDirection}>
-                                            {sortingDirection === 'asc' ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                                        </IconButton>
-                                        <SearchRounded />
-                                    </>
-                                ),
-                            }}
-                        >
-                            <MenuItem value="name">Name</MenuItem>
-                            <MenuItem value="expiryDate">Expiry Date</MenuItem>
-                            <MenuItem value="dateAdded">Date Added</MenuItem> {/* Add "Date Added" option */}
-                            {/* Add more sorting criteria options here */}
-                        </TextField>
-                    </Grid>
-
-                    <Grid item xs={10} md={12} sx={{ overflowX: 'auto', display: 'flex', alignItems: 'center' }}>
-                        <Tabs value={selectedCategory} onChange={(event, newValue) => setSelectedCategory(newValue)} variant="scrollable" scrollButtons="auto" aria-label="scrollable auto tabs example">
-                            <Tab label="All" value="All" />
-                            {categories.map((category, index) => (
-                                <Tab key={index} label={category.name} value={category.name} />
-                            ))}
-                        </Tabs>
-                    </Grid>
-                </Grid>
-            </Card>
 
 
 
             <Container sx={{ mt: "1rem" }} maxWidth="xl">
-                <Grid container spacing={2}>
+                <Card sx={{ mb: "1rem" }}>
+                    <CardContent>
+                        <Grid container spacing={2}>
+
+                            <Grid item xs={12} md={6}>
+                                <TextField
+                                    label="Search Activities"
+                                    variant="outlined"
+                                    value={searchQuery}
+                                    onChange={handleSearch}
+                                    fullWidth
+                                    InputProps={{
+                                        endAdornment: <SearchRounded />,
+                                    }}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6} md={3}>
+                                <TextField
+                                    label="Maximum Age Limit"
+                                    type="number"
+                                    variant="outlined"
+                                    value={maxAgeLimit}
+                                    onChange={(e) => handleMaxAgeLimitChange(parseInt(e.target.value))}
+                                    InputProps={{
+                                        endAdornment: <AccessibilityNewIcon />,
+                                    }}
+                                    fullWidth
+                                />
+
+
+                            </Grid>
+                            <Grid item xs={12} sm={6} md={3}>
+                                <TextField
+                                    select
+                                    label="Sorting Criteria"
+                                    value={sortingCriteria}
+                                    onChange={handleSortingCriteriaChange}
+                                    variant="outlined"
+                                    fullWidth
+                                    InputProps={{
+                                        endAdornment: (
+                                            <>
+                                                <IconButton onClick={toggleSortingDirection}>
+                                                    {sortingDirection === 'asc' ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                                                </IconButton>
+                                            </>
+                                        ),
+                                    }}
+                                >
+                                    <MenuItem value="name">Name</MenuItem>
+                                    <MenuItem value="expiryDate">Expiry Date</MenuItem>
+                                    <MenuItem value="dateAdded">Date Added</MenuItem> {/* Add "Date Added" option */}
+                                    {/* Add more sorting criteria options here */}
+                                </TextField>
+                            </Grid>
+
+
+                            <Grid item xs={10} md={12} sx={{ overflowX: 'auto', display: 'flex', alignItems: 'center' }}>
+                                <Tabs value={selectedCategory} onChange={(event, newValue) => setSelectedCategory(newValue)} variant="scrollable" scrollButtons="auto" aria-label="scrollable auto tabs example">
+                                    <Tab label="All" value="All" />
+                                    {categories.map((category, index) => (
+                                        <Tab key={index} label={category.name} value={category.name} />
+                                    ))}
+                                </Tabs>
+                            </Grid>
+                        </Grid>
+                    </CardContent>
+                </Card>
+                <Grid container spacing={2} mb={"1rem"}>
                     {loading ? (
                         // Display skeleton cards while loading
                         [...Array(6)].map((_, index) => (

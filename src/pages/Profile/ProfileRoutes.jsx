@@ -48,8 +48,8 @@ export default function ProfileRoutes() {
         setLoadingPicture(true);
         console.log(e);
         const formData = new FormData();
-        formData.append("profile_picture", e.target.files[0]);
-        http.post("/user/upload", formData, { headers: { "Content-Type": "multipart/form-data" } }).then((res) => {
+        formData.append("file", e.target.files[0]);
+        http.post("/user/Upload", formData, { headers: { "Content-Type": "multipart/form-data" } }).then((res) => {
             if (res.status === 200) {
                 enqueueSnackbar("Profile picture updated successfully!", { variant: "success" });
                 setUser(res.data);

@@ -31,7 +31,11 @@ function TopUpDialog(props) {
             onSubmit: (data) => {
                 setLoading(true);
                 data.amount = parseFloat(data.amount).toFixed()
-                http.get("/User/Wallet/Topup?amount=" + data.amount).then((res) => {
+                var url = "/User/Wallet/Topup?amount=" + data.amount
+                if (props.gift) {
+                    url += "&type=Gift"
+                }
+                http.get(url).then((res) => {
                     if (res.status === 200) {
                         setClientSecret(res.data.clientSecret);
                         setAmount(res.data.amount);
@@ -82,18 +86,18 @@ function TopUpDialog(props) {
     return (
         <>
             <Dialog maxWidth={"sm"} fullWidth open={props.open} onClose={handleClose}>
-                <DialogTitle>Top-up Wallet</DialogTitle>
+                <DialogTitle>{!props.gift ? "Top-up Wallet" : "Purchase Gift Code"}</DialogTitle>
                 {!payment &&
                     <Box component="form" onSubmit={topupFormik.handleSubmit}>
                         <DialogContent sx={{ paddingTop: 0 }}>
                             <DialogContentText>
-                                Enter the amount you want to top-up your wallet with.
+                                {!props.gift ? "Enter the amount you want to top-up to your wallet" : "Enter the amount you want to gift"}
                             </DialogContentText>
                             <TextField
                                 autoFocus
                                 margin="dense"
                                 id="amount"
-                                label="Amount to top-up"
+                                label={!props.gift ? "Top-up Amount" : "Gift Amount"}
                                 type="amount"
                                 name="amount"
                                 fullWidth
@@ -109,7 +113,9 @@ function TopUpDialog(props) {
                         </DialogContent>
                         <DialogActions>
                             <Button onClick={handleClose} startIcon={<CloseIcon />}>Cancel</Button>
-                            <LoadingButton type="submit" loadingPosition="start" loading={loading} variant="text" color="primary" startIcon={<AddIcon />}>Add Funds</LoadingButton>
+                            <LoadingButton type="submit" loadingPosition="start" loading={loading} variant="text" color="primary" startIcon={<AddIcon />}>
+                                {!props.gift ? "Top-up" : "Purchase Gift"}
+                            </LoadingButton>
                         </DialogActions>
                     </Box>
                 }
