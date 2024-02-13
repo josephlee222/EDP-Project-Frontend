@@ -6,7 +6,7 @@ import { AppContext } from "../App";
 import NavbarProfile from "./NavbarProfile";
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettingsRounded';
 import NavbarNotifications from "./NavbarNotifications";
-import { BackpackRounded, CardMembershipRounded, CelebrationRounded, GroupRounded, LogoutRounded, MenuRounded, PersonRounded, QuestionAnswerRounded, StorefrontRounded } from "@mui/icons-material";
+import { BackpackRounded, CardMembershipRounded, CelebrationRounded, GroupRounded, LogoutRounded, LoyaltyRounded, MenuRounded, PersonRounded, QuestionAnswerRounded, StorefrontRounded } from "@mui/icons-material";
 import { HomeRounded } from "@mui/icons-material";
 import NavbarFriends from "./NavbarFriends";
 import NavbarCart from "./NavbarCart";
@@ -29,7 +29,7 @@ export default function Navbar() {
                             {!adminPage &&
                                 <Stack direction="row" spacing={1}>
                                     <Button sx={{ fontWeight: 700 }} startIcon={<CelebrationRounded />} LinkComponent={Link} variant="text" color="inherit" to="/activityList">All Experiences</Button>
-                                    <Button sx={{ fontWeight: 700 }} startIcon={<CardMembershipRounded />} LinkComponent={Link} variant="text" color="inherit" to="/">Friends Of UPLay</Button>
+                                    <Button sx={{ fontWeight: 700 }} startIcon={<LoyaltyRounded />} LinkComponent={Link} variant="text" color="inherit" to="/fou">Friends Of UPLay</Button>
                                     <Button sx={{ fontWeight: 700 }} startIcon={<QuestionAnswerRounded />} LinkComponent={Link} variant="text" color="inherit" to="/faq">FAQ</Button>
                                 </Stack>
                             }
@@ -80,8 +80,8 @@ export default function Navbar() {
                         </ListItemButton>
                     </ListItem>
                     <ListItem key={"Friends Of UPlay"} disablePadding>
-                        <ListItemButton onClick={() => setIsDrawerOpen(false)}>
-                            <ListItemIcon><CardMembershipRounded /></ListItemIcon>
+                        <ListItemButton LinkComponent={Link} to="/fou" onClick={() => setIsDrawerOpen(false)}>
+                            <ListItemIcon><LoyaltyRounded /></ListItemIcon>
                             <ListItemText primary={"Friends of UPlay"} />
                         </ListItemButton>
                     </ListItem>

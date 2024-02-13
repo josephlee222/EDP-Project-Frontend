@@ -25,6 +25,7 @@ import Faq from './Faq'
 import CartRoutes from './Cart/CartRoutes'
 import EditReview from './Activities/EditReview'
 import About from './About'
+import Fou from './Fou'
 
 
 function UserRoutes() {
@@ -59,6 +60,7 @@ function UserRoutes() {
             <Route path="/profile/*" element={<ProfileRoutes />} />
             <Route path="/cart/*" element={<CartRoutes />} />
             <Route path="/about" element={<About />} />
+            <Route path="/fou" element={<Fou />} />
         </Routes>
     )
 }
