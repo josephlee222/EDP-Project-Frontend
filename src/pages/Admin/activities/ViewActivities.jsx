@@ -68,6 +68,14 @@ function ViewActivities() {
                     showInMenu
                 />,
                 <GridActionsCellItem
+                    icon={<EditCalendarRounded />}
+                    label="View Bookings"
+                    onClick={() => {
+                        navigate("/admin/activities/viewBookings/" + params.row.id)
+                    }}
+                    showInMenu
+                />,
+                <GridActionsCellItem
                     icon={<DeleteIcon />}
                     label="Delete Activity"
                     onClick={() => {
