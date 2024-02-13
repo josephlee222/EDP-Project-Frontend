@@ -14,6 +14,7 @@ import AdminUsersRoutes from './users/AdminUsersRoutes'
 import AdminActivitiesRoutes from './activities/AdminActivitiesRoutes'
 import AdminShopRoutes from './shop/AdminShopRoutes'
 import AdminGroupsRoutes from './groups/AdminGroupsRoutes'
+import AdminHome from './AdminHome'
 
 export default function AdminRoutes() {
     //Routes for admin pages. To add authenication so that only admins can access these pages, add a check for the user's role in the UserContext
@@ -93,6 +94,7 @@ export default function AdminRoutes() {
                 <Grid item xs={12} md="9">
                     <Routes>
                         <Route path="*" element={<NotFound />} />
+                        <Route path="/" element={<AdminHome />} />
                         <Route path="/test" element={<Test />} />
                         <Route path="/users/*" element={<AdminUsersRoutes />} />
                         <Route path="/activities/*" element={<AdminActivitiesRoutes />} />

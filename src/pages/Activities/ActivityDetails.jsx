@@ -310,7 +310,7 @@ function ActivityDetails() {
                     </Grid>
                   }
                   {Reviews.map((card) => (
-                    <Grid item key={card.id} xs={12} sm={12} md={12}>
+                    <Grid item key={card.id} xs={12} md={6}>
                       <Accordion>
                         <AccordionSummary expandIcon={<KeyboardArrowDownIcon />}
                           aria-controls="panel1a-content" id="panel1a-header"
