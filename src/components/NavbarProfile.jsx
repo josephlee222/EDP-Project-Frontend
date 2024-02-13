@@ -82,7 +82,7 @@ export default function NavbarProfile() {
                     </ListItem>
                     { user.isAdmin && 
                     <ListItem key={"Admin Panel"} disablePadding>
-                        <ListItemButton component={Link} to="/admin/users" onClick={() => setIsPopoverOpen(false)}>
+                        <ListItemButton component={Link} to="/admin" onClick={() => setIsPopoverOpen(false)}>
                             <ListItemIcon><AdminPanelSettingsIcon /></ListItemIcon>
                             <ListItemText primary={"Admin Panel"} />
                         </ListItemButton>
