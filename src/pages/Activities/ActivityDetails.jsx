@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import {
   Box, Card, CardContent, Grid, Typography, Button, Container, CardMedia, Skeleton,
   Dialog, DialogTitle, DialogContent, DialogActions, TextField, Accordion,
-  AccordionSummary, AccordionDetails, Rating, IconButton
+  AccordionSummary, AccordionDetails, Rating, IconButton, Chip
 } from '@mui/material';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
@@ -22,7 +22,7 @@ import DateCalendarServerRequest from '../../components/CustomDateCalendarBookin
 import ProfilePicture from '../../components/ProfilePicture';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import { AddRounded, Place, RateReviewRounded } from '@mui/icons-material';
+import { AddRounded, CategoryRounded, Place, RateReviewRounded } from '@mui/icons-material';
 import { AppContext } from '../../App';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -228,11 +228,13 @@ function ActivityDetails() {
           <Typography variant="h3" fontWeight={700}>{activity.name}</Typography>
           <Grid container spacing={2}>
             <Grid item xs={12} md={12}>
-              <div style={{ justifyContent: 'space-between', display: 'flex' }} alignItems={"center"}>
-                <Typography><b>category:</b> {activity.category}</Typography>
-                <Typography sx={{ display: 'flex', marginLeft: '20px' }} alignItems={"center"}><PlaceIcon /> {activity.location}</Typography>
-                <Typography sx={{ marginLeft: 'auto' }}>share  </Typography><ShareIcon />
-              </div>
+              <Box sx={{ justifyContent: 'space-between', display: 'flex', alignItems: {xs: "initial", md: "center"}, flexDirection: {xs: "column", md: "row"} }}>
+                <Chip icon={<CategoryRounded/>} label={activity.category} variant="filled" sx={{mr: {xs: "0", md: "1rem"}}} />
+                {/* <Typography><b>category:</b> {activity.category}</Typography> */}
+                <Chip icon={<PlaceIcon/>} label={activity.location} variant="filled" />
+                {/* <Typography sx={{ display: 'flex', marginLeft: '20px' }} alignItems={"center"}><PlaceIcon /> {activity.location}</Typography> */}
+                <Button sx={{ marginLeft: 'auto', width: {xs: "100%", md: "auto"} }} variant="secondary" startIcon={<ShareIcon />}>Share</Button>
+              </Box>
             </Grid>
           </Grid>
         </Box>
@@ -244,7 +246,7 @@ function ActivityDetails() {
           <Card>
             <CardContent>
               <Grid container spacing={2} sx={{ display: 'flex' }}>
-                <Grid item xs={8} sm={8}>
+                <Grid item xs={12} md={8}>
 
 
                   <div>
@@ -286,10 +288,10 @@ function ActivityDetails() {
                     </DialogActions>
                   </Dialog>
                 </Grid>
-                <Grid item xs={4} sm={4}>
+                <Grid item xs={12} md={4}>
                 <div alignItems={"center"} style={{marginLeft:'auto'}}>
                 <div>
-                    <Typography variant="subtitle1" fontWeight={700}>Expiry Date</Typography>
+                    <Typography variant="subtitle1" fontWeight={700}>Till</Typography>
                     <Typography variant="body1">{moment(activity.expiryDate).format('DD/MM/YYYY')}</Typography>
                   </div>
                   <div>

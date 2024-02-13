@@ -222,8 +222,8 @@ function ActivityList() {
 
 
             <Container maxWidth="xl">
-                <Card sx={{ mb: "1rem" }}>
-                    <CardContent sx={{ mt: '1rem' }}>
+                <Card sx={{ my: "1rem" }}>
+                    <CardContent>
                         <Grid container spacing={2}>
 
                             <Grid item xs={12} md={6}>
@@ -278,11 +278,9 @@ function ActivityList() {
                                 </TextField>
                             </Grid>
 
-                            <Grid item xs={12} md={12}>
-                                <hr style={{ border: "1px solid #bbbbbb", width: '80%' }} />
-                            </Grid>
+                            <Divider />
 
-                            <Grid item xs={10} md={12} sx={{ overflowX: 'auto', display: 'flex', alignItems: 'center' }}>
+                            <Grid item xs={12} sx={{ overflowX: 'auto', display: 'flex', alignItems: 'center' }}>
                                 <Tabs value={selectedCategory} onChange={(event, newValue) => setSelectedCategory(newValue)} variant="scrollable" scrollButtons="auto" aria-label="scrollable auto tabs example">
                                     <Tab label="All" value="All" />
                                     {categories.map((category, index) => (
