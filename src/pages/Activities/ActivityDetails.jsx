@@ -22,10 +22,12 @@ import DateCalendarServerRequest from '../../components/CustomDateCalendarBookin
 import ProfilePicture from '../../components/ProfilePicture';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import { AddRounded, RateReviewRounded } from '@mui/icons-material';
+import { AddRounded, Place, RateReviewRounded } from '@mui/icons-material';
 import { AppContext } from '../../App';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import PlaceIcon from '@mui/icons-material/Place';
+import moment from 'moment';
 
 function ActivityDetails() {
   const url = import.meta.env.VITE_API_URL
@@ -75,7 +77,7 @@ function ActivityDetails() {
 
   };
   const handleEditReview = (reviewId) => {
-    navigate("/editReview/"+reviewId);
+    navigate("/editReview/" + reviewId);
   };
 
   const handleDeleteReview = (reviewId) => {
@@ -226,11 +228,12 @@ function ActivityDetails() {
         <Box sx={{ marginY: "1rem", margin: "1.5rem" }}>
           <Typography variant="h3" fontWeight={700}>{activity.name}</Typography>
           <Grid container spacing={2}>
-            <Grid item xs={11} md={11}>
-              <Typography>category: {activity.category}</Typography>
-            </Grid>
-            <Grid item xs={1} md={1} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Typography>share  </Typography><ShareIcon />
+            <Grid item xs={12} md={12}>
+              <div style={{ justifyContent: 'space-between', display: 'flex' }} alignItems={"center"}>
+                <Typography><b>category:</b> {activity.category}</Typography>
+                <Typography sx={{ display: 'flex', marginLeft: '20px' }} alignItems={"center"}><PlaceIcon /> {activity.location}</Typography>
+                <Typography sx={{ marginLeft: 'auto' }}>share  </Typography><ShareIcon />
+              </div>
             </Grid>
           </Grid>
         </Box>
@@ -241,19 +244,16 @@ function ActivityDetails() {
         <Box sx={{ marginY: "1rem" }}>
           <Card>
             <CardContent>
-              <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
+              <Grid container spacing={2} sx={{ display: 'flex' }}>
+                <Grid item xs={8} sm={8}>
+
 
                   <div>
-                    <Typography variant="subtitle1">Expiry Date:</Typography>
-                    <Typography variant="body1">{activity.expiryDate}</Typography>
-                  </div>
-                  <div>
-                    <Typography variant="subtitle1">Description:</Typography>
+                    <Typography variant="subtitle1" fontWeight={700}>Description</Typography>
                     <Typography variant="body1">{activity.description}</Typography>
                   </div>
 
-                  <Button onClick={handleOpenDialog}>Book</Button>
+
                   <Dialog open={isDialogOpen} onClose={handleCloseDialog}>
                     <DialogTitle>Book Activity</DialogTitle>
                     <DialogContent>
@@ -286,6 +286,29 @@ function ActivityDetails() {
                       <Button onClick={formik.handleSubmit} color="primary">Book</Button>
                     </DialogActions>
                   </Dialog>
+                </Grid>
+                <Grid item xs={4} sm={4}>
+                <div alignItems={"center"} style={{marginLeft:'auto'}}>
+                <div>
+                    <Typography variant="subtitle1" fontWeight={700}>Expiry Date</Typography>
+                    <Typography variant="body1">{moment(activity.expiryDate).format('DD/MM/YYYY')}</Typography>
+                  </div>
+                  <div>
+                    <Typography variant="subtitle1" fontWeight={700}>Company</Typography>
+                    <Typography variant="body1">{activity.company}</Typography>
+                  </div>
+                  <div>
+                    <Typography variant="subtitle1" fontWeight={700}>Location</Typography>
+                    <Typography variant="body1">{activity.location}</Typography>
+                  </div>
+                  </div>
+                </Grid>
+
+                <Grid item xs={12} sm={12} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                  <Button variant="contained" color="primary"
+                    sx={{ marginLeft: 'auto', marginRight: 'auto', width: '100%' }} onClick={handleOpenDialog}>
+                    <Typography variant='h5' fontWeight={800}>Book</Typography>
+                  </Button>
                 </Grid>
               </Grid>
             </CardContent>
@@ -332,7 +355,7 @@ function ActivityDetails() {
                       <Accordion>
                         <AccordionSummary expandIcon={<KeyboardArrowDownIcon />}
                           aria-controls="panel1a-content" id="panel1a-header"
-                          sx={{ height: "90px", overflow: "hidden", display: 'flex', justifyContent: 'space-between', width: '100%'}}>
+                          sx={{ height: "90px", overflow: "hidden", display: 'flex', justifyContent: 'space-between', width: '100%' }}>
                           <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
                             <ProfilePicture user={card.user} sx={{ width: "72px", height: "72px" }} />
                             <p style={{ marginLeft: '10px' }}>@{card.user.name}</p>
@@ -346,9 +369,9 @@ function ActivityDetails() {
                             </Typography>
 
                             {card.user.id == user?.id && (
-                              <div style={{ display: 'flex', marginLeft:'auto'}}>
-                                <EditIcon onClick={() => handleEditReview(card.id)} style={{ marginRight: '5px' }}/>
-                                <DeleteIcon onClick={() => handleDeleteReview(card.id)}/>
+                              <div style={{ display: 'flex', marginLeft: 'auto' }}>
+                                <EditIcon onClick={() => handleEditReview(card.id)} style={{ marginRight: '5px' }} />
+                                <DeleteIcon onClick={() => handleDeleteReview(card.id)} />
                               </div>
                             )
                             }

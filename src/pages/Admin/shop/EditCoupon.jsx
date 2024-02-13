@@ -68,11 +68,11 @@ function EditCoupon() {
                     enqueueSnackbar("coupon edited successfully!", { variant: "success" });
                     navigate("/admin/shop/coupons")
                 } else {
-                    enqueueSnackbar("coupon edited failed!.", { variant: "error" });
+                    enqueueSnackbar("coupon edit failed!.", { variant: "error" });
                     setLoading(false);
                 }
             }).catch((err) => {
-                enqueueSnackbar("coupon edited failed! " + err.response.data.error, { variant: "error" });
+                enqueueSnackbar("coupon edit failed! " + err.response.data.error, { variant: "error" });
                 setLoading(false);
             })
         }
