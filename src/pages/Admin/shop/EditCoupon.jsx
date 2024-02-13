@@ -98,7 +98,7 @@ function EditCoupon() {
                                         fullWidth
                                         id="code"
                                         name="code"
-                                        label="Description"
+                                        label="Code"
                                         variant="outlined"
                                         value={formik.values.code}
                                         onChange={formik.handleChange}
@@ -112,7 +112,7 @@ function EditCoupon() {
                                         fullWidth
                                         id="description"
                                         name="description"
-                                        label="Code"
+                                        label="Description"
                                         variant="outlined"
                                         value={formik.values.description}
                                         onChange={formik.handleChange}
