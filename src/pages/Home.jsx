@@ -215,7 +215,7 @@ function Home() {
                             </Grid>
 
                         )}
-                        {activities.slice(0, 5).map((activity, index) => (
+                        {activities.slice(0, 6).map((activity, index) => (
                             <Grid item xs={12} sm={6} md={4} key={index}>
                                 <Link to={`/activityList/${activity.id}`} style={{ textDecoration: 'none' }}>
                                     <Card>
