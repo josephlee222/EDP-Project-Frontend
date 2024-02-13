@@ -212,7 +212,7 @@ function ActivityList() {
     }, [])
     return (
         <>
-            <PageHeader title="Activities" icon={BackpackRounded} background="/golf_edit.jpg" />
+            <PageHeader title="Activities" icon={BackpackRounded} background="/kayak.jpg" />
 
 
 

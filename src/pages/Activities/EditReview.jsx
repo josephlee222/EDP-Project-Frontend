@@ -2,65 +2,46 @@ import React, { useState, useEffect, useContext } from 'react'
 import {
     Container, Card, CardContent, Box, Checkbox, TextField,
     Grid, FormControlLabel, IconButton, Typography, RadioGroup, Radio, List,
-    ListItem, ListItemText, Menu, MenuItem
+    ListItem, ListItemText, Menu, MenuItem, Rating
 } from '@mui/material'
 import LoadingButton from '@mui/lab/LoadingButton';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import AddIcon from '@mui/icons-material/Add';
-import CardTitle from "../../../components/CardTitle";
-import http from '../../../http'
+import CardTitle from "../../components/CardTitle";
+import http from '../../http'
 import { useSnackbar } from 'notistack'
 import { Form, useNavigate, useParams } from 'react-router-dom'
 import * as Yup from "yup";
 import { useFormik } from 'formik';
 import { EditRounded, PersonAddRounded } from '@mui/icons-material';
-import { CategoryContext } from './AdminActivitiesRoutes';
 import moment from 'moment';
-import titleHelper from '../../../functions/helpers';
+import titleHelper from '../../functions/helpers';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 
-function EditActivity() {
-    const [Categories, setCategories] = useState([])
+function EditReview() {
     //const { user } = useContext(AppContext);
-    titleHelper("Edit Activity")
+    titleHelper("Edit Review")
     const [loading, setLoading] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
     const navigate = useNavigate();
     const url = import.meta.env.VITE_API_URL
-    const { setActivePage } = useContext(CategoryContext);
-    const { id: activityId } = useParams();
+    const { id: reviewId } = useParams();
     const [uploadedFiles, setUploadedFiles] = useState([]);
     const [files, setFiles] = useState([]);
     const [oldFiles, setOldFiles] = useState([]);
 
-    const handleGetCategories = () => {
-        http.get("/Admin/Category/").then((res) => {
-            if (res.status === 200) {
-                setCategories(res.data)
-                setLoading(false)
-            }
-        })
-    }
 
-    const [activity, setActivity] = useState({
-        name: "",
-        expiryDate: "",
+    const [review, setReview] = useState({
+        rating: "",
         description: "",
-        category: "",
-        ntucExclusive: "",
-        ageLimit: "",
-        location: "",
-        company: "",
-        discountType: "",
-        discountAmount: "",
         pictures: [],
     })
 
-    const handleGetActivity = () => {
-        http.get(`/Admin/Activity/${activityId}`).then((res) => {
+    const handleGetReview = () => {
+        http.get(`/Review/${reviewId}`).then((res) => {
             if (res.status === 200) {
-                setActivity(res.data)
+                setReview(res.data)
                 //setLoading(false)
                 formik.setValues(res.data);
             }
@@ -71,56 +52,33 @@ function EditActivity() {
 
     const formik = useFormik({
         initialValues: {
-            /*name: activity.name,
-            expiryDate: activity.expiryDate,
-            description: activity.description,
-            category:activity.category,
-            ntucExclusive:activity.ntucExclusive,
-            ageLimit:activity.ageLimit,
-            location:activity.location,
-            company:activity.company,
-            discountType:activity.discountType,
-            discountAmount:activity.discountAmount*/
+            /*name: review.name,
+            expiryDate: review.expiryDate,
+            description: review.description,
+            category:review.category,
+            ntucExclusive:review.ntucExclusive,
+            ageLimit:review.ageLimit,
+            location:review.location,
+            company:review.company,
+            discountType:review.discountType,
+            discountAmount:review.discountAmount*/
 
-            name: "",
-            expiryDate: "",
+            rating: "",
             description: "",
-            category: "",
-            ntucExclusive: false,
-            ageLimit: "",
-            location: "",
-            company: "",
-            discounted: false,
-            discountType: "",
-            discountAmount: 0,
+
         },
         validationSchema: Yup.object({
-            name: Yup.string().required("Name is required"),
-            expiryDate: Yup.date().required("Date is required"),
+            rating: Yup.string().required("Rating is required"),
             description: Yup.string().required("Description is required"),
-            category: Yup.string().required("Category is required"),
-            ntucExclusive: Yup.boolean().optional(),
-            ageLimit: Yup.number().required("Age Limit is required. Enter 0 if no age limit"),
-            location: Yup.string().required("Location is required"),
-            company: Yup.string().required("Company is required"),
-            discounted: Yup.boolean(),
-            discountType: Yup.string().when("discounted", {
-                is: true,
-                then: () => Yup.string().required("Discount Type is required"),
-                otherwise: () => Yup.string().optional(),
 
-            }),
-            discountAmount: Yup.number().when("discounted", {
-                is: true,
-                then: () => Yup.number().required("Discount Amount is required"),
-                otherwise: () => Yup.number().optional(),
-            }),
         }),
         onSubmit: (data) => {
             setLoading(true);
             var pictures = []
             console.log("pictures: " + data.pictures);
             console.log(data.pictures);
+
+            console.log("files", files)
 
             const formData = new FormData();
             Array.from(files).forEach((file, index) => {
@@ -136,13 +94,9 @@ function EditActivity() {
 
             console.log("formdata: ", formData);
             console.log(formData);
-            data.name = data.name.trim();
-            data.description = data.description.trim();
-            data.category = data.category.trim();
-            data.location = data.location.trim();
-            data.company = data.company.trim();
-            data.discountType = data.discountType.trim();
+
             data.pictures = oldFiles;
+            data.description = data.description.trim();
 
             const formDataEntries = formData.getAll('files');
             if (formDataEntries.length > 0) {
@@ -158,7 +112,7 @@ function EditActivity() {
 
                         console.log(data)
 
-                        http.put(`/Admin/Activity/${activityId}`, data).then((res) => {
+                        http.put(`/Review/${reviewId}`, data).then((res) => {
                             if (res.status === 200) {
                                 enqueueSnackbar("Review created successfully!", { variant: "success" });
                                 navigate("/admin/activities")
@@ -182,12 +136,12 @@ function EditActivity() {
             }
 
             else {
-                http.put("/Admin/Activity/"+activityId, data)
+                http.put("/Review/"+reviewId, data)
                     .then((res) => {
                         if (res.status === 200) {
                             enqueueSnackbar("Activity created successfully!", { variant: "success" });
                             console.log(res.data);
-                            navigate(`/activityList/${activityId}`);
+                            navigate(`/activityList/${review.activityId}`);
                         } else {
                             enqueueSnackbar("Activity creation failed!.", { variant: "error" });
                             setLoading(false);
@@ -210,7 +164,7 @@ function EditActivity() {
 
         // Concatenate the new array of files with the existing list of uploaded files
         const newUploadedFiles = [...uploadedFiles, ...fileList.map(file => ({
-            name: file.name,
+            name: file.rating,
             preview: URL.createObjectURL(file)
         }))];
         // Set the updated list of uploaded files
@@ -265,39 +219,37 @@ function EditActivity() {
     };
 
     useEffect(() => {
-        setActivePage(0);
-        handleGetActivity();
-        handleGetCategories();
+        handleGetReview();
         return () => {
             uploadedFiles.forEach(file => URL.revokeObjectURL(file.preview));
         };
     }, [])
 
     useEffect(() => {
-        // Set default value for uploadedFiles when activity data is fetched
-        if (activity.pictures?.items) {
+        // Set default value for uploadedFiles when review data is fetched
+        if (review.pictures?.items) {
             const files = [];
             const oldFiles = [];
-            for (let i = 0; i < activity.pictures.items.length; i++) {
-                const picture = activity.pictures.items[i];
+            for (let i = 0; i < review.pictures.items.length; i++) {
+                const picture = review.pictures.items[i];
                 files.push({
                     name: picture,
                     preview: url + `/uploads/${picture}`
                 });
             }
 
-            for (let i = 0; i < activity.pictures.items.length; i++) {
-                const picture = activity.pictures.items[i];
+            for (let i = 0; i < review.pictures.items.length; i++) {
+                const picture = review.pictures.items[i];
                 oldFiles.push(picture);
             }
 
-            console.log(files);
+            console.log("files", oldFiles);
 
             setUploadedFiles(files);
 
             setOldFiles(oldFiles);
         }
-    }, [activity]);
+    }, [review]);
 
 
     return (
@@ -306,20 +258,17 @@ function EditActivity() {
                 <Card>
 
                     <CardContent>
-                        <CardTitle title="Edit Activity" icon={<EditRounded />} />
+                        <CardTitle title="Edit Review" icon={<EditRounded />} />
                         <Box component="form" mt={3}>
                             <Grid container spacing={2}>
                                 <Grid item xs={12} sm={6}>
-                                    <TextField
-                                        fullWidth
-                                        id="name"
-                                        name="name"
-                                        label="Name"
-                                        variant="outlined"
-                                        value={formik.values.name}
-                                        onChange={formik.handleChange}
-                                        error={formik.touched.name && Boolean(formik.errors.name)}
-                                        helperText={formik.touched.name && formik.errors.name}
+                                    <Rating
+                                        name="rating"
+                                        value={formik.values.rating}
+                                        onChange={(event, newValue) => {
+                                            formik.setFieldValue("rating", newValue);
+                                        }}
+                                        size="large"
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
@@ -342,7 +291,7 @@ function EditActivity() {
                                         fullWidth
                                         id="description"
                                         name="description"
-                                        label="Activity Description"
+                                        label="Review Description"
                                         variant="outlined"
                                         value={formik.values.description}
                                         onChange={formik.handleChange}
@@ -352,81 +301,10 @@ function EditActivity() {
                                         rows={4}
                                     />
                                 </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <TextField
-                                        fullWidth
-                                        id="category"
-                                        name="category"
-                                        select  // Use select to create a dropdown
-                                        label="Category"
-                                        variant="outlined"
-                                        value={formik.values.category}
-                                        onChange={formik.handleChange}
-                                        error={formik.touched.category && Boolean(formik.errors.category)}
-                                        helperText={formik.touched.category && formik.errors.category}
-                                    >
-                                        {/* Map through Categories and create an option for each category */}
-                                        {Categories.map((category) => (
-                                            <MenuItem key={category.id} value={category.name}>
-                                                {category.name}
-                                            </MenuItem>
-                                        ))}
-                                    </TextField>
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <TextField
-                                        fullWidth
-                                        id="ageLimit"
-                                        name="ageLimit"
-                                        label="Age Limit"
-                                        variant="outlined"
-                                        value={formik.values.ageLimit}
-                                        onChange={formik.handleChange}
-                                        error={formik.touched.ageLimit && Boolean(formik.errors.ageLimit)}
-                                        helperText={formik.touched.ageLimit && formik.errors.ageLimit}
-                                        type='number'
-                                    />
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <TextField
-                                        fullWidth
-                                        id="location"
-                                        name="location"
-                                        label="Activity Location"
-                                        variant="outlined"
-                                        value={formik.values.location}
-                                        onChange={formik.handleChange}
-                                        error={formik.touched.location && Boolean(formik.errors.location)}
-                                        helperText={formik.touched.location && formik.errors.location}
-                                    />
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <TextField
-                                        fullWidth
-                                        id="company"
-                                        name="company"
-                                        label="Organising Company"
-                                        variant="outlined"
-                                        value={formik.values.company}
-                                        onChange={formik.handleChange}
-                                        error={formik.touched.company && Boolean(formik.errors.company)}
-                                        helperText={formik.touched.company && formik.errors.company}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <TextField
-                                        fullWidth
-                                        id="discountAmount"
-                                        name="discountAmount"
-                                        label="Discount Amount"
-                                        variant="outlined"
-                                        value={formik.values.discountAmount}
-                                        onChange={formik.handleChange}
-                                        error={formik.touched.discountAmount && Boolean(formik.errors.discountAmount)}
-                                        helperText={formik.touched.discountAmount && formik.errors.discountAmount}
-                                        type='number'
-                                    />
-                                </Grid>
+
+
+
+
                                 <Grid item xs={12}>
                                     <input
                                         accept="image/*"
@@ -467,50 +345,6 @@ function EditActivity() {
                                         </ListItem>
                                     ))}
                                 </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    {/* radio buttons for discount type */}
-                                    <Typography variant="subtitle1">Discount Type:</Typography>
-                                    <RadioGroup
-                                        row
-                                        aria-label="discountType"
-                                        name="discountType"
-                                        id='discountType'
-                                        value={formik.values.discountType}
-                                        onChange={formik.handleChange}
-                                    >
-                                        <FormControlLabel value="Percentage" control={<Radio />} label="Percentage" />
-                                        <FormControlLabel value="Fixed" control={<Radio />} label="Fixed" />
-                                    </RadioGroup>
-                                </Grid>
-
-                                <Grid item xs={6}>
-                                    <FormControlLabel
-                                        control={
-                                            <Checkbox
-                                                checked={formik.values.ntucExclusive}
-                                                onChange={formik.handleChange}
-                                                name="ntucExclusive"
-                                                id='ntucExclusive'
-                                                color="primary"
-                                            />
-                                        }
-                                        label="NTUC Member Exclusive"
-                                    />
-                                </Grid>
-                                <Grid item xs={6}>
-                                    <FormControlLabel
-                                        control={
-                                            <Checkbox
-                                                checked={formik.values.discounted}
-                                                onChange={formik.handleChange}
-                                                name="discounted"
-                                                id='discounted'
-                                                color="primary"
-                                            />
-                                        }
-                                        label="Discounted Activity"
-                                    />
-                                </Grid>
                             </Grid>
                             <LoadingButton
                                 variant="contained"
@@ -522,7 +356,7 @@ function EditActivity() {
                                 onClick={formik.handleSubmit}
                                 fullWidth
                             >
-                                Edit Activity
+                                Edit Review
                             </LoadingButton>
                         </Box>
 
@@ -533,4 +367,4 @@ function EditActivity() {
     )
 }
 
-export default EditActivity
+export default EditReview
