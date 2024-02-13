@@ -28,6 +28,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import PlaceIcon from '@mui/icons-material/Place';
 import moment from 'moment';
+import { validateUser } from '../../functions/user';
 
 function ActivityDetails() {
   const url = import.meta.env.VITE_API_URL
@@ -46,6 +47,7 @@ function ActivityDetails() {
   const [pax, setPax] = React.useState('');
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [averageRating, setAverageRating] = useState(0);
+  const [loggedIn, setLoggedIn] = useState(false);
 
   const handlePrevImage = (card) => {
     setCurrentImageIndex((prevIndex) => (prevIndex === 0 ? card.pictures.items.length - 1 : prevIndex - 1));
@@ -215,6 +217,7 @@ function ActivityDetails() {
     handleGetActivity();
     handleGetReviews();
     handleGetAvailabilities();
+    setLoggedIn(validateUser())
     console.log("user: ", user);
   }, []);
 
@@ -228,12 +231,12 @@ function ActivityDetails() {
           <Typography variant="h3" fontWeight={700}>{activity.name}</Typography>
           <Grid container spacing={2}>
             <Grid item xs={12} md={12}>
-              <Box sx={{ justifyContent: 'space-between', display: 'flex', alignItems: {xs: "initial", md: "center"}, flexDirection: {xs: "column", md: "row"} }}>
-                <Chip icon={<CategoryRounded/>} label={activity.category} variant="filled" sx={{mr: {xs: "0", md: "1rem"}}} />
+              <Box sx={{ justifyContent: 'space-between', display: 'flex', alignItems: { xs: "initial", md: "center" }, flexDirection: { xs: "column", md: "row" } }}>
+                <Chip icon={<CategoryRounded />} label={activity.category} variant="filled" sx={{ mr: { xs: "0", md: "1rem" } }} />
                 {/* <Typography><b>category:</b> {activity.category}</Typography> */}
-                <Chip icon={<PlaceIcon/>} label={activity.location} variant="filled" />
+                <Chip icon={<PlaceIcon />} label={activity.location} variant="filled" />
                 {/* <Typography sx={{ display: 'flex', marginLeft: '20px' }} alignItems={"center"}><PlaceIcon /> {activity.location}</Typography> */}
-                <Button sx={{ marginLeft: 'auto', width: {xs: "100%", md: "auto"} }} variant="secondary" startIcon={<ShareIcon />}>Share</Button>
+                <Button sx={{ marginLeft: 'auto', width: { xs: "100%", md: "auto" } }} variant="secondary" startIcon={<ShareIcon />}>Share</Button>
               </Box>
             </Grid>
           </Grid>
@@ -289,27 +292,35 @@ function ActivityDetails() {
                   </Dialog>
                 </Grid>
                 <Grid item xs={12} md={4}>
-                <div alignItems={"center"} style={{marginLeft:'auto'}}>
-                <div>
-                    <Typography variant="subtitle1" fontWeight={700}>Till</Typography>
-                    <Typography variant="body1">{moment(activity.expiryDate).format('DD/MM/YYYY')}</Typography>
-                  </div>
-                  <div>
-                    <Typography variant="subtitle1" fontWeight={700}>Company</Typography>
-                    <Typography variant="body1">{activity.company}</Typography>
-                  </div>
-                  <div>
-                    <Typography variant="subtitle1" fontWeight={700}>Location</Typography>
-                    <Typography variant="body1">{activity.location}</Typography>
-                  </div>
+                  <div alignItems={"center"} style={{ marginLeft: 'auto' }}>
+                    <div>
+                      <Typography variant="subtitle1" fontWeight={700}>Till</Typography>
+                      <Typography variant="body1">{moment(activity.expiryDate).format('DD/MM/YYYY')}</Typography>
+                    </div>
+                    <div>
+                      <Typography variant="subtitle1" fontWeight={700}>Company</Typography>
+                      <Typography variant="body1">{activity.company}</Typography>
+                    </div>
+                    <div>
+                      <Typography variant="subtitle1" fontWeight={700}>Location</Typography>
+                      <Typography variant="body1">{activity.location}</Typography>
+                    </div>
                   </div>
                 </Grid>
 
                 <Grid item xs={12} sm={12} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                  <Button variant="contained" color="primary"
-                    sx={{ marginLeft: 'auto', marginRight: 'auto', width: '100%' }} onClick={handleOpenDialog}>
-                    <Typography variant='h5' fontWeight={800}>Book</Typography>
-                  </Button>
+                  {loggedIn && (
+                    <Button variant="contained" color="primary"
+                      sx={{ marginLeft: 'auto', marginRight: 'auto', width: '100%' }} onClick={handleOpenDialog}>
+                      <Typography variant='h5' fontWeight={800}>Book</Typography>
+                    </Button>
+                  )}
+                  {!loggedIn && (
+                    <Button variant="contained" color="primary"
+                      sx={{ marginLeft: 'auto', marginRight: 'auto', width: '100%' }} LinkComponent={Link} to="/login">
+                      <Typography variant='h5' fontWeight={800}>Login to Book</Typography>
+                    </Button>
+                  )}
                 </Grid>
               </Grid>
             </CardContent>
@@ -323,7 +334,9 @@ function ActivityDetails() {
                 <Typography variant='h5'>Average Rating: {averageRating.toFixed(2)}</Typography>
                 <Rating name="read-only" value={averageRating} readOnly precision={0.1} />
               </Box>
-              <Button variant="contained" color="primary" startIcon={<AddRounded />} LinkComponent={Link} to={`/review/${activityId}`}>Add Review</Button>
+              {loggedIn && (
+                <Button variant="contained" color="primary" startIcon={<AddRounded />} LinkComponent={Link} to={`/review/${activityId}`}>Add Review</Button>
+              )}
             </Box>
 
             <Grid container spacing={2}>
