@@ -25,6 +25,7 @@ export default function ViewTransactions() {
             type: 'boolean',
         },
         { field: 'type', headerName: 'Type', type: 'string', minWidth: 100, flex: 1, },
+        { field: 'description', headerName: 'Notes', type: 'string', minWidth: 200 },
         { field: 'amount', headerName: 'Amount Paid ($)', type: 'number', minWidth: 150, valueFormatter: (params) => `$${params.value.toLocaleString()}` },
         { field: 'createdAt', headerName: 'Created On', type: 'dateTime', minWidth: 200, valueFormatter: (params) => new Date(params.value).toLocaleString() },
         {
@@ -64,6 +65,11 @@ export default function ViewTransactions() {
                             rowsPerPageOptions={[10]}
                             loading={loading}
                             autoHeight
+                            initialState={{
+                                sorting: {
+                                  sortModel: [{ field: 'id', sort: 'desc' }],
+                                },
+                              }}
                         />
                     </Box>
                 </CardContent>

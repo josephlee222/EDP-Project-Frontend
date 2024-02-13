@@ -22,6 +22,7 @@ import DateCalendarServerRequest from '../../components/CustomDateCalendarBookin
 import ProfilePicture from '../../components/ProfilePicture';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import { AddRounded, RateReviewRounded } from '@mui/icons-material';
 
 function ActivityDetails() {
   const url = import.meta.env.VITE_API_URL
@@ -205,7 +206,7 @@ function ActivityDetails() {
 
 
         <Box sx={{ marginY: "1rem", margin: "1.5rem" }}>
-          <Typography variant="h2">{activity.name}</Typography>
+          <Typography variant="h3" fontWeight={700}>{activity.name}</Typography>
           <Grid container spacing={2}>
             <Grid item xs={11} md={11}>
               <Typography>category: {activity.category}</Typography>
@@ -272,25 +273,17 @@ function ActivityDetails() {
             </CardContent>
           </Card>
 
-
-
-
           {/* review section */}
-
-
-
-
-
-          <Box mt={2} mb={2}>
-            <Typography variant='h5'>Average Rating: {averageRating.toFixed(2)}</Typography>
-            <Rating name="read-only" value={averageRating} readOnly precision={0.1} />
-          </Box>
-
           {/* <ProfilePicture user={user} sx={{ width: "72px", height: "72px" }} /> */}
-          <Container sx={{ mt: "1rem" }} maxWidth="xl">
-            <Link to={`/review/${activityId}`} style={{ textDecoration: 'none' }}>
-              <Typography variant="h6">add review</Typography>
-            </Link>
+          <Box sx={{ mt: "1rem" }}>
+            <Box mb={"1rem"} display={"flex"} alignItems={"center"}>
+              <Box flexGrow={1}>
+                <Typography variant='h5'>Average Rating: {averageRating.toFixed(2)}</Typography>
+                <Rating name="read-only" value={averageRating} readOnly precision={0.1} />
+              </Box>
+              <Button variant="contained" color="primary" startIcon={<AddRounded />} LinkComponent={Link} to={`/review/${activityId}`}>Add Review</Button>
+            </Box>
+
             <Grid container spacing={2}>
               {loading && (
                 <>
@@ -304,6 +297,18 @@ function ActivityDetails() {
 
               {!loading && (
                 <>
+                  {Reviews.length === 0 &&
+                    <Grid item xs={12}>
+                      <Card>
+                        <CardContent>
+                          <Box display="flex" justifyContent="center" alignItems="center" flexDirection="column">
+                            <RateReviewRounded sx={{ fontSize: 100, color: "black", opacity: "0.5" }} />
+                            <Typography variant="h6" fontWeight={700}>No reviews yet...</Typography>
+                          </Box>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                  }
                   {Reviews.map((card) => (
                     <Grid item key={card.id} xs={12} sm={12} md={12}>
                       <Accordion>
@@ -340,8 +345,8 @@ function ActivityDetails() {
                                 <img
                                   src="/logo_uplay_warm_grey.png" // Replace with your placeholder image URL
                                   alt="No Image"
-                                  style={{ width: '100%', maxHeight: '20rem', objectFit: 'fit', opacity:"0.7" }}
-                                  //style={{ width: '100%', maxHeight: '20rem', objectFit: 'cover', filter:"invert(1)", opacity:"0.25" }}
+                                  style={{ width: '100%', maxHeight: '20rem', objectFit: 'fit', opacity: "0.7" }}
+                                //style={{ width: '100%', maxHeight: '20rem', objectFit: 'cover', filter:"invert(1)", opacity:"0.25" }}
                                 />
                               )}
                             </Grid>
@@ -366,7 +371,7 @@ function ActivityDetails() {
               )}
             </Grid>
 
-          </Container>
+          </Box>
         </Box>
       </Container>
     </>
