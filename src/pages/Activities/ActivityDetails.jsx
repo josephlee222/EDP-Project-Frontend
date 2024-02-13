@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   Box, Card, CardContent, Grid, Typography, Button, Container, CardMedia, Skeleton,
   Dialog, DialogTitle, DialogContent, DialogActions, TextField, Accordion,
@@ -23,6 +23,9 @@ import ProfilePicture from '../../components/ProfilePicture';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { AddRounded, RateReviewRounded } from '@mui/icons-material';
+import { AppContext } from '../../App';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 
 function ActivityDetails() {
   const url = import.meta.env.VITE_API_URL
@@ -33,6 +36,7 @@ function ActivityDetails() {
   const [Reviews, setReviews] = useState([])
   const [activity, setActivity] = useState([])
   titleHelper("Activity Details", activity.name);
+  const { user } = useContext(AppContext);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [availabilities, setavailabilities] = useState([]);
@@ -69,6 +73,18 @@ function ActivityDetails() {
 
   const handleSubmit = () => {
 
+  };
+  const handleEditReview = (reviewId) => {
+    navigate("/editReview/"+reviewId);
+  };
+
+  const handleDeleteReview = (reviewId) => {
+    http.delete(`/Review/${reviewId}`).then((res) => {
+      if (res.status === 200) {
+        handleGetReviews();
+        enqueueSnackbar("Review Deleted");
+      }
+    })
   };
 
   const formik = useFormik({
@@ -198,7 +214,9 @@ function ActivityDetails() {
     handleGetActivity();
     handleGetReviews();
     handleGetAvailabilities();
+    console.log("user: ", user);
   }, []);
+
 
   return (
     <>
@@ -314,8 +332,8 @@ function ActivityDetails() {
                       <Accordion>
                         <AccordionSummary expandIcon={<KeyboardArrowDownIcon />}
                           aria-controls="panel1a-content" id="panel1a-header"
-                          sx={{ height: "90px", overflow: "hidden" }}>
-                          <div style={{ display: 'flex', alignItems: 'center' }}>
+                          sx={{ height: "90px", overflow: "hidden", display: 'flex', justifyContent: 'space-between', width: '100%'}}>
+                          <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
                             <ProfilePicture user={card.user} sx={{ width: "72px", height: "72px" }} />
                             <p style={{ marginLeft: '10px' }}>@{card.user.name}</p>
                             <Rating name="read-only" value={card.rating} readOnly style={{ marginLeft: '10px' }} />
@@ -326,6 +344,14 @@ function ActivityDetails() {
                             }}>
                               {card.description}
                             </Typography>
+
+                            {card.user.id == user?.id && (
+                              <div style={{ display: 'flex', marginLeft:'auto'}}>
+                                <EditIcon onClick={() => handleEditReview(card.id)} style={{ marginRight: '5px' }}/>
+                                <DeleteIcon onClick={() => handleDeleteReview(card.id)}/>
+                              </div>
+                            )
+                            }
                           </div>
                         </AccordionSummary>
                         <AccordionDetails>

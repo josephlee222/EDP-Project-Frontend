@@ -23,6 +23,7 @@ import CreateReview from './Activities/Review'
 import Faq from './Faq'
 
 import CartRoutes from './Cart/CartRoutes'
+import EditReview from './Activities/EditReview'
 
 
 function UserRoutes() {
@@ -46,6 +47,7 @@ function UserRoutes() {
             <Route path="/booking/:id" element={<CreateBooking />}/>
             <Route path="/editBooking/:id" element={<EditBooking />}/>
             <Route path="/review/:id" element={<CreateReview />}/>
+            <Route path="/editReview/:id" element={<EditReview />}/>
             <Route path="/reviewDetails/:id" element={<ReviewDetails />}/>
             <Route path="/login" element={!user ? <Login /> : <Navigate to={"/"} />} />
             <Route path="/register" element={!user ? <Register /> : <Navigate to={"/"} />} />

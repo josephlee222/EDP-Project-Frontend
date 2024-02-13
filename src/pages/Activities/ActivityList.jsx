@@ -60,7 +60,7 @@ function ActivityList() {
 
     const handleCategoryChange = (category) => {
         setSelectedCategory(category);
-        filterActivities(Activities, category, searchQuery);
+        filteredActivities(Activities, category, searchQuery);
     };
 
     // Function to handle changes in sorting criteria
@@ -212,7 +212,7 @@ function ActivityList() {
     }, [])
     return (
         <>
-            <PageHeader title="Activities" icon={BackpackRounded} background="/golf_edit.jpg" />
+            <PageHeader title="Activities" icon={BackpackRounded} background="/kayak.jpg" />
 
 
 

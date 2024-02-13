@@ -174,3 +174,8 @@ todo:
 
 ok i just finished fixing the photo upload for reviews. My brain is dying.
 review display is uhhh almost done ig
+
+todo for tmr:
+baically everything on top
+check everything again
+ decide whether edit and delete reviews is worth it to do

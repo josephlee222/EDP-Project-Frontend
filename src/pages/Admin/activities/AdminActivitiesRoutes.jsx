@@ -17,6 +17,7 @@ import CreateAvailability from './CreateAvailability'
 import CreateCategory from './CreateCategory'
 import ViewCategories from './ViewCategories'
 import EditCategory from './EditCategory'
+import ViewBookings from './ViewBookings'
 
 export const CategoryContext = createContext(null);
 export default function AdminActivitiesRoutes() {
@@ -41,6 +42,7 @@ export default function AdminActivitiesRoutes() {
                     <Route path="/create" element={<CreateActivity />} />
                     <Route path="/createCategory" element={<CreateCategory />} />
                     <Route path="/viewCategories" element={<ViewCategories />} />
+                    <Route path="/viewBookings/:id" element={<ViewBookings />} />
                     <Route path="/categories/:id" element={<EditCategory />} />
                     <Route path="/createAvailability/:id" element={<CreateAvailability />} />
                     <Route path="/test" element={<Test />} />
