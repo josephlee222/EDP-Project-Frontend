@@ -58,7 +58,7 @@ function Footer() {
                 </Container>
                 <Box sx={{ textAlign: "center", margin: "1rem" }}>
                     <Link to="/about" style={{ textDecoration: "none", color: "inherit" }}>
-                        <Typography color={"inherit"} sx={{ textAlign: "center", opacity: "0.5" }} >UPlay Remastered - 2024<br/>Enterprise Development Project Group 1<br />UPlay is part of NTUC brand</Typography>
+                        <Typography color={"inherit"} sx={{ textAlign: "center", opacity: "0.5" }} >UPlay - NTUC - 2024<br/>Enterprise Development Project Group 1</Typography>
                     </Link>
                 </Box>
             </Box>

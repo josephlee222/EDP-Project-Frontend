@@ -107,8 +107,10 @@ function ActivityDetails() {
       let availableId = null;
 
       const isDateAvailable = availabilities.some(availability => {
-        const availabilityDate = new Date(availability.date).toISOString().split('T')[0];
-        if (availabilityDate === data.date && availability.currentPax < availability.maxPax) {
+        const availabilityDate = moment(availability.date).format("YYYY-MM-DD");
+        console.log("availabilityDate: ", availabilityDate)
+        console.log("data.date: ", data.date)
+        if (availabilityDate === data.date) {
           availableId = availability.id;
           return true;
         }
@@ -121,20 +123,17 @@ function ActivityDetails() {
         return;
       }
 
-
       const postData = {
         availabilityId: availableId,
         pax: data.pax
       };
 
-
-
-
       http.post("/Shop/Cart", postData).then((res) => {
         if (res.status === 200) {
-          enqueueSnackbar("Cart successful!", { variant: "success" });
-          console.log("success yayyyy")
-          navigate("/profile/booking")
+          enqueueSnackbar("Added to cart!", { variant: "success" });
+          handleCloseDialog();
+          setLoading(false);
+          //navigate("/profile/booking")
         } else {
           enqueueSnackbar("Cart failed! else", { variant: "error" });
           setLoading(false);
