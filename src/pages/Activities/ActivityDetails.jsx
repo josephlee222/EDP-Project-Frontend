@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   Box, Card, CardContent, Grid, Typography, Button, Container, CardMedia, Skeleton,
   Dialog, DialogTitle, DialogContent, DialogActions, TextField, Accordion,
@@ -23,6 +23,7 @@ import ProfilePicture from '../../components/ProfilePicture';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { AddRounded, List } from '@mui/icons-material'
+import { AppContext } from '../../App';
 
 function ActivityDetails() {
   const url = import.meta.env.VITE_API_URL
@@ -33,6 +34,7 @@ function ActivityDetails() {
   const [Reviews, setReviews] = useState([])
   const [activity, setActivity] = useState([])
   titleHelper("Activity Details", activity.name);
+  const { user } = useContext(AppContext);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [availabilities, setavailabilities] = useState([]);
@@ -198,7 +200,9 @@ function ActivityDetails() {
     handleGetActivity();
     handleGetReviews();
     handleGetAvailabilities();
+    console.log("user: ", user);
   }, []);
+
 
   return (
     <>
@@ -290,7 +294,7 @@ function ActivityDetails() {
           {/* <ProfilePicture user={user} sx={{ width: "72px", height: "72px" }} /> */}
           <Container sx={{ mt: "1rem" }} maxWidth="xl">
             <Link to={`/review/${activityId}`} style={{ textDecoration: 'none' }}>
-              <Button variant={ "contained" } startIcon={<AddRounded/>} sx={{mb:'1rem'}}>
+              <Button variant={"contained"} startIcon={<AddRounded />} sx={{ mb: '1rem' }}>
                 add review</Button>
             </Link>
             <Grid container spacing={2}>
@@ -323,6 +327,14 @@ function ActivityDetails() {
                             }}>
                               {card.description}
                             </Typography>
+
+                            {card.user.id == user?.id && (
+                              <>
+                                <IconButton onClick={() => handleEditReview(card.id)}>Edit</IconButton>
+                                <IconButton onClick={() => handleDeleteReview(card.id)}>Delete</IconButton>
+                              </>
+                            )
+                            }
                           </div>
                         </AccordionSummary>
                         <AccordionDetails>
@@ -342,8 +354,8 @@ function ActivityDetails() {
                                 <img
                                   src="/logo_uplay_warm_grey.png" // Replace with your placeholder image URL
                                   alt="No Image"
-                                  style={{ width: '100%', maxHeight: '20rem', objectFit: 'fit', opacity:"0.7" }}
-                                  //style={{ width: '100%', maxHeight: '20rem', objectFit: 'cover', filter:"invert(1)", opacity:"0.25" }}
+                                  style={{ width: '100%', maxHeight: '20rem', objectFit: 'fit', opacity: "0.7" }}
+                                //style={{ width: '100%', maxHeight: '20rem', objectFit: 'cover', filter:"invert(1)", opacity:"0.25" }}
                                 />
                               )}
                             </Grid>
