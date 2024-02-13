@@ -2,7 +2,9 @@ import React, { useEffect, useState, useContext, useRef } from 'react'
 import {
     Button, Container, Divider, Typography, Grid, Box, Card,
     Tabs, TextField, Skeleton, CardContent, CardMedia, Tab, MenuItem
-    , IconButton
+    , IconButton,
+    Badge,
+    Chip
 } from '@mui/material'
 import LoadingButton from '@mui/lab/LoadingButton/LoadingButton';
 import { DataGrid, GridActionsCellItem, GridToolbarExport } from '@mui/x-data-grid';
@@ -181,17 +183,21 @@ function ActivityList() {
     };
 
 
-    const CustomCard = ({ id, name, expiryDate, description, pictures }) => (
+    const CustomCard = ({ id, name, expiryDate, description, pictures, category }) => (
         <Link to={`/activityList/${id}`} style={{ textDecoration: 'none' }}>
             <Card>
                 <CardMedia sx={{ height: 140 }} image={pictures ? url + '/uploads/' + pictures.items[0] : "/unknown.png"} />
                 <CardContent>
-                    <Typography variant="h6" fontWeight={700}>{name}</Typography>
+                    <Typography variant="h6" fontWeight={700} sx={{
+                        whiteSpace: 'nowrap', overflow: "hidden",
+                        textOverflow: "ellipsis"
+                    }}>{name}</Typography>
                     <Typography sx={{
                         whiteSpace: 'nowrap', overflow: "hidden",
                         textOverflow: "ellipsis"
                     }}>{description}</Typography>
-                    <Typography>Expiry Date: {expiryDate}</Typography>
+                    <Typography>Till: {moment(expiryDate).format("DD/MM/YYYY")}</Typography>
+                    <Chip label={category} variant='contained' sx={{mt: ".5rem"}} /> 
                 </CardContent>
             </Card>
         </Link>

@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react'
 import { Route, Routes, Navigate, Link } from 'react-router-dom'
 //import NotFound from './errors/NotFound'
 //import { UserContext } from '..'
-import { Button, Container, Divider, Typography, Grid, Box, Card, TextField, Skeleton, CardContent, CardMedia } from '@mui/material'
+import { Button, Container, Divider, Typography, Grid, Box, Card, TextField, Skeleton, CardContent, CardMedia, Chip } from '@mui/material'
 import { AppContext } from '../App';
 import { HomeRounded, NewReleasesRounded, SearchRounded, WarningRounded } from '@mui/icons-material';
 import titleHelper from '../functions/helpers';
@@ -230,6 +230,7 @@ function Home() {
                                                 textOverflow: "ellipsis"
                                             }}>{activity.description}</Typography>
                                             <Typography>Till: {moment(activity.expiryDate).format("DD/MM/YYYY")}</Typography>
+                                            <Chip label={activity.category} variant='contained' sx={{mt: ".5rem"}} /> 
                                         </CardContent>
                                     </Card>
                                 </Link>
