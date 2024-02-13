@@ -21,6 +21,7 @@ import { HomeRounded, SearchRounded } from '@mui/icons-material';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import AccessibilityNewIcon from '@mui/icons-material/AccessibilityNew';
+import moment from 'moment';
 
 
 function getChipProps(params) {
@@ -187,7 +188,7 @@ function ActivityList() {
                 <CardContent>
                     <Typography variant="h6" fontWeight={700}>{name}</Typography>
                     <Typography>{description}</Typography>
-                    <Typography>Expiry Date: {expiryDate}</Typography>
+                    <Typography>Expiry Date: {moment(expiryDate).format("DD/MM/YYYY")}</Typography>
                 </CardContent>
             </Card>
         </Link>

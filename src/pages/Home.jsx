@@ -8,6 +8,7 @@ import { HomeRounded, NewReleasesRounded, SearchRounded, WarningRounded } from '
 import titleHelper from '../functions/helpers';
 import http from '../http';
 import { useSnackbar } from "notistack";
+import moment from 'moment';
 
 function Home() {
     // Routes for admin pages. To add authenication so that only admins can access these pages, add a check for the user's role in the UserContext
@@ -222,7 +223,7 @@ function Home() {
                                         <CardContent>
                                             <Typography variant="h6" fontWeight={700}>{activity.name}</Typography>
                                             <Typography>{activity.description}</Typography>
-                                            <Typography>Till: {activity.expiryDate}</Typography>
+                                            <Typography>Till: {moment(activity.expiryDate).format("DD/MM/YYYY")}</Typography>
                                         </CardContent>
                                     </Card>
                                 </Link>
