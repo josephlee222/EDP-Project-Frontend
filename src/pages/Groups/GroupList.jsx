@@ -135,6 +135,11 @@ function GroupList() {
     return (
         <>
             <PageHeader title="Discussion Groups" icon={GroupRounded} />
+            <Box display="flex" justifyContent="flex-end">
+                <Button variant="contained" sx={{ mt: 2, mr: "2rem" }} onClick={handleOpen}>
+                    Create Group
+                </Button>
+            </Box>
             <Container sx={{ my: "1rem" }} maxWidth="xl">
                 <Typography variant='body1' mb={2}>Welcome to the discussion groups page. Here you can find and join groups to discuss various topics with other users.</Typography>
                 <Grid container spacing={2}>
