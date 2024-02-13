@@ -221,7 +221,10 @@ function Home() {
                                     <Card>
                                         <CardMedia sx={{ height: 140 }} image={activity.pictures ? apiUrl + '/uploads/' + activity.pictures.items[0] : "/unknown.png"} />
                                         <CardContent>
-                                            <Typography variant="h6" fontWeight={700}>{activity.name}</Typography>
+                                            <Typography sx={{
+                                                whiteSpace: 'nowrap', overflow: "hidden",
+                                                textOverflow: "ellipsis"
+                                            }} variant="h6" fontWeight={700}>{activity.name}</Typography>
                                             <Typography sx={{
                                                 whiteSpace: 'nowrap', overflow: "hidden",
                                                 textOverflow: "ellipsis"
