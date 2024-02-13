@@ -86,7 +86,7 @@ function Checkout() {
             email: Yup.string().email("Invalid email address").required("Email is required"),
             phone: Yup.string().required("Phone number is required"),
             name: Yup.string().required("Name is required"),
-            birthday: Yup.string().required("Birthday is required"),
+            birthday: Yup.date().required("Birthday is required"),
             nric: Yup.string().required("NRIC is required"),
         }),
         onSubmit: (data) => {

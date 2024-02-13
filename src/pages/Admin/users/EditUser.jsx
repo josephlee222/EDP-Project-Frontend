@@ -69,7 +69,7 @@ export default function EditUser() {
             postalCode: Yup.string().optional().nullable().matches(/^[0-9]+$/, "Postal code must be a number"),
             address: Yup.string().optional().nullable(),
             nric: Yup.string().optional().nullable().max(4, "Only the last 4 characters of NRIC is required"),
-            birthdate: Yup.date().optional().nullable(),
+            birthdate: Yup.date().optional(),
             isAdmin: Yup.boolean().optional(),
             member: Yup.boolean().optional(),
         }),
