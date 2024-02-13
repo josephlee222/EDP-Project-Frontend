@@ -102,14 +102,14 @@ function CreateReview() {
 
                         http.post("/Review/", data).then((res) => {
                             if (res.status === 200) {
-                                enqueueSnackbar("Activity created successfully!", { variant: "success" });
+                                enqueueSnackbar("Review created successfully!", { variant: "success" });
                                 navigate(`/activityList/${activityId}`);
                             } else {
-                                enqueueSnackbar("Activity creation failed!.", { variant: "error" });
+                                enqueueSnackbar("Review creation failed!.", { variant: "error" });
                                 setLoading(false);
                             }
                         }).catch((err) => {
-                            enqueueSnackbar("Activity creation failed! " + err.response.data.error, { variant: "error" });
+                            enqueueSnackbar("Review creation failed! " + err.response.data.error, { variant: "error" });
                             setLoading(false);
                         })
                     } else {
@@ -126,16 +126,16 @@ function CreateReview() {
                 http.post("/Review/", data)
                     .then((res) => {
                         if (res.status === 200) {
-                            enqueueSnackbar("Activity created successfully!", { variant: "success" });
+                            enqueueSnackbar("Review created successfully!", { variant: "success" });
                             console.log(res.data);
                             navigate(`/activityList/${activityId}`);
                         } else {
-                            enqueueSnackbar("Activity creation failed!.", { variant: "error" });
+                            enqueueSnackbar("Review creation failed!.", { variant: "error" });
                             setLoading(false);
                         }
                     })
                     .catch((err) => {
-                        enqueueSnackbar("Activity creation failed! " + err.response.data.error, { variant: "error" });
+                        enqueueSnackbar("Review creation failed! " + err.response.data.error, { variant: "error" });
                         setLoading(false);
                     });
             }
@@ -197,7 +197,7 @@ function CreateReview() {
                 <Card>
 
                     <CardContent>
-                        <CardTitle title={`Booking Activity: ${activity.name}`} icon={<AddRounded />} />
+                        <CardTitle title={`Rating Activity: ${activity.name}`} icon={<AddRounded />} />
                         <Box component="form" mt={2}>
 
                             <Grid container spacing={2}>

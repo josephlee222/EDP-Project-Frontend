@@ -187,8 +187,11 @@ function ActivityList() {
                 <CardMedia sx={{ height: 140 }} image={pictures ? url + '/uploads/' + pictures.items[0] : "/unknown.png"} />
                 <CardContent>
                     <Typography variant="h6" fontWeight={700}>{name}</Typography>
-                    <Typography>{description}</Typography>
-                    <Typography>Expiry Date: {moment(expiryDate).format("DD/MM/YYYY")}</Typography>
+                    <Typography sx={{
+                        whiteSpace: 'nowrap', overflow: "hidden",
+                        textOverflow: "ellipsis"
+                    }}>{description}</Typography>
+                    <Typography>Expiry Date: {expiryDate}</Typography>
                 </CardContent>
             </Card>
         </Link>
@@ -218,8 +221,8 @@ function ActivityList() {
 
 
 
-            <Container sx={{ mt: "1rem" }} maxWidth="xl">
-                <Card sx={{ mb: "1rem" }}>
+            <Container maxWidth="xl">
+                <Card sx={{ my: "1rem" }}>
                     <CardContent>
                         <Grid container spacing={2}>
 
@@ -275,8 +278,9 @@ function ActivityList() {
                                 </TextField>
                             </Grid>
 
+                            <Divider />
 
-                            <Grid item xs={10} md={12} sx={{ overflowX: 'auto', display: 'flex', alignItems: 'center' }}>
+                            <Grid item xs={12} sx={{ overflowX: 'auto', display: 'flex', alignItems: 'center' }}>
                                 <Tabs value={selectedCategory} onChange={(event, newValue) => setSelectedCategory(newValue)} variant="scrollable" scrollButtons="auto" aria-label="scrollable auto tabs example">
                                     <Tab label="All" value="All" />
                                     {categories.map((category, index) => (

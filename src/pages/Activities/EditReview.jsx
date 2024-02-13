@@ -139,16 +139,16 @@ function EditReview() {
                 http.put("/Review/"+reviewId, data)
                     .then((res) => {
                         if (res.status === 200) {
-                            enqueueSnackbar("Activity created successfully!", { variant: "success" });
+                            enqueueSnackbar("Review created successfully!", { variant: "success" });
                             console.log(res.data);
                             navigate(`/activityList/${review.activityId}`);
                         } else {
-                            enqueueSnackbar("Activity creation failed!.", { variant: "error" });
+                            enqueueSnackbar("review creation failed!.", { variant: "error" });
                             setLoading(false);
                         }
                     })
                     .catch((err) => {
-                        enqueueSnackbar("Activity creation failed! " + err.response, { variant: "error" });
+                        enqueueSnackbar("Review creation failed! " + err.response, { variant: "error" });
                         setLoading(false);
                     });
             }

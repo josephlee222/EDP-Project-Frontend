@@ -149,12 +149,12 @@ availability:
     delete-
 
 book:
-    create
+    create-
 
 review:
     create-
-    update
-    delete
+    update-
+    delete-
 
 coupon:
     create-
@@ -179,3 +179,33 @@ todo for tmr:
 baically everything on top
 check everything again
  decide whether edit and delete reviews is worth it to do
+
+ validation checklist:
+ 
+activity:
+    create-
+    update-
+    delete-
+
+category:
+    create-
+    update-
+    delete-
+
+availability:
+    create-
+    update-
+    delete-
+
+book:
+    create
+
+review:
+    create
+    update
+    delete
+
+coupon:
+    create
+    update
+    delete
