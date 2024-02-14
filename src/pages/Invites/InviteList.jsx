@@ -157,7 +157,7 @@ function InviteList() {
     }, [])
     return (
         <>
-            <PageHeader title="Friends" icon={GroupRounded} />
+            <PageHeader title="Invites" icon={GroupRounded} />
             <Container sx={{ my: "1rem" }} maxWidth="xl">
                 <Grid container spacing={2}>
                     {loading && <>{[...Array(6)].map((card) => (

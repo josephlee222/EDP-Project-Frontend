@@ -11,7 +11,7 @@ import CardTitle from '../../components/CardTitle';
 import PageHeader from '../../components/PageHeader';
 import titleHelper from '../../functions/helpers';
 import { grey } from '@mui/material/colors';
-import { useFormik } from 'formik';
+import { Field, useFormik } from 'formik';
 import * as yup from 'yup';
 import { AddRounded, CloseRounded, GroupRounded, Delete, GroupAdd } from '@mui/icons-material';
 
@@ -36,22 +36,21 @@ function FriendList() {
     //Form and friend request creation
     const formik = useFormik({
         initialValues: {
-            senderID: User.Id,
-            recipientID: ""
+            senderid: User.Id,
+            recipientid: "",
         },
         validationSchema: yup.object({
-            senderid: yup.string().trim()
-                .required('SenderID is required'),
-            recipientid: yup.string().trim()
+            senderid: yup.number()
+                .required(),
+            recipientid: yup.number()
                 .required('RecipientID is required')
         }),
         onSubmit: (data) => {
-            data.senderid = data.senderid.trim();
+            data.senderid = data.senderid;
             data.recipientid = data.recipientid.trim();
             http.post("/FriendRequest", data).then((res) => {
                 if (res.status === 200) {
                     console.log(res.data);
-                    window.location.reload();
                     enqueueSnackbar("Friend request sent!", { variant: "success" });
                 } else {
                     enqueueSnackbar("Something went wrong.", { variant: "error" });
@@ -203,14 +202,14 @@ function FriendList() {
                         top: 12,
                     }}
                 >
-                    <CloseIcon onClick={handleClose} />
+                    <CloseIcon />
                 </IconButton>
                 <Box component="form" onSubmit={formik.handleSubmit}>
                     <DialogContent>
                         <TextField
                             fullWidth margin="none" autoComplete="off"
                             label="Friend's ID"
-                            name="Friend's ID"
+                            name="recipientID"
                             value={formik.values.recipientID}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
