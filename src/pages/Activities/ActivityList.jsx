@@ -2,7 +2,9 @@ import React, { useEffect, useState, useContext, useRef } from 'react'
 import {
     Button, Container, Divider, Typography, Grid, Box, Card,
     Tabs, TextField, Skeleton, CardContent, CardMedia, Tab, MenuItem
-    , IconButton
+    , IconButton,
+    Badge,
+    Chip
 } from '@mui/material'
 import LoadingButton from '@mui/lab/LoadingButton/LoadingButton';
 import { DataGrid, GridActionsCellItem, GridToolbarExport } from '@mui/x-data-grid';
@@ -21,6 +23,7 @@ import { HomeRounded, SearchRounded } from '@mui/icons-material';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import AccessibilityNewIcon from '@mui/icons-material/AccessibilityNew';
+import moment from 'moment';
 
 
 function getChipProps(params) {
@@ -60,7 +63,7 @@ function ActivityList() {
 
     const handleCategoryChange = (category) => {
         setSelectedCategory(category);
-        filterActivities(Activities, category, searchQuery);
+        filteredActivities(Activities, category, searchQuery);
     };
 
     // Function to handle changes in sorting criteria
@@ -180,14 +183,21 @@ function ActivityList() {
     };
 
 
-    const CustomCard = ({ id, name, expiryDate, description, pictures }) => (
+    const CustomCard = ({ id, name, expiryDate, description, pictures, category }) => (
         <Link to={`/activityList/${id}`} style={{ textDecoration: 'none' }}>
             <Card>
                 <CardMedia sx={{ height: 140 }} image={pictures ? url + '/uploads/' + pictures.items[0] : "/unknown.png"} />
                 <CardContent>
-                    <Typography variant="h6" fontWeight={700}>{name}</Typography>
-                    <Typography>{description}</Typography>
-                    <Typography>Expiry Date: {expiryDate}</Typography>
+                    <Typography variant="h6" fontWeight={700} sx={{
+                        whiteSpace: 'nowrap', overflow: "hidden",
+                        textOverflow: "ellipsis"
+                    }}>{name}</Typography>
+                    <Typography sx={{
+                        whiteSpace: 'nowrap', overflow: "hidden",
+                        textOverflow: "ellipsis"
+                    }}>{description}</Typography>
+                    <Typography>Till: {moment(expiryDate).format("DD/MM/YYYY")}</Typography>
+                    <Chip label={category} variant='contained' sx={{mt: ".5rem"}} /> 
                 </CardContent>
             </Card>
         </Link>
@@ -212,13 +222,13 @@ function ActivityList() {
     }, [])
     return (
         <>
-            <PageHeader title="Activities" icon={BackpackRounded} background="/golf_edit.jpg" />
+            <PageHeader title="Activities" icon={BackpackRounded} background="/kayak.jpg" />
 
 
 
 
-            <Container sx={{ mt: "1rem" }} maxWidth="xl">
-                <Card sx={{ mb: "1rem" }}>
+            <Container maxWidth="xl">
+                <Card sx={{ my: "1rem" }}>
                     <CardContent>
                         <Grid container spacing={2}>
 
@@ -274,8 +284,9 @@ function ActivityList() {
                                 </TextField>
                             </Grid>
 
+                            <Divider />
 
-                            <Grid item xs={10} md={12} sx={{ overflowX: 'auto', display: 'flex', alignItems: 'center' }}>
+                            <Grid item xs={12} sx={{ overflowX: 'auto', display: 'flex', alignItems: 'center' }}>
                                 <Tabs value={selectedCategory} onChange={(event, newValue) => setSelectedCategory(newValue)} variant="scrollable" scrollButtons="auto" aria-label="scrollable auto tabs example">
                                     <Tab label="All" value="All" />
                                     {categories.map((category, index) => (

@@ -126,7 +126,7 @@ function ViewCoupons() {
 
             </Box>
             <Dialog open={deactivateActivityDialog} onClose={handleDeactivateActivityDialogClose}>
-                <DialogTitle>Deactivate Activity</DialogTitle>
+                <DialogTitle>Delete Coupon</DialogTitle>
                 <DialogContent sx={{ paddingTop: 0 }}>
                     <DialogContentText>
                         Are you sure you want to deactivate this coupon?

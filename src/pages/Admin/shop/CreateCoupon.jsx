@@ -54,14 +54,14 @@ function CreateCoupon() {
 
             http.post("/Admin/Coupon/", data).then((res) => {
                 if (res.status === 200) {
-                    enqueueSnackbar("Category created successfully!", { variant: "success" });
+                    enqueueSnackbar("Coupon created successfully!", { variant: "success" });
                     navigate("/admin/shop/coupons")
                 } else {
-                    enqueueSnackbar("Category creation failed!.", { variant: "error" });
+                    enqueueSnackbar("Coupon creation failed!.", { variant: "error" });
                     setLoading(false);
                 }
             }).catch((err) => {
-                enqueueSnackbar("Category creation failed! " + err.response.data.error, { variant: "error" });
+                enqueueSnackbar("Coupon creation failed! " + err.response.data.error, { variant: "error" });
                 setLoading(false);
             })
         }
@@ -89,7 +89,7 @@ function CreateCoupon() {
                                         fullWidth
                                         id="code"
                                         name="code"
-                                        label="Description"
+                                        label="Code"
                                         variant="outlined"
                                         value={formik.values.code}
                                         onChange={formik.handleChange}
@@ -103,7 +103,7 @@ function CreateCoupon() {
                                         fullWidth
                                         id="description"
                                         name="description"
-                                        label="Code"
+                                        label="Description"
                                         variant="outlined"
                                         value={formik.values.description}
                                         onChange={formik.handleChange}

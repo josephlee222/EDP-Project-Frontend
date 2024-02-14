@@ -68,11 +68,11 @@ function EditCoupon() {
                     enqueueSnackbar("coupon edited successfully!", { variant: "success" });
                     navigate("/admin/shop/coupons")
                 } else {
-                    enqueueSnackbar("coupon edited failed!.", { variant: "error" });
+                    enqueueSnackbar("coupon edit failed!.", { variant: "error" });
                     setLoading(false);
                 }
             }).catch((err) => {
-                enqueueSnackbar("coupon edited failed! " + err.response.data.error, { variant: "error" });
+                enqueueSnackbar("coupon edit failed! " + err.response.data.error, { variant: "error" });
                 setLoading(false);
             })
         }
@@ -98,7 +98,7 @@ function EditCoupon() {
                                         fullWidth
                                         id="code"
                                         name="code"
-                                        label="Description"
+                                        label="Code"
                                         variant="outlined"
                                         value={formik.values.code}
                                         onChange={formik.handleChange}
@@ -112,7 +112,7 @@ function EditCoupon() {
                                         fullWidth
                                         id="description"
                                         name="description"
-                                        label="Code"
+                                        label="Description"
                                         variant="outlined"
                                         value={formik.values.description}
                                         onChange={formik.handleChange}

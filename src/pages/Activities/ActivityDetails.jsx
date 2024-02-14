@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   Box, Card, CardContent, Grid, Typography, Button, Container, CardMedia, Skeleton,
   Dialog, DialogTitle, DialogContent, DialogActions, TextField, Accordion,
-  AccordionSummary, AccordionDetails, Rating, IconButton
+  AccordionSummary, AccordionDetails, Rating, IconButton, Chip
 } from '@mui/material';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
@@ -22,7 +22,13 @@ import DateCalendarServerRequest from '../../components/CustomDateCalendarBookin
 import ProfilePicture from '../../components/ProfilePicture';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import { AddRounded, RateReviewRounded } from '@mui/icons-material';
+import { AddRounded, CategoryRounded, Place, RateReviewRounded } from '@mui/icons-material';
+import { AppContext } from '../../App';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import PlaceIcon from '@mui/icons-material/Place';
+import moment from 'moment';
+import { validateUser } from '../../functions/user';
 
 function ActivityDetails() {
   const url = import.meta.env.VITE_API_URL
@@ -33,6 +39,7 @@ function ActivityDetails() {
   const [Reviews, setReviews] = useState([])
   const [activity, setActivity] = useState([])
   titleHelper("Activity Details", activity.name);
+  const { user } = useContext(AppContext);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [availabilities, setavailabilities] = useState([]);
@@ -40,6 +47,7 @@ function ActivityDetails() {
   const [pax, setPax] = React.useState('');
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [averageRating, setAverageRating] = useState(0);
+  const [loggedIn, setLoggedIn] = useState(false);
 
   const handlePrevImage = (card) => {
     setCurrentImageIndex((prevIndex) => (prevIndex === 0 ? card.pictures.items.length - 1 : prevIndex - 1));
@@ -70,6 +78,18 @@ function ActivityDetails() {
   const handleSubmit = () => {
 
   };
+  const handleEditReview = (reviewId) => {
+    navigate("/editReview/" + reviewId);
+  };
+
+  const handleDeleteReview = (reviewId) => {
+    http.delete(`/Review/${reviewId}`).then((res) => {
+      if (res.status === 200) {
+        handleGetReviews();
+        enqueueSnackbar("Review Deleted");
+      }
+    })
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -89,8 +109,10 @@ function ActivityDetails() {
       let availableId = null;
 
       const isDateAvailable = availabilities.some(availability => {
-        const availabilityDate = new Date(availability.date).toISOString().split('T')[0];
-        if (availabilityDate === data.date && availability.currentPax < availability.maxPax) {
+        const availabilityDate = moment(availability.date).format("YYYY-MM-DD");
+        console.log("availabilityDate: ", availabilityDate)
+        console.log("data.date: ", data.date)
+        if (availabilityDate === data.date) {
           availableId = availability.id;
           return true;
         }
@@ -103,20 +125,17 @@ function ActivityDetails() {
         return;
       }
 
-
       const postData = {
         availabilityId: availableId,
         pax: data.pax
       };
 
-
-
-
       http.post("/Shop/Cart", postData).then((res) => {
         if (res.status === 200) {
-          enqueueSnackbar("Cart successful!", { variant: "success" });
-          console.log("success yayyyy")
-          navigate("/profile/booking")
+          enqueueSnackbar("Added to cart!", { variant: "success" });
+          handleCloseDialog();
+          setLoading(false);
+          //navigate("/profile/booking")
         } else {
           enqueueSnackbar("Cart failed! else", { variant: "error" });
           setLoading(false);
@@ -198,7 +217,10 @@ function ActivityDetails() {
     handleGetActivity();
     handleGetReviews();
     handleGetAvailabilities();
+    setLoggedIn(validateUser())
+    console.log("user: ", user);
   }, []);
+
 
   return (
     <>
@@ -208,11 +230,14 @@ function ActivityDetails() {
         <Box sx={{ marginY: "1rem", margin: "1.5rem" }}>
           <Typography variant="h3" fontWeight={700}>{activity.name}</Typography>
           <Grid container spacing={2}>
-            <Grid item xs={11} md={11}>
-              <Typography>category: {activity.category}</Typography>
-            </Grid>
-            <Grid item xs={1} md={1} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Typography>share  </Typography><ShareIcon />
+            <Grid item xs={12} md={12}>
+              <Box sx={{ justifyContent: 'space-between', display: 'flex', alignItems: { xs: "initial", md: "center" }, flexDirection: { xs: "column", md: "row" } }}>
+                <Chip icon={<CategoryRounded />} label={activity.category} variant="filled" sx={{ mr: { xs: "0", md: "1rem" } }} />
+                {/* <Typography><b>category:</b> {activity.category}</Typography> */}
+                <Chip icon={<PlaceIcon />} label={activity.location} variant="filled" />
+                {/* <Typography sx={{ display: 'flex', marginLeft: '20px' }} alignItems={"center"}><PlaceIcon /> {activity.location}</Typography> */}
+                <Button sx={{ marginLeft: 'auto', width: { xs: "100%", md: "auto" } }} variant="secondary" startIcon={<ShareIcon />}>Share</Button>
+              </Box>
             </Grid>
           </Grid>
         </Box>
@@ -223,19 +248,16 @@ function ActivityDetails() {
         <Box sx={{ marginY: "1rem" }}>
           <Card>
             <CardContent>
-              <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
+              <Grid container spacing={2} sx={{ display: 'flex' }}>
+                <Grid item xs={12} md={8}>
+
 
                   <div>
-                    <Typography variant="subtitle1">Expiry Date:</Typography>
-                    <Typography variant="body1">{activity.expiryDate}</Typography>
-                  </div>
-                  <div>
-                    <Typography variant="subtitle1">Description:</Typography>
+                    <Typography variant="subtitle1" fontWeight={700}>Description</Typography>
                     <Typography variant="body1">{activity.description}</Typography>
                   </div>
 
-                  <Button onClick={handleOpenDialog}>Book</Button>
+
                   <Dialog open={isDialogOpen} onClose={handleCloseDialog}>
                     <DialogTitle>Book Activity</DialogTitle>
                     <DialogContent>
@@ -269,6 +291,37 @@ function ActivityDetails() {
                     </DialogActions>
                   </Dialog>
                 </Grid>
+                <Grid item xs={12} md={4}>
+                  <div alignItems={"center"} style={{ marginLeft: 'auto' }}>
+                    <div>
+                      <Typography variant="subtitle1" fontWeight={700}>Till</Typography>
+                      <Typography variant="body1">{moment(activity.expiryDate).format('DD/MM/YYYY')}</Typography>
+                    </div>
+                    <div>
+                      <Typography variant="subtitle1" fontWeight={700}>Company</Typography>
+                      <Typography variant="body1">{activity.company}</Typography>
+                    </div>
+                    <div>
+                      <Typography variant="subtitle1" fontWeight={700}>Location</Typography>
+                      <Typography variant="body1">{activity.location}</Typography>
+                    </div>
+                  </div>
+                </Grid>
+
+                <Grid item xs={12} sm={12} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                  {loggedIn && (
+                    <Button variant="contained" color="primary"
+                      sx={{ marginLeft: 'auto', marginRight: 'auto', width: '100%' }} onClick={handleOpenDialog}>
+                      <Typography variant='h5' fontWeight={800}>Book</Typography>
+                    </Button>
+                  )}
+                  {!loggedIn && (
+                    <Button variant="contained" color="primary"
+                      sx={{ marginLeft: 'auto', marginRight: 'auto', width: '100%' }} LinkComponent={Link} to="/login">
+                      <Typography variant='h5' fontWeight={800}>Login to Book</Typography>
+                    </Button>
+                  )}
+                </Grid>
               </Grid>
             </CardContent>
           </Card>
@@ -281,7 +334,9 @@ function ActivityDetails() {
                 <Typography variant='h5'>Average Rating: {averageRating.toFixed(2)}</Typography>
                 <Rating name="read-only" value={averageRating} readOnly precision={0.1} />
               </Box>
-              <Button variant="contained" color="primary" startIcon={<AddRounded />} LinkComponent={Link} to={`/review/${activityId}`}>Add Review</Button>
+              {loggedIn && (
+                <Button variant="contained" color="primary" startIcon={<AddRounded />} LinkComponent={Link} to={`/review/${activityId}`}>Add Review</Button>
+              )}
             </Box>
 
             <Grid container spacing={2}>
@@ -310,12 +365,12 @@ function ActivityDetails() {
                     </Grid>
                   }
                   {Reviews.map((card) => (
-                    <Grid item key={card.id} xs={12} sm={12} md={12}>
+                    <Grid item key={card.id} xs={12} md={6}>
                       <Accordion>
                         <AccordionSummary expandIcon={<KeyboardArrowDownIcon />}
                           aria-controls="panel1a-content" id="panel1a-header"
-                          sx={{ height: "90px", overflow: "hidden" }}>
-                          <div style={{ display: 'flex', alignItems: 'center' }}>
+                          sx={{ height: "90px", overflow: "hidden", display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
                             <ProfilePicture user={card.user} sx={{ width: "72px", height: "72px" }} />
                             <p style={{ marginLeft: '10px' }}>@{card.user.name}</p>
                             <Rating name="read-only" value={card.rating} readOnly style={{ marginLeft: '10px' }} />
@@ -326,6 +381,14 @@ function ActivityDetails() {
                             }}>
                               {card.description}
                             </Typography>
+
+                            {card.user.id == user?.id && (
+                              <div style={{ display: 'flex', marginLeft: 'auto' }}>
+                                <EditIcon onClick={() => handleEditReview(card.id)} style={{ marginRight: '5px' }} />
+                                <DeleteIcon onClick={() => handleDeleteReview(card.id)} />
+                              </div>
+                            )
+                            }
                           </div>
                         </AccordionSummary>
                         <AccordionDetails>

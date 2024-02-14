@@ -33,6 +33,7 @@ function EditActivity() {
     const [uploadedFiles, setUploadedFiles] = useState([]);
     const [files, setFiles] = useState([]);
     const [oldFiles, setOldFiles] = useState([]);
+    const today = new Date();
 
     const handleGetCategories = () => {
         http.get("/Admin/Category/").then((res) => {
@@ -96,7 +97,7 @@ function EditActivity() {
         },
         validationSchema: Yup.object({
             name: Yup.string().required("Name is required"),
-            expiryDate: Yup.date().required("Date is required"),
+            expiryDate: Yup.date().min(today, "Expiry date must be after today").required("Date is required"),
             description: Yup.string().required("Description is required"),
             category: Yup.string().required("Category is required"),
             ntucExclusive: Yup.boolean().optional(),
@@ -136,48 +137,68 @@ function EditActivity() {
 
             console.log("formdata: ", formData);
             console.log(formData);
+            data.name = data.name.trim();
+            data.description = data.description.trim();
+            data.category = data.category.trim();
+            data.location = data.location.trim();
+            data.company = data.company.trim();
+            data.discountType = data.discountType.trim();
+            data.pictures = oldFiles;
 
-            http.post("/File/multiUpload/", formData, config).then((res) => {
+            const formDataEntries = formData.getAll('files');
+            if (formDataEntries.length > 0) {
+                console.log("no skip")
+                http.post("/File/multiUpload/", formData, config).then((res) => {
 
-                if (res.status === 200) {
-                    const allFiles = oldFiles.concat(res.data.uploadedFiles)
-                    console.log(allFiles);
-                    enqueueSnackbar("Pictures uploaded successfully!", { variant: "success" });
-                    console.log("res data: ", res.data);
-                    const resPic = { Items: res.data };
-                    console.log("respic: ", resPic);
-                    data.pictures = allFiles
-                    console.log(pictures)
-                    data.name = data.name.trim();
-                    data.description = data.description.trim();
-                    data.category = data.category.trim();
-                    data.location = data.location.trim();
-                    data.company = data.company.trim();
-                    data.discountType = data.discountType.trim();
+                    if (res.status === 200) {
+                        const allFiles = oldFiles.concat(res.data.uploadedFiles)
+                        enqueueSnackbar("Pictures uploaded successfully!", { variant: "success" });
+                        data.pictures = allFiles
+                        
 
-                    console.log(data)
 
-                    http.put(`/Admin/Activity/${activityId}`, data).then((res) => {
+                        console.log(data)
+
+                        http.put(`/Admin/Activity/${activityId}`, data).then((res) => {
+                            if (res.status === 200) {
+                                enqueueSnackbar("Review created successfully!", { variant: "success" });
+                                navigate("/admin/activities")
+                            } else {
+                                enqueueSnackbar("Review creation failed!.", { variant: "error" });
+                                setLoading(false);
+                            }
+                        }).catch((err) => {
+                            enqueueSnackbar("Review creation failed! " + err.response.data.error, { variant: "error" });
+                            setLoading(false);
+                        })
+                    } else {
+                        enqueueSnackbar("Pictures uploaded failed!. else", { variant: "error" });
+                        setLoading(false);
+                    }
+                }).catch((err) => {
+                    console.log(err)
+                    enqueueSnackbar("Pictures uploaded failed! catch" + err.response.data.error, { variant: "error" });
+                    setLoading(false);
+                })
+            }
+
+            else {
+                http.put("/Admin/Activity/"+activityId, data)
+                    .then((res) => {
                         if (res.status === 200) {
                             enqueueSnackbar("Activity created successfully!", { variant: "success" });
-                            navigate("/admin/activities")
+                            console.log(res.data);
+                            navigate(`/activityList/${activityId}`);
                         } else {
                             enqueueSnackbar("Activity creation failed!.", { variant: "error" });
                             setLoading(false);
                         }
-                    }).catch((err) => {
-                        enqueueSnackbar("Activity creation failed! " + err.response.data.error, { variant: "error" });
-                        setLoading(false);
                     })
-                } else {
-                    enqueueSnackbar("Pictures uploaded failed!. else", { variant: "error" });
-                    setLoading(false);
-                }
-            }).catch((err) => {
-                console.log(err)
-                enqueueSnackbar("Pictures uploaded failed! catch" + err.response.data.error, { variant: "error" });
-                setLoading(false);
-            })
+                    .catch((err) => {
+                        enqueueSnackbar("Activity creation failed! " + err.response, { variant: "error" });
+                        setLoading(false);
+                    });
+            }
         }
     })
 
@@ -207,8 +228,33 @@ function EditActivity() {
     const handleDeleteFile = (index) => {
         //the list of file details
         const updatedFileDetails = [...uploadedFiles];
-        updatedFileDetails.splice(index, 1);
+        var removedFile = updatedFileDetails.splice(index, 1);
         setUploadedFiles(updatedFileDetails);
+        var OldFileNames = [];
+        var OldFiles = oldFiles;
+
+        for (let i = 0; i < oldFiles; i++) {
+            const picture = oldFiles[i];
+            OldFileNames.push({
+                name: picture,
+            });
+        }
+
+        var removeIndex = null;
+
+        for(let i = 0;i < OldFileNames; i++){
+            const pictureName = OldFileNames[i].name;
+            if(removedFile == pictureName){
+                removeIndex = i;
+            }
+        }
+
+        OldFiles.splice(removeIndex, 1);
+        setOldFiles(OldFiles);
+
+
+        console.log(removedFile);
+
 
         //the actual list of file that contain the FILE files
         //this is 100% definitely best practice
