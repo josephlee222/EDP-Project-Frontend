@@ -3,7 +3,7 @@ import { Link, Route, Routes, useNavigate } from 'react-router-dom'
 import Test from '../Test'
 import { AppContext } from '../../App'
 import { useSnackbar } from 'notistack'
-import { Card, CardContent, Grid, Box, Typography, ButtonBase } from '@mui/material'
+import { Card, CardContent, Grid, Box, Typography, ButtonBase, Skeleton } from '@mui/material'
 import { AdminPanelSettingsRounded, BackpackRounded, CalendarTodayRounded, GroupRounded, ManageAccountsRounded, QueryStatsRounded, ShopRounded, StorefrontRounded } from '@mui/icons-material'
 import CardTitle from '../../components/CardTitle'
 import http from '../../http'
@@ -13,7 +13,8 @@ export default function AdminHome() {
     const { setAdminPage, user } = useContext(AppContext);
     const { enqueueSnackbar } = useSnackbar();
     const navigate = useNavigate();
-    const [stats, setStats] = useState({ userCount: 0, activityCount: 0, transactionMoney: 0 });
+    const [stats, setStats] = useState({ });
+    const nf = new Intl.NumberFormat();
 
 
     useEffect(() => {
@@ -71,7 +72,7 @@ export default function AdminHome() {
                             </Grid>
                             <Grid item xs={12} sm={6} xl={3}>
                                 <Card sx={{ backgroundColor: "#fff" }}>
-                                    <ButtonBase component={Link} to="/admin/Shop" sx={{ width: "100%", justifyContent: 'start' }}>
+                                    <ButtonBase component={Link} to="/admin/shop" sx={{ width: "100%", justifyContent: 'start' }}>
                                         <CardContent sx={{ color: "primary.main" }}>
                                             <StorefrontRounded sx={{ width: "36px", height: "36px" }} />
                                             <Typography variant="h6" fontWeight={700}>Shop Settings</Typography>
@@ -90,10 +91,11 @@ export default function AdminHome() {
                         <Grid container spacing={2} mt={"0"}>
                             <Grid item xs={12} sm={6} xl={4}>
                                 <Card sx={{ backgroundColor: "#fff" }}>
-                                    <ButtonBase component={Link} to="/admin/Shop" sx={{ width: "100%", justifyContent: 'start' }}>
+                                    <ButtonBase component={Link} to="/admin/users" sx={{ width: "100%", justifyContent: 'start' }}>
                                         <CardContent sx={{ color: "primary.main" }}>
                                             <Typography variant='h3' fontWeight={700}>
-                                                {stats.userCount}
+                                                {!stats?.userCount && <Skeleton variant="text" width={"100px"} />}
+                                                {stats?.userCount && nf.format(stats?.userCount)}
                                             </Typography>
                                             <Typography variant="h6" fontWeight={700}>Users</Typography>
                                             <Typography variant="body1">Currently Registered</Typography>
@@ -103,10 +105,11 @@ export default function AdminHome() {
                             </Grid>
                             <Grid item xs={12} sm={6} xl={4}>
                                 <Card sx={{ backgroundColor: "#fff" }}>
-                                    <ButtonBase component={Link} to="/admin/Shop" sx={{ width: "100%", justifyContent: 'start' }}>
+                                    <ButtonBase component={Link} to="/admin/activities" sx={{ width: "100%", justifyContent: 'start' }}>
                                         <CardContent sx={{ color: "primary.main" }}>
                                             <Typography variant='h3' fontWeight={700}>
-                                                {stats.activityCount}
+                                                {!stats?.activityCount && <Skeleton variant="text" width={"100px"} />}
+                                                {stats?.activityCount && nf.format(stats?.activityCount)}
                                             </Typography>
                                             <Typography variant="h6" fontWeight={700}>Activities</Typography>
                                             <Typography variant="body1">On UPlay</Typography>
@@ -116,10 +119,11 @@ export default function AdminHome() {
                             </Grid>
                             <Grid item xs={12} sm={12} xl={4}>
                                 <Card sx={{ backgroundColor: "#fff" }}>
-                                    <ButtonBase component={Link} to="/admin/Shop" sx={{ width: "100%", justifyContent: 'start' }}>
+                                    <ButtonBase component={Link} to="/admin/shop" sx={{ width: "100%", justifyContent: 'start' }}>
                                         <CardContent sx={{ color: "primary.main" }}>
                                             <Typography variant='h3' fontWeight={700}>
-                                                ${stats.transactionMoney}
+                                                {!stats?.transactionMoney && <Skeleton variant="text" width={"100px"} />}
+                                                {stats?.transactionMoney && "$" + nf.format(stats?.transactionMoney)}
                                             </Typography>
                                             <Typography variant="h6" fontWeight={700}>Money In</Typography>
                                             <Typography variant="body1">Last 30 Days</Typography>

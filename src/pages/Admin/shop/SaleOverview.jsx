@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react'
-import { Box, Card, CardContent, Chip, Grid, Typography } from '@mui/material'
+import { Box, Card, CardContent, Chip, Grid, Skeleton, Typography } from '@mui/material'
 import LoadingButton from '@mui/lab/LoadingButton/LoadingButton';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
@@ -21,6 +21,7 @@ function SaleOverview() {
     const [users, setUsers] = useState([])
     const [sales, setSales] = useState({})
     const [loading, setLoading] = useState(true)
+    const nf = new Intl.NumberFormat();
     const navigate = useNavigate()
     const { setActivePage } = useContext(CategoryContext);
     const columns = [
@@ -78,7 +79,8 @@ function SaleOverview() {
                                 <Card sx={{ backgroundColor: "#fff" }}>
                                     <CardContent sx={{ color: "primary.main" }}>
                                         <Typography variant='h3' fontWeight={700}>
-                                            ${sales?.transactionMoney24}
+                                            {!sales?.transactionMoney24 && <Skeleton variant="text" width={"100px"} />}
+                                            {sales?.transactionMoney24 && "$" + nf.format(sales?.transactionMoney24)}
                                         </Typography>
                                         <Typography variant="h6" fontWeight={700}>Money In</Typography>
                                         <Typography variant="body1">Last 24 Hours</Typography>
@@ -89,7 +91,8 @@ function SaleOverview() {
                                 <Card sx={{ backgroundColor: "#fff" }}>
                                     <CardContent sx={{ color: "primary.main" }}>
                                         <Typography variant='h3' fontWeight={700}>
-                                            ${sales?.transactionMoney}
+                                            {!sales?.transactionMoney && <Skeleton variant="text" width={"100px"} />}
+                                            {sales?.transactionMoney && "$" + nf.format(sales?.transactionMoney)}
                                         </Typography>
                                         <Typography variant="h6" fontWeight={700}>Money In</Typography>
                                         <Typography variant="body1">Last 30 Days</Typography>
@@ -100,7 +103,8 @@ function SaleOverview() {
                                 <Card sx={{ backgroundColor: "#fff" }}>
                                     <CardContent sx={{ color: "primary.main" }}>
                                         <Typography variant='h3' fontWeight={700}>
-                                            ${sales?.transactionMoneyLifetime}
+                                            {!sales?.transactionMoneyLifetime && <Skeleton variant="text" width={"100px"} />}
+                                            {sales?.transactionMoneyLifetime && "$" + nf.format(sales?.transactionMoneyLifetime)}
                                         </Typography>
                                         <Typography variant="h6" fontWeight={700}>Money In</Typography>
                                         <Typography variant="body1">Lifetime</Typography>
