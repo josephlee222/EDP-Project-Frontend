@@ -46,8 +46,9 @@ export default function ViewBookings() {
 
                     <Typography variant="h6" fontWeight={700}>{availability.activity.name}</Typography>
 
-                    <Typography>Date: {moment(date).format("DD/MM/YYYY")}</Typography>
-                    <Typography>Pax: {pax}</Typography>
+                    <Typography>On {moment(date).format("DD/MM/YYYY")}</Typography>
+                    <Typography>{pax} people</Typography>
+                    <Typography>Paid ${(availability.price * pax).toFixed(2)}</Typography>
                     <Typography>Notes: {notes ? notes : "No notes"}</Typography>
 
                     <Button LinkComponent={Link} to={`/editBooking/${id}`} variant="contained" color="primary" sx={{ mt: "1rem" }}>Edit</Button>
@@ -91,13 +92,13 @@ export default function ViewBookings() {
 
             <Grid container spacing={2} mt={"0rem"}>
                 {loading && <>{[...Array(6)].map((card) => (
-                    <Grid item key={card} xs={12} sm={6} md={4}>
+                    <Grid item key={card} xs={12} sm={6} lg={4}>
                         <CustomSkeletonCard />
                     </Grid>
                 ))}</>}
 
                 {!loading && <>{booking.map((card) => (
-                    <Grid item key={card.id} xs={12} sm={6} md={4}>
+                    <Grid item key={card.id} xs={12} sm={6} lg={4}>
                         <CustomCard {...card} />
                     </Grid>
                 ))}</>}

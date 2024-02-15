@@ -3,7 +3,7 @@ import { Box, Card, CardContent, Grid, Typography, Button, Divider, Dialog, Dial
 import { AppContext } from "../../App";
 import { ProfileContext } from "./ProfileRoutes";
 import CardTitle from "../../components/CardTitle";
-import { AddLinkRounded, CloseRounded, Info, Key, KeyRounded, LinkOffRounded, LinkRounded } from "@mui/icons-material";
+import { AddLinkRounded, CloseRounded, Info, Key, KeyRounded, LinkOffRounded, LinkRounded, ManageAccountsRounded } from "@mui/icons-material";
 import InfoBox from "../../components/InfoBox";
 import { useSnackbar } from "notistack";
 import http from "../../http";
@@ -192,11 +192,11 @@ export default function ViewSecurity() {
         <>
             <Card sx={{ mt: "1rem" }}>
                 <CardContent>
-                    <CardTitle title="Passkey Access" icon={<Key />} />
+                    <CardTitle title="Passkey Access" icon={<KeyRounded />} />
                     <Typography variant="body1" mt={"1rem"}>Passkeys allows you to login into NTUC UPlay without the need of a password by using your biometrics via mobile device or USB security key to verify your identity.</Typography>
                     <Box sx={{ mt: "1rem", display: "flex" }}>
                         <Button variant="contained" sx={{ mr: ".5rem", flexGrow: 1, flexBasis: 0 }} startIcon={<Key />} onClick={handlePasskeyDialogOpen}>Setup Passkey Access</Button>
-                        <Button variant="secondary" sx={{ ml: ".5rem", flexGrow: 1, flexBasis: 0 }} startIcon={<Info />} LinkComponent={Link} to="https://www.passkeys.io/" target="_blank">Learn More</Button>
+                        <Button variant="secondary" sx={{ ml: ".5rem", flexGrow: 1, flexBasis: 0 }} startIcon={<ManageAccountsRounded />} LinkComponent={Link} to="/profile/passkeys">Manage Passkeys</Button>
                     </Box>
                 </CardContent>
             </Card>
