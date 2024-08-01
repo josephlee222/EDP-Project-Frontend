@@ -82,7 +82,7 @@ function Home() {
                             <Box sx={{ mt: "1rem" }} display={"flex"}>
                                 <TextField
                                     id="outlined-basic"
-                                    label="Search for an activity"
+                                    label="Search Activities..."
                                     variant="outlined"
                                     sx={{ minWidth: "15rem", flexGrow: { xs: "1", md: "0" } }}
                                 />
@@ -99,7 +99,9 @@ function Home() {
                     <Alert severity="warning" onClose={() => {setAlert(false)}}>
                         <Typography variant="p" fontWeight={700}>This is a school project prototype</Typography><br/>
                         <Typography variant="p">This website is a prototype for a school project for NTUC UPlay and is not a real booking platform. All data shown here are for demonstration purposes only.</Typography><br/>
-                        <Typography variant="p">Visit the real NTUC UPlay website at </Typography><Link href="https://uplay.com.sg" target="_blank">https://uplay.com.sg</Link>
+                        <Typography variant="p">Visit the real NTUC UPlay website at </Typography><Link href="https://uplay.com.sg" target="_blank">https://uplay.com.sg</Link><br/><br/>
+                        <Typography variant="p" fontWeight={700}>If you came here for the project demo</Typography><br/>
+                        <Typography variant="p">Email: admin@admin.com | Password: admin123</Typography><br/>
                     </Alert>
                 </Collapse>
                 <Box mt={"2rem"} mb={"3rem"}>
