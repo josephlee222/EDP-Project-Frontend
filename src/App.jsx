@@ -113,7 +113,7 @@ function App() {
                 currentNotification,
                 setCurrentNotification,
             }}>
-                <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+                <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh", minWidth: "100%" }}>
                     <Navbar />
                     <Box sx={{ flexGrow: 1 }}>
                         <Routes location={location}>

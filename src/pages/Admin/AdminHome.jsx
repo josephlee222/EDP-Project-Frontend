@@ -7,6 +7,7 @@ import { Card, CardContent, Grid, Box, Typography, ButtonBase, Skeleton } from '
 import { AdminPanelSettingsRounded, BackpackRounded, CalendarTodayRounded, GroupRounded, ManageAccountsRounded, QueryStatsRounded, ShopRounded, StorefrontRounded } from '@mui/icons-material'
 import CardTitle from '../../components/CardTitle'
 import http from '../../http'
+import titleHelper from '../../functions/helpers';
 
 export default function AdminHome() {
     //Routes for admin pages. To add authenication so that only admins can access these pages, add a check for the user's role in the UserContext
@@ -29,6 +30,8 @@ export default function AdminHome() {
             enqueueSnackbar("Failed to load statistics", { variant: "error" });
         })
     }, [])
+
+    titleHelper("Admin Dashboard")
 
     return (
         <>

@@ -14,11 +14,11 @@ import CardTitle from '../components/CardTitle';
 function Fou() {
     // Routes for admin pages. To add authenication so that only admins can access these pages, add a check for the user's role in the UserContext
     //const { setIsAdminPage } = useContext(UserContext);
-    titleHelper("Friends Of UPlay")
+    titleHelper("Friends of UPlay")
 
     return (
         <>
-            <PageHeader icon={LoyaltyRounded} title="Friends Of UPlay" navTitle="FAQ" />
+            <PageHeader icon={LoyaltyRounded} title="Friends of UPlay" navTitle="Friends of UPlay" />
             <Container maxWidth="xl" sx={{ marginY: "1rem" }}>
                 <Box my={"3rem"} display={"flex"} flexDirection={"column"} alignItems={"center"}>
                     <Typography variant="h4" fontWeight={700}>

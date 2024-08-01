@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react'
 import { Route, Routes, Navigate, Link } from 'react-router-dom'
 //import NotFound from './errors/NotFound'
 //import { UserContext } from '..'
-import { Button, Container, Divider, Typography, Grid, Box, Card, TextField, Skeleton, CardContent, CardMedia, Chip } from '@mui/material'
+import { Button, Container, Divider, Typography, Grid, Box, Card, TextField, Skeleton, CardContent, CardMedia, Chip, Alert, Collapse } from '@mui/material'
 import { AppContext } from '../App';
 import { HomeRounded, NewReleasesRounded, SearchRounded, WarningRounded } from '@mui/icons-material';
 import titleHelper from '../functions/helpers';
@@ -17,6 +17,7 @@ function Home() {
     const apiUrl = import.meta.env.VITE_API_URL;
     const [banners, setBanners] = useState({})
     const [loading, setLoading] = useState(false)
+    const [alert, setAlert] = useState(true)
     const [activities, setActivities] = useState([])
     const [loadingActivities, setLoadingActivities] = useState(false)
     const { enqueueSnackbar } = useSnackbar();
@@ -94,6 +95,13 @@ function Home() {
                 </Grid>
             </Box>
             <Container sx={{ mt: "1rem" }} maxWidth="xl">
+                <Collapse in={alert}>
+                    <Alert severity="warning" onClose={() => {setAlert(false)}}>
+                        <Typography variant="p" fontWeight={700}>This is a school project prototype</Typography><br/>
+                        <Typography variant="p">This website is a prototype for a school project for NTUC UPlay and is not a real booking platform. All data shown here are for demonstration purposes only.</Typography><br/>
+                        <Typography variant="p">Visit the real NTUC UPlay website at </Typography><Link href="https://uplay.com.sg" target="_blank">https://uplay.com.sg</Link>
+                    </Alert>
+                </Collapse>
                 <Box mt={"2rem"} mb={"3rem"}>
                     <Grid container spacing={{ xs: "1rem", md: 10 }}>
                         <Grid item xs={12} md={8} display={"flex"} direction={"column"} justifyContent={"center"}>
@@ -230,7 +238,7 @@ function Home() {
                                                 textOverflow: "ellipsis"
                                             }}>{activity.description}</Typography>
                                             <Typography>Till: {moment(activity.expiryDate).format("DD/MM/YYYY")}</Typography>
-                                            <Chip label={activity.category} variant='contained' sx={{mt: ".5rem"}} /> 
+                                            <Chip label={activity.category} variant='contained' sx={{ mt: ".5rem" }} />
                                         </CardContent>
                                     </Card>
                                 </Link>

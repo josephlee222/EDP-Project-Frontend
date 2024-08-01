@@ -54,7 +54,7 @@ function SaleOverview() {
             <GridToolbarExport />
         );
     }
-    titleHelper("Sale Overview")
+    titleHelper("Sales Overview")
 
     const getSales = () => {
         http.get('/Admin/Shop/Sales').then((res) => {
